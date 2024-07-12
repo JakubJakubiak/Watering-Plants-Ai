@@ -5,53 +5,51 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class HistoryModule extends StatefulWidget {
-  // final Map<String, String?> imageData;
+class Chat extends StatefulWidget {
+  final Map<String, String?> imageData;
 
-  HistoryModule(
-    Key? key,
-  ) : super(key: key);
+  Chat({Key? key, required this.imageData}) : super(key: key);
 
   @override
-  State<HistoryModule> createState() => _HistoryModuleState();
+  State<Chat> createState() => _ChatState();
 }
 
-class _HistoryModuleState extends State<HistoryModule> {
-  List<Map<String, dynamic>> generatedHistory = [];
+class _ChatState extends State<Chat> {
+  // List<Map<String, dynamic>> generatedHistory = [];
 
-  // List<Map<String, dynamic>> get generatedHistorynext => [widget.imageData];
+  List<Map<String, dynamic>> get generatedHistory => [widget.imageData];
 
   @override
   void initState() {
     super.initState();
-    _loadGeneratedHistory();
-    // _addElementToList();
+    // _loadGeneratedHistory();
+    _addElementToList();
   }
 
-  // Future<void> _addElementToList() async {
-  //   print('/////generatedHistory///////${widget.imageData['mimeType']}/////');
-  //   setState(() {
-  //     generatedHistory.insert(0, {
-  //       'base64Image': widget.imageData['base64Image'],
-  //       'mimeType': widget.imageData['mimeType'],
-  //       'description': widget.imageData['mimeType'],
-  //     });
-  //   });
-  //   // await _saveGenerateHistory();
-  // }
-
-  Future<void> _loadGeneratedHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? jsonStringList = prefs.getStringList('HistoryChat');
-    if (jsonStringList != null) {
-      setState(() {
-        generatedHistory = jsonStringList.map((jsonString) {
-          return jsonDecode(jsonString) as Map<String, dynamic>;
-        }).toList();
+  Future<void> _addElementToList() async {
+    print('/////generatedHistory///////${widget.imageData['mimeType']}/////');
+    setState(() {
+      generatedHistory.insert(0, {
+        'base64Image': widget.imageData['base64Image'],
+        'mimeType': widget.imageData['mimeType'],
+        'description': widget.imageData['mimeType'],
       });
-      print('/////generatedHistory/////_loadGeneratedHistory///$generatedHistory');
-    }
+    });
+    // await _saveGenerateHistory();
   }
+
+  // Future<void> _loadGeneratedHistory() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String>? jsonStringList = prefs.getStringList('HistoryChat');
+  //   if (jsonStringList != null) {
+  //     setState(() {
+  //       generatedHistory = jsonStringList.map((jsonString) {
+  //         return jsonDecode(jsonString) as Map<String, dynamic>;
+  //       }).toList();
+  //     });
+  //     print('/////generatedHistory/////_loadGeneratedHistory///$generatedHistory');
+  //   }
+  // }
 
   Future<void> _saveGenerateHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -120,7 +118,7 @@ class _HistoryModuleState extends State<HistoryModule> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Text(
-                'History',
+                'Chat',
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,

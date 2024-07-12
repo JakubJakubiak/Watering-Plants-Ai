@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:PlantsAI/main.dart';
+import 'package:PlantsAI/moduls/chat.dart';
+import 'package:PlantsAI/moduls/history.dart';
 import 'package:PlantsAI/moduls/modern_full_width_button.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -37,17 +39,35 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
   String generatedText = "";
   List<Map<String, dynamic>> generatedHistory = [];
 
+  // Future<void> _pickImage() async {
+  //   final pickedImage = await _picker.pickImage(source: ImageSource.camera);
+  //   File file = File(pickedImage!.path);
+  //   String base64ImageFuncion = base64Encode(await file.readAsBytes());
+  //   String? mimeTypeFuncion = lookupMimeType(file.path);
+
+  //   setState(() {
+  //     mimeType = mimeTypeFuncion;
+  //     base64Image = base64ImageFuncion;
+  //   });
+  // }
+
   Future<void> _pickImage() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.camera);
-    File file = File(pickedImage!.path);
-    String base64ImageFuncion = base64Encode(await file.readAsBytes());
-    String? mimeTypeFuncion = lookupMimeType(file.path);
 
-    setState(() {
-      // _image = pickedImage;
-      mimeType = mimeTypeFuncion;
-      base64Image = base64ImageFuncion;
-    });
+    File file = File(pickedImage!.path);
+    String base64ImageFunction = base64Encode(await file.readAsBytes());
+    String? mimeTypeFunction = lookupMimeType(file.path);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Chat(imageData: {
+          'base64Image': base64ImageFunction,
+          'mimeType': mimeTypeFunction,
+          'description': mimeTypeFunction,
+        }),
+      ),
+    );
   }
 
   @override
@@ -58,7 +78,7 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
 
   Future<void> _loadGeneratedHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? jsonStringList = prefs.getStringList('generatedHistory');
+    List<String>? jsonStringList = prefs.getStringList('HistoryChat');
     if (jsonStringList != null) {
       setState(() {
         generatedHistory = jsonStringList.map((jsonString) {
@@ -71,7 +91,7 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
   Future<void> _saveGenerateHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> jsonStringList = generatedHistory.map((item) => jsonEncode(item)).toList();
-    await prefs.setStringList('generatedHistory', jsonStringList);
+    await prefs.setStringList('HistoryChat', jsonStringList);
   }
 
   Future<void> _reset() async {
@@ -176,6 +196,20 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
             if (base64Image.isNotEmpty) ...[
               gapH24,
               _buildAnalyzeButton(),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     Map<String, String?> imageData = await _pickImage();
+              //     if (imageData.isNotEmpty) {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => HistoryModule(imageData: imageData),
+              //         ),
+              //       );
+              //     }
+              //   },
+              //   child: Text('Take Picture and Open History'),
+              // ),
             ],
             if (!_isUploading && generatedText.isNotEmpty) ...[
               gapH24,

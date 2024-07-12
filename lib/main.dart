@@ -22,7 +22,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await initializePurchases();
+  // await initializePurchases();
   await signInAnonymously();
   runApp(const MyApp());
 }
@@ -179,6 +179,7 @@ Stream<int> tokensStream() async* {
         if (snapshot.exists && snapshot.data()!.containsKey('tokens')) {
           return snapshot.data()!['tokens'];
         }
+
         return 0;
       });
     }

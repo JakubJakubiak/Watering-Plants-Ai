@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _createBanerAd();
     _loadRewardedAd();
-    _signInAnonymously();
     // _setupIsPro();
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
@@ -71,33 +70,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _signInAnonymously() async {
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-    } catch (e) {
-      print("Failed to sign in anonymously: $e");
-    }
-  }
+  // Future<void> _setupIsPro() async {
+  //   DocumentSnapshot userDoc = await _firestore.collection('users').doc(userid).get();
+  //   print(userDoc);
+  //   try {
+  //     CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+  //     _updateProStatus(customerInfo);
+  //     Purchases.addCustomerInfoUpdateListener(_updateProStatus);
+  //   } catch (e) {
+  //     print("Error while checking subscription status: $e");
+  //   }
+  // }
 
-  Future<void> _setupIsPro() async {
-    DocumentSnapshot userDoc = await _firestore.collection('users').doc(userid).get();
-    print(userDoc);
-    try {
-      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-      _updateProStatus(customerInfo);
-      Purchases.addCustomerInfoUpdateListener(_updateProStatus);
-    } catch (e) {
-      print("Error while checking subscription status: $e");
-    }
-  }
-
-  void _updateProStatus(CustomerInfo customerInfo) {
-    EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
-    bool isProActive = (entitlement?.isActive ?? false);
-    setState(() {
-      isPro = isProActive;
-    });
-  }
+  // void _updateProStatus(CustomerInfo customerInfo) {
+  //   EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+  //   bool isProActive = (entitlement?.isActive ?? false);
+  //   setState(() {
+  //     isPro = isProActive;
+  //   });
+  // }
 
   void _createBanerAd() {
     if (!Constants.adsEnabled) return;
@@ -112,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void endGame() async {
     CounterModel counterModel = Provider.of<CounterModel>(context, listen: false);
     counter = counterModel.counter;
-    _setupIsPro();
+    // _setupIsPro();
 
     showGameOverDialog(counter);
   }
@@ -209,8 +200,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
         ImagePickerModule(counter: tokens),
-        // GameScreen(counter: tokens),
-        HistoryModule(key: UniqueKey()),
+        HistoryModule(
+          key: UniqueKey(),
+          imageData: {},
+        ),
       ];
 
       return Scaffold(
@@ -267,10 +260,6 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.image_outlined),
               label: 'Caption Image',
             ),
-            // NavigationDestination(
-            //   icon: Icon(Icons.edit_note_outlined),
-            //   label: 'Generate Text',
-            // ),
             NavigationDestination(
               icon: Icon(Icons.history),
               label: 'History',
