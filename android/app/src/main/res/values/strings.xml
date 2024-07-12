@@ -1,0 +1,5 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="facebook_app_id">3497995107190306</string>
+    <string name="fb_login_protocol_scheme">fb3497995107190306</string>
+    <string name="facebook_client_token">c5fffd680c490b9b6b88f748750d0834</string>
+</resources>
