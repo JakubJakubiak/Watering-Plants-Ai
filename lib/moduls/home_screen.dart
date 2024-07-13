@@ -200,10 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
         ImagePickerModule(counter: tokens),
-        HistoryModule(
-          key: UniqueKey(),
-          imageData: {},
-        ),
+        HistoryModule(key: UniqueKey()),
       ];
 
       return Scaffold(

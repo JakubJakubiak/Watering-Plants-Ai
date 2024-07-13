@@ -52,20 +52,20 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
   // }
 
   Future<void> _pickImage() async {
-    final pickedImage = await _picker.pickImage(source: ImageSource.camera);
+    final pickedImage = await _picker.pickImage(source: ImageSource.camera, requestFullMetadata: true, imageQuality: 80, maxWidth: 800, maxHeight: 800);
 
-    File file = File(pickedImage!.path);
-    String base64ImageFunction = base64Encode(await file.readAsBytes());
-    String? mimeTypeFunction = lookupMimeType(file.path);
+    if (pickedImage == null) {
+      debugPrint("No image selected.");
+      return;
+    }
+
+    // String base64ImageFunction = base64Encode(await file.readAsBytes());
+    // String? mimeTypeFunction = lookupMimeType(file.path);
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Chat(imageData: {
-          'base64Image': base64ImageFunction,
-          'mimeType': mimeTypeFunction,
-          'description': mimeTypeFunction,
-        }),
+        builder: (context) => Chat(file: pickedImage),
       ),
     );
   }

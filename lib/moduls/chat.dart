@@ -1,23 +1,26 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Chat extends StatefulWidget {
-  final Map<String, String?> imageData;
+  final XFile file;
 
-  Chat({Key? key, required this.imageData}) : super(key: key);
+  const Chat({super.key, required this.file});
 
   @override
   State<Chat> createState() => _ChatState();
 }
 
 class _ChatState extends State<Chat> {
-  // List<Map<String, dynamic>> generatedHistory = [];
+  List<Map<String, dynamic>> generatedHistory = [];
 
-  List<Map<String, dynamic>> get generatedHistory => [widget.imageData];
+  // List<Map<String, dynamic>> get generatedHistory => widget.file;
+  XFile get historyFile => widget.file;
 
   @override
   void initState() {
@@ -27,15 +30,28 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> _addElementToList() async {
-    print('/////generatedHistory///////${widget.imageData['mimeType']}/////');
+    // print('/////generatedHistory///////${widget.imageData['mimeType']}/////');
+
+    final nameFile = saveXFile(historyFile, historyFile.name);
     setState(() {
       generatedHistory.insert(0, {
-        'base64Image': widget.imageData['base64Image'],
-        'mimeType': widget.imageData['mimeType'],
-        'description': widget.imageData['mimeType'],
+        "nameFile": nameFile,
+        "texprompt": "",
       });
     });
-    // await _saveGenerateHistory();
+    await _saveGenerateHistory();
+  }
+
+  Future<String> saveXFile(XFile xFile, String fileName) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final destinationPath = '${appDir.path}/$fileName';
+    await File(destinationPath).writeAsBytes(await xFile.readAsBytes());
+    return destinationPath;
+  }
+
+  Future<File?> getFile(String fileName) async {
+    final file = File('${(await getApplicationDocumentsDirectory()).path}/$fileName');
+    return await file.exists() ? file : null;
   }
 
   // Future<void> _loadGeneratedHistory() async {

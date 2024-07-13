@@ -6,11 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class HistoryModule extends StatefulWidget {
-  // final Map<String, String?> imageData;
-
-  HistoryModule(
-    Key? key,
-  ) : super(key: key);
+  const HistoryModule({Key? key}) : super(key: key);
 
   @override
   State<HistoryModule> createState() => _HistoryModuleState();
@@ -18,8 +14,6 @@ class HistoryModule extends StatefulWidget {
 
 class _HistoryModuleState extends State<HistoryModule> {
   List<Map<String, dynamic>> generatedHistory = [];
-
-  // List<Map<String, dynamic>> get generatedHistorynext => [widget.imageData];
 
   @override
   void initState() {
