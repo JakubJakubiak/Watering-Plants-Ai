@@ -43,7 +43,6 @@ class _HistoryModuleState extends State<HistoryModule> {
           return jsonDecode(jsonString) as Map<String, dynamic>;
         }).toList();
       });
-      print('/////generatedHistory/////_loadGeneratedHistory///$generatedHistory');
     }
   }
 

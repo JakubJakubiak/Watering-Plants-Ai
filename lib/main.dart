@@ -1,4 +1,7 @@
+import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/moduls/home_screen.dart';
+import 'package:PlantsAI/providers/chat_notifier.dart';
+import 'package:PlantsAI/repositories/chat_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +27,34 @@ void main() async {
   ]);
   // await initializePurchases();
   await signInAnonymously();
-  runApp(const MyApp());
+
+  final db = ChatDatabase();
+  final firebaseFunctions = FirebaseFunctions.instance;
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<RewardedAdProvider>(
+          create: (_) => RewardedAdProvider(),
+        ),
+        ChangeNotifierProvider<CounterModel>(
+          create: (_) => CounterModel(),
+        ),
+        StreamProvider<int>(
+          create: (_) => tokensStream(),
+          initialData: 0,
+        ),
+        Provider<ChatRepository>(
+          create: (_) => ChatRepository(db, firebaseFunctions),
+        ),
+        ChangeNotifierProxyProvider<ChatRepository, ChatNotifier>(
+          create: (context) => ChatNotifier(context.read<ChatRepository>()),
+          update: (context, repository, previous) => ChatNotifier(repository)
+        )
+      ],
+      child: const MyApp(),
+      ),
+    );
 }
 
 final purchasesConfiguration = PurchasesConfiguration('goog_yaidSqdYePZHGMtePEiJvvUbMBm');
@@ -67,70 +97,56 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<RewardedAdProvider>(
-          create: (_) => RewardedAdProvider(),
-        ),
-        ChangeNotifierProvider<CounterModel>(
-          create: (_) => CounterModel(),
-        ),
-        StreamProvider<int>(
-          create: (_) => tokensStream(),
-          initialData: 0,
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Caption',
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          useMaterial3: true,
-          scaffoldBackgroundColor: Colors.black,
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Colors.blueAccent.withOpacity(0.5),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-          ),
-          textTheme: const TextTheme(
-            bodyLarge: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white70),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Caption',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.blueAccent.withOpacity(0.5),
+                blurRadius: 10,
               ),
-            ),
+            ],
           ),
-          cardTheme: CardTheme(
-            color: Colors.grey[900],
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white70),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
         ),
-        home: FuturisticWrapper(child: const HomeScreen()),
+        cardTheme: CardTheme(
+          color: Colors.grey[900],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
       ),
+      home: const FuturisticWrapper(child: HomeScreen()),
     );
   }
 }
 
 class FuturisticWrapper extends StatelessWidget {
   final Widget child;
-  const FuturisticWrapper({Key? key, required this.child}) : super(key: key);
+  const FuturisticWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

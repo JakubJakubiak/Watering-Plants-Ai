@@ -7,16 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Chat extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final XFile file;
 
-  const Chat({super.key, required this.file});
+  const ChatScreen({super.key, required this.file});
 
   @override
-  State<Chat> createState() => _ChatState();
+  State<ChatScreen> createState() => _ChatState();
 }
 
-class _ChatState extends State<Chat> {
+class _ChatState extends State<ChatScreen> {
   List<Map<String, dynamic>> generatedHistory = [];
 
   // List<Map<String, dynamic>> get generatedHistory => widget.file;

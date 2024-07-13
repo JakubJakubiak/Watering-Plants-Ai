@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:PlantsAI/main.dart';
 import 'package:PlantsAI/moduls/History.dart';
+import 'package:PlantsAI/moduls/chat/chat_history_screen.dart';
+import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
 import 'package:PlantsAI/moduls/game_over_dialog.dart';
-import 'package:PlantsAI/moduls/game_screen.dart';
-import 'package:PlantsAI/moduls/sign_in_page.dart';
-import 'package:PlantsAI/utils/gaps.dart';
-import 'package:PlantsAI/utils/shared_preferences_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,13 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'image_picker.dart';
 import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -196,11 +189,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final tokens = Provider.of<int>(context);
+    
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
         ImagePickerModule(counter: tokens),
         HistoryModule(key: UniqueKey()),
+        const NewChatScreen(),
+        const ChatHistoryScreen(),
       ];
 
       return Scaffold(
@@ -260,6 +256,14 @@ class _HomeScreenState extends State<HomeScreen> {
             NavigationDestination(
               icon: Icon(Icons.history),
               label: 'History',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.chat),
+              label: 'New Chat',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.history),
+              label: 'Chat History',
             ),
           ],
         ),
