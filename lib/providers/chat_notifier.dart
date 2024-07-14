@@ -8,7 +8,7 @@ class ChatNotifier extends ChangeNotifier {
   ChatNotifier(this._repository);
 
   List<Chat> _chats = [];
-  List<Chat> get chats => _chats;
+  List<Chat> get chats => _chats.reversed.toList();
 
   Future<void> loadChats() async {
     _chats = await _repository.getAllChats();

@@ -27,10 +27,11 @@ class ChatRepository {
   Future<Chat> createChat(String imagePath, String initialMessage) async {
     // Create a new chat
     final chat = await _db.into(_db.chats).insertReturning(ChatsCompanion.insert(
-          name: 'Plant Identification Chat',
+          name: '',
           // iconChat: Value(imagePath),
           quickQuestions: const Value([]),
           createdAt: DateTime.now(),
+          imagePath: Value(imagePath),
         ));
 
     // Create the first user message
@@ -55,14 +56,18 @@ class ChatRepository {
       'image': base64Image,
     });
 
-    // Save bot response
+    final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
+
+    await _db.updateQuickQuestions(chatId, responseMessage.quickQuestions);
+    await _db.updateName(chatId, responseMessage.name);
+    await _db.updateLastMessage(chatId, responseMessage.response);
+
     await _db.into(_db.messages).insert(MessagesCompanion.insert(
           chatId: chatId,
-          content: botResponse.data['message'],
+          content: responseMessage.response,
           timestamp: DateTime.now(),
           isUserMessage: false,
         ));
-    print("///////botResponse//////////////${botResponse.data['message']}");
   }
 
   Future<void> sendMessage(int chatId, String content) async {
@@ -74,6 +79,7 @@ class ChatRepository {
       isUserMessage: true,
     );
     await _db.into(_db.messages).insert(userMessage);
+    await _db.updateLastMessage(chatId, content);
 
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
 
@@ -90,6 +96,7 @@ class ChatRepository {
 
     await _db.updateQuickQuestions(chatId, responseMessage.quickQuestions);
     await _db.updateName(chatId, responseMessage.name);
+    await _db.updateLastMessage(chatId, responseMessage.response);
 
     await _db.into(_db.messages).insert(MessagesCompanion.insert(
           chatId: chatId,

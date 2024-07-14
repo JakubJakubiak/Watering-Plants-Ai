@@ -7,6 +7,8 @@ class Chats extends Table {
   TextColumn get name => text()();
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get quickQuestions => text().map(const ListStringConverter()).withDefault(const Constant('[]'))();
+  TextColumn get lastMessage => text().nullable()();
+  TextColumn get imagePath => text().nullable()();
 }
 
 class ListStringConverter extends TypeConverter<List<String>, String> {

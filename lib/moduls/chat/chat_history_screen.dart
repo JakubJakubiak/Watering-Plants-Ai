@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
 import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 
@@ -31,13 +34,22 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
             itemCount: chatNotifier.chats.length,
             itemBuilder: (context, index) {
               final chat = chatNotifier.chats[index];
-              final chatlist = chatNotifier.chats;
-              print(chatlist);
+              final chatName = chatNotifier.chats[index].name;
+              final chatTitle = chatName.isNotEmpty ? chatName : 'Chat $index';
+
+              final chatAvatarPath = chatNotifier.chats[index].imagePath;
+              final lastMessage = chatNotifier.chats[index].lastMessage;
+
               return ListTile(
-                // leading: const Icon(chat.imagePath),
-                // leading: Image.file(File(message.imagePath!), width: 50, height: 50),
-                title: Text('Chat ${chat.id}'),
-                subtitle: Text(chat.createdAt.toString()),
+                leading: CircleAvatar(
+                  backgroundImage: chatAvatarPath != null ? FileImage(File(chatAvatarPath)) : null,
+                  child: chatAvatarPath == null ? const Icon(Icons.person) : null,
+                ),
+                title: Text(chatTitle),
+                subtitle: Text(
+                  lastMessage ?? 'No messages yet',
+                  maxLines: 1,
+                ),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ChatScreen(
@@ -60,5 +72,10 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         },
       ),
     );
+  }
+
+  Future<File?> getFile(String fileName) async {
+    final file = File('${(await getApplicationDocumentsDirectory()).path}/$fileName');
+    return await file.exists() ? file : null;
   }
 }

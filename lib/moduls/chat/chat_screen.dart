@@ -90,10 +90,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                         decoration: BoxDecoration(
                                           color: message.isUserMessage ? Colors.blue[700] : Colors.grey[900],
                                           borderRadius: BorderRadius.circular(12),
-                                          // border: Border.all(
-                                          //   color: message.isUserMessage ? Colors.blue[500]! : Colors.grey[500]!,
-                                          //   width: 1,
-                                          // ),
                                         ),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,

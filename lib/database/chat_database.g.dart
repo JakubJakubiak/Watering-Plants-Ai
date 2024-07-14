@@ -38,8 +38,21 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
               requiredDuringInsert: false,
               defaultValue: const Constant('[]'))
           .withConverter<List<String>>($ChatsTable.$converterquickQuestions);
+  static const VerificationMeta _lastMessageMeta =
+      const VerificationMeta('lastMessage');
   @override
-  List<GeneratedColumn> get $columns => [id, name, createdAt, quickQuestions];
+  late final GeneratedColumn<String> lastMessage = GeneratedColumn<String>(
+      'last_message', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, createdAt, quickQuestions, lastMessage, imagePath];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -66,6 +79,16 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
       context.missing(_createdAtMeta);
     }
     context.handle(_quickQuestionsMeta, const VerificationResult.success());
+    if (data.containsKey('last_message')) {
+      context.handle(
+          _lastMessageMeta,
+          lastMessage.isAcceptableOrUnknown(
+              data['last_message']!, _lastMessageMeta));
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    }
     return context;
   }
 
@@ -84,6 +107,10 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
       quickQuestions: $ChatsTable.$converterquickQuestions.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.string, data['${effectivePrefix}quick_questions'])!),
+      lastMessage: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}last_message']),
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path']),
     );
   }
 
@@ -101,13 +128,15 @@ class Chat extends DataClass implements Insertable<Chat> {
   final String name;
   final DateTime createdAt;
   final List<String> quickQuestions;
+  final String? lastMessage;
+  final String? imagePath;
   const Chat(
       {required this.id,
       required this.name,
       required this.createdAt,
-      required this.quickQuestions});
-
-  get length => null;
+      required this.quickQuestions,
+      this.lastMessage,
+      this.imagePath});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -118,6 +147,12 @@ class Chat extends DataClass implements Insertable<Chat> {
       map['quick_questions'] = Variable<String>(
           $ChatsTable.$converterquickQuestions.toSql(quickQuestions));
     }
+    if (!nullToAbsent || lastMessage != null) {
+      map['last_message'] = Variable<String>(lastMessage);
+    }
+    if (!nullToAbsent || imagePath != null) {
+      map['image_path'] = Variable<String>(imagePath);
+    }
     return map;
   }
 
@@ -127,6 +162,12 @@ class Chat extends DataClass implements Insertable<Chat> {
       name: Value(name),
       createdAt: Value(createdAt),
       quickQuestions: Value(quickQuestions),
+      lastMessage: lastMessage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessage),
+      imagePath: imagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imagePath),
     );
   }
 
@@ -138,6 +179,8 @@ class Chat extends DataClass implements Insertable<Chat> {
       name: serializer.fromJson<String>(json['name']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       quickQuestions: serializer.fromJson<List<String>>(json['quickQuestions']),
+      lastMessage: serializer.fromJson<String?>(json['lastMessage']),
+      imagePath: serializer.fromJson<String?>(json['imagePath']),
     );
   }
   @override
@@ -148,6 +191,8 @@ class Chat extends DataClass implements Insertable<Chat> {
       'name': serializer.toJson<String>(name),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'quickQuestions': serializer.toJson<List<String>>(quickQuestions),
+      'lastMessage': serializer.toJson<String?>(lastMessage),
+      'imagePath': serializer.toJson<String?>(imagePath),
     };
   }
 
@@ -155,12 +200,16 @@ class Chat extends DataClass implements Insertable<Chat> {
           {int? id,
           String? name,
           DateTime? createdAt,
-          List<String>? quickQuestions}) =>
+          List<String>? quickQuestions,
+          Value<String?> lastMessage = const Value.absent(),
+          Value<String?> imagePath = const Value.absent()}) =>
       Chat(
         id: id ?? this.id,
         name: name ?? this.name,
         createdAt: createdAt ?? this.createdAt,
         quickQuestions: quickQuestions ?? this.quickQuestions,
+        lastMessage: lastMessage.present ? lastMessage.value : this.lastMessage,
+        imagePath: imagePath.present ? imagePath.value : this.imagePath,
       );
   Chat copyWithCompanion(ChatsCompanion data) {
     return Chat(
@@ -170,6 +219,9 @@ class Chat extends DataClass implements Insertable<Chat> {
       quickQuestions: data.quickQuestions.present
           ? data.quickQuestions.value
           : this.quickQuestions,
+      lastMessage:
+          data.lastMessage.present ? data.lastMessage.value : this.lastMessage,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
     );
   }
 
@@ -179,13 +231,16 @@ class Chat extends DataClass implements Insertable<Chat> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
-          ..write('quickQuestions: $quickQuestions')
+          ..write('quickQuestions: $quickQuestions, ')
+          ..write('lastMessage: $lastMessage, ')
+          ..write('imagePath: $imagePath')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, createdAt, quickQuestions);
+  int get hashCode =>
+      Object.hash(id, name, createdAt, quickQuestions, lastMessage, imagePath);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -193,7 +248,9 @@ class Chat extends DataClass implements Insertable<Chat> {
           other.id == this.id &&
           other.name == this.name &&
           other.createdAt == this.createdAt &&
-          other.quickQuestions == this.quickQuestions);
+          other.quickQuestions == this.quickQuestions &&
+          other.lastMessage == this.lastMessage &&
+          other.imagePath == this.imagePath);
 }
 
 class ChatsCompanion extends UpdateCompanion<Chat> {
@@ -201,17 +258,23 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   final Value<String> name;
   final Value<DateTime> createdAt;
   final Value<List<String>> quickQuestions;
+  final Value<String?> lastMessage;
+  final Value<String?> imagePath;
   const ChatsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.quickQuestions = const Value.absent(),
+    this.lastMessage = const Value.absent(),
+    this.imagePath = const Value.absent(),
   });
   ChatsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required DateTime createdAt,
     this.quickQuestions = const Value.absent(),
+    this.lastMessage = const Value.absent(),
+    this.imagePath = const Value.absent(),
   })  : name = Value(name),
         createdAt = Value(createdAt);
   static Insertable<Chat> custom({
@@ -219,12 +282,16 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     Expression<String>? name,
     Expression<DateTime>? createdAt,
     Expression<String>? quickQuestions,
+    Expression<String>? lastMessage,
+    Expression<String>? imagePath,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
       if (quickQuestions != null) 'quick_questions': quickQuestions,
+      if (lastMessage != null) 'last_message': lastMessage,
+      if (imagePath != null) 'image_path': imagePath,
     });
   }
 
@@ -232,12 +299,16 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       {Value<int>? id,
       Value<String>? name,
       Value<DateTime>? createdAt,
-      Value<List<String>>? quickQuestions}) {
+      Value<List<String>>? quickQuestions,
+      Value<String?>? lastMessage,
+      Value<String?>? imagePath}) {
     return ChatsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       quickQuestions: quickQuestions ?? this.quickQuestions,
+      lastMessage: lastMessage ?? this.lastMessage,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
@@ -257,6 +328,12 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       map['quick_questions'] = Variable<String>(
           $ChatsTable.$converterquickQuestions.toSql(quickQuestions.value));
     }
+    if (lastMessage.present) {
+      map['last_message'] = Variable<String>(lastMessage.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
     return map;
   }
 
@@ -266,7 +343,9 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
-          ..write('quickQuestions: $quickQuestions')
+          ..write('quickQuestions: $quickQuestions, ')
+          ..write('lastMessage: $lastMessage, ')
+          ..write('imagePath: $imagePath')
           ..write(')'))
         .toString();
   }
@@ -635,12 +714,16 @@ typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
   required String name,
   required DateTime createdAt,
   Value<List<String>> quickQuestions,
+  Value<String?> lastMessage,
+  Value<String?> imagePath,
 });
 typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<int> id,
   Value<String> name,
   Value<DateTime> createdAt,
   Value<List<String>> quickQuestions,
+  Value<String?> lastMessage,
+  Value<String?> imagePath,
 });
 
 class $$ChatsTableTableManager extends RootTableManager<
@@ -664,24 +747,32 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<List<String>> quickQuestions = const Value.absent(),
+            Value<String?> lastMessage = const Value.absent(),
+            Value<String?> imagePath = const Value.absent(),
           }) =>
               ChatsCompanion(
             id: id,
             name: name,
             createdAt: createdAt,
             quickQuestions: quickQuestions,
+            lastMessage: lastMessage,
+            imagePath: imagePath,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String name,
             required DateTime createdAt,
             Value<List<String>> quickQuestions = const Value.absent(),
+            Value<String?> lastMessage = const Value.absent(),
+            Value<String?> imagePath = const Value.absent(),
           }) =>
               ChatsCompanion.insert(
             id: id,
             name: name,
             createdAt: createdAt,
             quickQuestions: quickQuestions,
+            lastMessage: lastMessage,
+            imagePath: imagePath,
           ),
         ));
 }
@@ -710,6 +801,16 @@ class $$ChatsTableFilterComposer
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
               joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get lastMessage => $state.composableBuilder(
+      column: $state.table.lastMessage,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get imagePath => $state.composableBuilder(
+      column: $state.table.imagePath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 
   ComposableFilter messagesRefs(
       ComposableFilter Function($$MessagesTableFilterComposer f) f) {
@@ -745,6 +846,16 @@ class $$ChatsTableOrderingComposer
 
   ColumnOrderings<String> get quickQuestions => $state.composableBuilder(
       column: $state.table.quickQuestions,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get lastMessage => $state.composableBuilder(
+      column: $state.table.lastMessage,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get imagePath => $state.composableBuilder(
+      column: $state.table.imagePath,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
