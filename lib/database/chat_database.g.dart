@@ -28,8 +28,18 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _quickQuestionsMeta =
+      const VerificationMeta('quickQuestions');
   @override
-  List<GeneratedColumn> get $columns => [id, name, createdAt];
+  late final GeneratedColumnWithTypeConverter<List<String>, String>
+      quickQuestions = GeneratedColumn<String>(
+              'quick_questions', aliasedName, false,
+              type: DriftSqlType.string,
+              requiredDuringInsert: false,
+              defaultValue: const Constant('[]'))
+          .withConverter<List<String>>($ChatsTable.$converterquickQuestions);
+  @override
+  List<GeneratedColumn> get $columns => [id, name, createdAt, quickQuestions];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -55,6 +65,7 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    context.handle(_quickQuestionsMeta, const VerificationResult.success());
     return context;
   }
 
@@ -70,6 +81,9 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      quickQuestions: $ChatsTable.$converterquickQuestions.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}quick_questions'])!),
     );
   }
 
@@ -77,19 +91,31 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   $ChatsTable createAlias(String alias) {
     return $ChatsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<String>, String> $converterquickQuestions =
+      const ListStringConverter();
 }
 
 class Chat extends DataClass implements Insertable<Chat> {
   final int id;
   final String name;
   final DateTime createdAt;
-  const Chat({required this.id, required this.name, required this.createdAt});
+  final List<String> quickQuestions;
+  const Chat(
+      {required this.id,
+      required this.name,
+      required this.createdAt,
+      required this.quickQuestions});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['created_at'] = Variable<DateTime>(createdAt);
+    {
+      map['quick_questions'] = Variable<String>(
+          $ChatsTable.$converterquickQuestions.toSql(quickQuestions));
+    }
     return map;
   }
 
@@ -98,6 +124,7 @@ class Chat extends DataClass implements Insertable<Chat> {
       id: Value(id),
       name: Value(name),
       createdAt: Value(createdAt),
+      quickQuestions: Value(quickQuestions),
     );
   }
 
@@ -108,6 +135,7 @@ class Chat extends DataClass implements Insertable<Chat> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      quickQuestions: serializer.fromJson<List<String>>(json['quickQuestions']),
     );
   }
   @override
@@ -117,19 +145,29 @@ class Chat extends DataClass implements Insertable<Chat> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'quickQuestions': serializer.toJson<List<String>>(quickQuestions),
     };
   }
 
-  Chat copyWith({int? id, String? name, DateTime? createdAt}) => Chat(
+  Chat copyWith(
+          {int? id,
+          String? name,
+          DateTime? createdAt,
+          List<String>? quickQuestions}) =>
+      Chat(
         id: id ?? this.id,
         name: name ?? this.name,
         createdAt: createdAt ?? this.createdAt,
+        quickQuestions: quickQuestions ?? this.quickQuestions,
       );
   Chat copyWithCompanion(ChatsCompanion data) {
     return Chat(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      quickQuestions: data.quickQuestions.present
+          ? data.quickQuestions.value
+          : this.quickQuestions,
     );
   }
 
@@ -138,55 +176,66 @@ class Chat extends DataClass implements Insertable<Chat> {
     return (StringBuffer('Chat(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('quickQuestions: $quickQuestions')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, createdAt);
+  int get hashCode => Object.hash(id, name, createdAt, quickQuestions);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Chat &&
           other.id == this.id &&
           other.name == this.name &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.quickQuestions == this.quickQuestions);
 }
 
 class ChatsCompanion extends UpdateCompanion<Chat> {
   final Value<int> id;
   final Value<String> name;
   final Value<DateTime> createdAt;
+  final Value<List<String>> quickQuestions;
   const ChatsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.quickQuestions = const Value.absent(),
   });
   ChatsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required DateTime createdAt,
+    this.quickQuestions = const Value.absent(),
   })  : name = Value(name),
         createdAt = Value(createdAt);
   static Insertable<Chat> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<DateTime>? createdAt,
+    Expression<String>? quickQuestions,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
+      if (quickQuestions != null) 'quick_questions': quickQuestions,
     });
   }
 
   ChatsCompanion copyWith(
-      {Value<int>? id, Value<String>? name, Value<DateTime>? createdAt}) {
+      {Value<int>? id,
+      Value<String>? name,
+      Value<DateTime>? createdAt,
+      Value<List<String>>? quickQuestions}) {
     return ChatsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
+      quickQuestions: quickQuestions ?? this.quickQuestions,
     );
   }
 
@@ -202,6 +251,10 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (quickQuestions.present) {
+      map['quick_questions'] = Variable<String>(
+          $ChatsTable.$converterquickQuestions.toSql(quickQuestions.value));
+    }
     return map;
   }
 
@@ -210,7 +263,8 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     return (StringBuffer('ChatsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('quickQuestions: $quickQuestions')
           ..write(')'))
         .toString();
   }
@@ -578,11 +632,13 @@ typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
   Value<int> id,
   required String name,
   required DateTime createdAt,
+  Value<List<String>> quickQuestions,
 });
 typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<int> id,
   Value<String> name,
   Value<DateTime> createdAt,
+  Value<List<String>> quickQuestions,
 });
 
 class $$ChatsTableTableManager extends RootTableManager<
@@ -605,21 +661,25 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<List<String>> quickQuestions = const Value.absent(),
           }) =>
               ChatsCompanion(
             id: id,
             name: name,
             createdAt: createdAt,
+            quickQuestions: quickQuestions,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String name,
             required DateTime createdAt,
+            Value<List<String>> quickQuestions = const Value.absent(),
           }) =>
               ChatsCompanion.insert(
             id: id,
             name: name,
             createdAt: createdAt,
+            quickQuestions: quickQuestions,
           ),
         ));
 }
@@ -641,6 +701,13 @@ class $$ChatsTableFilterComposer
       column: $state.table.createdAt,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get quickQuestions => $state.composableBuilder(
+          column: $state.table.quickQuestions,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
 
   ComposableFilter messagesRefs(
       ComposableFilter Function($$MessagesTableFilterComposer f) f) {
@@ -671,6 +738,11 @@ class $$ChatsTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
       column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get quickQuestions => $state.composableBuilder(
+      column: $state.table.quickQuestions,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

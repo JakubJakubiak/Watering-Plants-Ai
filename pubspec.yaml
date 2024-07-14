@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore: ^5.0.1
   cloud_functions: ^5.0.1
   cupertino_icons: ^1.0.5
+  dart_mappable: ^4.2.2
   device_info_plus: ^10.1.0
   drift: ^2.19.1
   drift_flutter: ^0.1.0
@@ -62,6 +63,7 @@ dependencies:
       ref: master
 dev_dependencies:
   build_runner: ^2.4.11
+  dart_mappable_builder: ^4.2.3
   drift_dev: ^2.19.0
   flutter_lints: ^4.0.0
   flutter_test:

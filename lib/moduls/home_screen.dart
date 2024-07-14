@@ -189,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final tokens = Provider.of<int>(context);
-    
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [

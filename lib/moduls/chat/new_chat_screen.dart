@@ -19,11 +19,8 @@ class NewChatScreen extends StatelessWidget {
             final imagePicker = ImagePicker();
             final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
             if (pickedFile != null && context.mounted) {
-              final chat = await context.read<ChatNotifier>().createChat(
-                pickedFile.path,
-                "What plant is in the photo?"
-              );
-               navigator.push(MaterialPageRoute(
+              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
+              navigator.push(MaterialPageRoute(
                 builder: (context) => ChatScreen(
                   chatId: chat.id,
                   isNewChat: true,

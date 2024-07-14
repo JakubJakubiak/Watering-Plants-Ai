@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:PlantsAI/database/chat_database.dart';
+import 'package:PlantsAI/models/response_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drift/drift.dart';
 
@@ -23,6 +24,8 @@ class ChatRepository {
     // Create a new chat
     final chat = await _db.into(_db.chats).insertReturning(ChatsCompanion.insert(
           name: 'Plant Identification Chat',
+          // iconChat: Value(imagePath),
+          quickQuestions: const Value([]),
           createdAt: DateTime.now(),
         ));
 
@@ -44,13 +47,9 @@ class ChatRepository {
     final List<int> imageBytes = await imageFile.readAsBytes();
     final String base64Image = base64Encode(imageBytes);
 
-    print("///////botResponse//////////start");
-
-    final botResponse = await _firebaseFunctions.httpsCallable('createChat2').call({
+    final botResponse = await _firebaseFunctions.httpsCallable('createChat').call({
       'image': base64Image,
     });
-
-    print("///////botResponse//////////////$botResponse");
 
     // Save bot response
     await _db.into(_db.messages).insert(MessagesCompanion.insert(
@@ -59,7 +58,7 @@ class ChatRepository {
           timestamp: DateTime.now(),
           isUserMessage: false,
         ));
-    print("///////botResponse//////////////$botResponse");
+    print("///////botResponse//////////////${botResponse.data['message']}");
   }
 
   Future<void> sendMessage(int chatId, String content) async {
@@ -85,10 +84,12 @@ class ChatRepository {
           .toList(),
     });
 
+    final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
+
     // Save bot response
     await _db.into(_db.messages).insert(MessagesCompanion.insert(
           chatId: chatId,
-          content: botResponse.data['message'],
+          content: responseMessage.response,
           timestamp: DateTime.now(),
           isUserMessage: false,
         ));
