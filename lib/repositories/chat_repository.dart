@@ -71,10 +71,8 @@ class ChatRepository {
     );
     await _db.into(_db.messages).insert(userMessage);
 
-    // Get all chat history
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
 
-    // Get bot response
     final botResponse = await _firebaseFunctions.httpsCallable('sendMessage').call({
       'chatHistory': chatHistory
           .map((m) => {
@@ -86,7 +84,9 @@ class ChatRepository {
 
     final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
 
-    // Save bot response
+    await _db.updateQuickQuestions(chatId, responseMessage.quickQuestions);
+    await _db.updateName(chatId, responseMessage.name);
+
     await _db.into(_db.messages).insert(MessagesCompanion.insert(
           chatId: chatId,
           content: responseMessage.response,

@@ -6,20 +6,29 @@ part 'chat_database.g.dart';
 
 @DriftDatabase(tables: [Chats, Messages])
 class ChatDatabase extends _$ChatDatabase {
-  ChatDatabase(): super(driftDatabase(name: 'chat.db'));
+  ChatDatabase() : super(driftDatabase(name: 'chat.db'));
 
-  @override 
+  @override
   int get schemaVersion => 2;
 
-  @override 
-  MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) async {
-      await m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from < 2) {
-        await m.addColumn(chats, chats.quickQuestions);
-      }
-    }
-  );
+  @override
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (m) async {
+        await m.createAll();
+      }, onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          await m.addColumn(chats, chats.quickQuestions);
+        }
+      });
+
+  Future<void> updateQuickQuestions(int chatId, List<String> newQuickQuestions) async {
+    await (update(chats)..where((t) => t.id.equals(chatId))).write(ChatsCompanion(
+      quickQuestions: Value(newQuickQuestions),
+    ));
+  }
+
+  Future<void> updateName(int chatId, String newName) async {
+    await (update(chats)..where((t) => t.id.equals(chatId))).write(ChatsCompanion(
+      name: Value(newName),
+    ));
+  }
 }
