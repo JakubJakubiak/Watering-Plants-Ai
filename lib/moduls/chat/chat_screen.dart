@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:PlantsAI/database/chat_database.dart';
@@ -40,68 +41,155 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Chat ${widget.chatId}')),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<List<Message>>(
-              stream: context.read<ChatNotifier>().watchMessages(widget.chatId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final message = snapshot.data![index];
-                      return ListTile(
-                        title: Text(message.content),
-                        subtitle: Text(message.isUserMessage ? 'User' : 'Bot'),
-                        leading: message.imagePath != null
-                            ? Image.file(File(message.imagePath!), width: 50, height: 50)
-                            : null,
-                      );
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-          ),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Getting first message...'),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+    return StreamBuilder<Chat>(
+        stream: context.read<ChatNotifier>().watchChat(widget.chatId),
+        builder: (context, snapshot) {
+          final chat = snapshot.data;
+
+          if (chat == null) {
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+
+          final quickQuestions = chat.quickQuestions;
+          final chatName = chat.name.isEmpty ? 'Chat ${widget.chatId}' : chat.name;
+
+          return Scaffold(
+            appBar: AppBar(title: Text(chatName)),
+            body: Column(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(hintText: 'Type a message'),
+                  child: StreamBuilder<List<Message>>(
+                    stream: context.read<ChatNotifier>().watchMessages(widget.chatId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final message = snapshot.data![index];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                              child: Align(
+                                alignment: message.isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                                  child: Column(
+                                    crossAxisAlignment: message.isUserMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        message.isUserMessage ? 'You' : 'Bot',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: message.isUserMessage ? Colors.blue[700] : Colors.green[700],
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: message.isUserMessage ? Colors.blue[700] : Colors.grey[900],
+                                          borderRadius: BorderRadius.circular(12),
+                                          // border: Border.all(
+                                          //   color: message.isUserMessage ? Colors.blue[500]! : Colors.grey[500]!,
+                                          //   width: 1,
+                                          // ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            if (message.imagePath != null)
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.circular(8),
+                                                child: Image.file(
+                                                  File(message.imagePath!),
+                                                  width: 200,
+                                                  height: 200,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            if (message.imagePath != null) SizedBox(height: 8),
+                                            MarkdownBody(
+                                              data: message.content,
+                                              styleSheet: MarkdownStyleSheet(
+                                                p: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    if (_messageController.text.isNotEmpty) {
-                      context.read<ChatNotifier>().sendMessage(
-                        widget.chatId,
-                        _messageController.text,
-                      );
-                      _messageController.clear();
-                    }
-                  },
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('Getting first message...'),
+                  ),
+                if (quickQuestions.isNotEmpty)
+                  SizedBox(
+                    height: 48,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: quickQuestions.length,
+                      itemBuilder: (context, index) {
+                        final question = quickQuestions[index];
+                        return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: FilledButton.tonal(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.grey[900],
+                              ),
+                              onPressed: () {
+                                context.read<ChatNotifier>().sendMessage(widget.chatId, question);
+                              },
+                              child: Text(question),
+                            ));
+                      },
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: const InputDecoration(hintText: 'Type a message'),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          if (_messageController.text.isNotEmpty) {
+                            context.read<ChatNotifier>().sendMessage(
+                                  widget.chatId,
+                                  _messageController.text,
+                                );
+                            _messageController.clear();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

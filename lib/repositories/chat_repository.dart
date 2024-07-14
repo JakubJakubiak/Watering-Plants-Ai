@@ -16,6 +16,10 @@ class ChatRepository {
     return _db.select(_db.chats).get();
   }
 
+  Stream<Chat> watchChat(int chatId) {
+    return (_db.select(_db.chats)..where((c) => c.id.equals(chatId))).watchSingle();
+  }
+
   Stream<List<Message>> watchMessages(int chatId) {
     return (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).watch();
   }

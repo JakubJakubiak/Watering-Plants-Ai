@@ -106,6 +106,8 @@ class Chat extends DataClass implements Insertable<Chat> {
       required this.name,
       required this.createdAt,
       required this.quickQuestions});
+
+  get length => null;
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};

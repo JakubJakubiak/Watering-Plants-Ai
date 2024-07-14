@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ImagePickerModule(counter: tokens),
         HistoryModule(key: UniqueKey()),
         const NewChatScreen(),
-        const ChatHistoryScreen(),
+        ChatHistoryScreen(key: UniqueKey()),
       ];
 
       return Scaffold(

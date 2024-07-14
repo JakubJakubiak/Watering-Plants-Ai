@@ -17,7 +17,7 @@ class ChatNotifier extends ChangeNotifier {
 
   Future<Chat> createChat(String imagePath, String initialMessage) async {
     final chat = await _repository.createChat(imagePath, initialMessage);
-    await loadChats();  // Reload chats to include the new one
+    await loadChats(); // Reload chats to include the new one
     return chat;
   }
 
@@ -31,5 +31,9 @@ class ChatNotifier extends ChangeNotifier {
 
   Stream<List<Message>> watchMessages(int chatId) {
     return _repository.watchMessages(chatId);
+  }
+
+  Stream<Chat> watchChat(int chatId) {
+    return _repository.watchChat(chatId);
   }
 }

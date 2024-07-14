@@ -40,6 +40,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
+  flutter_markdown: ^0.7.3
   google_mobile_ads: ^5.1.0
   google_sign_in: ^6.2.1
   html: ^0.15.3
