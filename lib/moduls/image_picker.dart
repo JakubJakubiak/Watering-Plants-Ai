@@ -193,20 +193,6 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
             if (base64Image.isNotEmpty) ...[
               gapH24,
               _buildAnalyzeButton(),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     Map<String, String?> imageData = await _pickImage();
-              //     if (imageData.isNotEmpty) {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => HistoryModule(imageData: imageData),
-              //         ),
-              //       );
-              //     }
-              //   },
-              //   child: Text('Take Picture and Open History'),
-              // ),
             ],
             if (!_isUploading && generatedText.isNotEmpty) ...[
               gapH24,
@@ -249,11 +235,6 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
                     imageBytes,
                     fit: BoxFit.cover,
                   ),
-
-                  //  Image.file(
-                  //   File(_image!.path),
-                  //   fit: BoxFit.cover,
-                  // ),
                 )),
             if (!_isUploading)
               Padding(
