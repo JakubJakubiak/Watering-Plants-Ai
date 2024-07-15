@@ -1,36 +1,111 @@
+import 'dart:io';
+
+import 'package:PlantsAI/moduls/chat/CameraButton%20.dart';
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
+// import 'package:camera/camera.dart';
+import 'package:wechat_camera_picker/wechat_camera_picker.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class NewChatScreen extends StatelessWidget {
   const NewChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // final _imagePicker = ImagePicker();
+
     return Scaffold(
       appBar: AppBar(title: const Text('New Plant Identification')),
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Select Plant Image'),
-          onPressed: () async {
-            final navigator = Navigator.of(context);
-            final imagePicker = ImagePicker();
-            final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-            if (pickedFile != null && context.mounted) {
-              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
-              navigator.push(MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  chatId: chat.id,
-                  isNewChat: true,
-                  imagePath: pickedFile.path,
-                ),
-              ));
-            }
-          },
-        ),
-      ),
+          child: Row(
+        children: [
+          ElevatedButton(
+              child: const Text('Select Plant Image'),
+              onPressed: () async {
+                final imagePicker = ImagePicker();
+                XFile? pickedFile;
+                try {
+                  final navigator = Navigator.of(context);
+                  final pickedFile = await imagePicker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 80,
+                    maxWidth: 800,
+                    maxHeight: 800,
+                  );
+
+                  if (pickedFile != null && context.mounted) {
+                    final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
+
+                    navigator.push(MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                        chatId: chat.id,
+                        isNewChat: true,
+                        imagePath: pickedFile.path,
+                      ),
+                    ));
+                  }
+                } catch (e, stackTrace) {
+                  print('Error in onPressed: $e');
+                  print('Stack trace: $stackTrace');
+                }
+              }),
+          ElevatedButton(
+            child: const Text('Select Plant Camera'),
+            onPressed: () async {
+              try {
+                final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
+                  context,
+                  pickerConfig: CameraPickerConfig(
+                    enableRecording: false,
+                    resolutionPreset: ResolutionPreset.medium,
+                    imageFormatGroup: ImageFormatGroup.jpeg,
+                    preferredLensDirection: CameraLensDirection.back,
+                    textDelegate: const EnglishCameraPickerTextDelegate(),
+                    theme: ThemeData(
+                      colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
+                    ),
+                  ),
+                );
+
+                if (pickedAsset == null) {
+                  debugPrint("No image selected.");
+                  return;
+                }
+
+                final file = await pickedAsset.file;
+                if (file == null) {
+                  debugPrint("Failed to get file from asset.");
+                  return;
+                }
+
+                debugPrint('Image selected: ${file.path}');
+
+                final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+                final chat = await chatNotifier.createChat(file.path, "What plant is in the photo?");
+
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      chatId: chat.id,
+                      isNewChat: true,
+                      imagePath: file.path,
+                    ),
+                  ),
+                );
+              } catch (e, stackTrace) {
+                debugPrint('Error in image picking: $e');
+                debugPrint('Stack trace: $stackTrace');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('An error occurred while picking the image.')),
+                );
+              }
+            },
+          )
+        ],
+      )),
     );
   }
 }
