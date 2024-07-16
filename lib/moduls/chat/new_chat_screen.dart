@@ -48,11 +48,6 @@ class _NewChatScreenState extends State<NewChatScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icon(
-                  //   Icons.add_photo_alternate_outlined,
-                  //   size: 80,
-                  //   color: Colors.white70,
-                  // ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
