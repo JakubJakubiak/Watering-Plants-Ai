@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'image_picker.dart';
 import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
 
@@ -192,8 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
-        ImagePickerModule(counter: tokens),
-        HistoryModule(key: UniqueKey()),
         const NewChatScreen(),
         ChatHistoryScreen(key: UniqueKey()),
       ];
@@ -248,14 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
             });
           },
           destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.image_outlined),
-              label: 'Caption Image',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.history),
-              label: 'History',
-            ),
             NavigationDestination(
               icon: Icon(Icons.chat),
               label: 'New Chat',

@@ -88,9 +88,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                      elevation: 0,
                     ),
                     child: const Icon(
                       Icons.camera_alt_outlined,

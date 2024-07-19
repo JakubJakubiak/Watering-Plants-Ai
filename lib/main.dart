@@ -48,13 +48,11 @@ void main() async {
           create: (_) => ChatRepository(db, firebaseFunctions),
         ),
         ChangeNotifierProxyProvider<ChatRepository, ChatNotifier>(
-          create: (context) => ChatNotifier(context.read<ChatRepository>()),
-          update: (context, repository, previous) => ChatNotifier(repository)
-        )
+            create: (context) => ChatNotifier(context.read<ChatRepository>()), update: (context, repository, previous) => ChatNotifier(repository))
       ],
       child: const MyApp(),
-      ),
-    );
+    ),
+  );
 }
 
 final purchasesConfiguration = PurchasesConfiguration('goog_yaidSqdYePZHGMtePEiJvvUbMBm');
@@ -103,9 +101,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         useMaterial3: true,
-        scaffoldBackgroundColor: Colors.black,
+        // scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
           elevation: 0,
           titleTextStyle: TextStyle(
             color: Colors.white,
@@ -133,7 +131,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         cardTheme: CardTheme(
-          color: Colors.grey[900],
+          // color: Colors.grey[900],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
