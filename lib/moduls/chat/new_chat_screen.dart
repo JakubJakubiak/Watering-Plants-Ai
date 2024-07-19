@@ -43,7 +43,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                   ],
                 ),
                 borderRadius: BorderRadius.circular(20.0),
-                border: Border.all(color: Colors.white24),
+                // border: Border.all(color: Colors.white24),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +84,10 @@ class _NewChatScreenState extends State<NewChatScreen> {
                           print('Stack trace: $stackTrace');
                         }
                       }),
-                  const VerticalDivider(),
+                  const VerticalDivider(
+                    // thickness: 1,
+                    color: Colors.white70,
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,

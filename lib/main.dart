@@ -100,6 +100,7 @@ class MyApp extends StatelessWidget {
       title: 'Caption',
       theme: ThemeData(
         brightness: Brightness.dark,
+        // brightness: Brightness.light,
         useMaterial3: true,
         // scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
