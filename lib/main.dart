@@ -15,6 +15,7 @@ import 'package:PlantsAI/utils/shared_preferences_helper.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+import 'moduls/payment/paymentrevenuecat.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  // await initializePurchases();
+  await initializePurchases();
   await signInAnonymously();
 
   final db = ChatDatabase();
@@ -55,12 +56,11 @@ void main() async {
   );
 }
 
-final purchasesConfiguration = PurchasesConfiguration('goog_yaidSqdYePZHGMtePEiJvvUbMBm');
+final purchasesConfiguration = PurchasesConfiguration('goog_JAECeoDvUtPzyJCMILswDqaphZy');
 
 Future<void> signInAnonymously() async {
   try {
     final mobileDeviceId = await MobileDeviceIdentifier().getDeviceId();
-    // call FirebaseFunctions createCustomToken to obtain a custom token
     final response = await FirebaseFunctions.instance.httpsCallable('createCustomToken').call<Map<String, dynamic>>({
       'uid': mobileDeviceId,
     });
@@ -75,7 +75,6 @@ Future<void> signInAnonymously() async {
     print('User: $userCredential');
   } on FirebaseAuthException catch (e) {
   } on Exception catch (e, st) {
-    // Handle generic exceptions
     debugPrint('Failed to sign in anonymously. Error: $e, StackTrace: $st');
   }
 }
@@ -84,11 +83,34 @@ Future<void> initializePurchases() async {
   try {
     await Purchases.setLogLevel(LogLevel.debug);
     await Purchases.configure(purchasesConfiguration);
-    await RevenueCatUI.presentPaywallIfNeeded("Pro");
+    // await RevenueCatUI.presentPaywallIfNeeded("Pro");
+
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const PaywallView()),
+    // );
+
+    // await _setupIsPro();
   } catch (e) {
     print('Error configuring purchases: $e');
   }
 }
+
+// Future<void> _setupIsPro() async {
+//   try {
+//     CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+//     _updateProStatus(customerInfo);
+//     Purchases.addCustomerInfoUpdateListener(_updateProStatus);
+//   } catch (e) {
+//     print("Error while checking subscription status: $e");
+//   }
+// }
+
+bool isProActive = false;
+// void _updateProStatus(CustomerInfo customerInfo) {
+//   EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+//   isProActive = (entitlement?.isActive ?? false);
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -138,7 +160,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const FuturisticWrapper(child: HomeScreen()),
+      home: FuturisticWrapper(child: HomeScreen(isProActive: isProActive)),
     );
   }
 }

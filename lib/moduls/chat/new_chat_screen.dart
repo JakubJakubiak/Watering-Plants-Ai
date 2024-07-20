@@ -34,16 +34,16 @@ class _NewChatScreenState extends State<NewChatScreen> {
               width: 300,
               height: 300,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.blueAccent.withOpacity(0.1),
-                    Colors.purpleAccent.withOpacity(0.1),
-                  ],
-                ),
+                // gradient: LinearGradient(
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.bottomRight,
+                //   colors: [
+                //     Colors.blueAccent.withOpacity(0.1),
+                //     Colors.purpleAccent.withOpacity(0.1),
+                //   ],
+                // ),
                 borderRadius: BorderRadius.circular(20.0),
-                // border: Border.all(color: Colors.white24),
+                border: Border.all(width: 2, color: Colors.white70),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +85,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                         }
                       }),
                   const VerticalDivider(
-                    // thickness: 1,
+                    thickness: 2,
                     color: Colors.white70,
                   ),
                   ElevatedButton(

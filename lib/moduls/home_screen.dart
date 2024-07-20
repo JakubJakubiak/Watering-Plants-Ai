@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:PlantsAI/main.dart';
-import 'package:PlantsAI/moduls/History.dart';
 import 'package:PlantsAI/moduls/chat/chat_history_screen.dart';
 import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
 import 'package:PlantsAI/moduls/game_over_dialog.dart';
+import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +16,8 @@ import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isProActive;
+  HomeScreen({super.key, required this.isProActive});
 
   get counter => null;
 
@@ -51,6 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _createBanerAd();
     _loadRewardedAd();
     // _setupIsPro();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showPaywallIfNeeded();
+    });
+
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
         try {
@@ -60,6 +66,19 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+  }
+
+  Future<void> _showPaywallIfNeeded() async {
+    // check if user is pro
+    final navigator = Navigator.of(context);
+    Offerings offerings = await Purchases.getOfferings();
+    final offering = offerings.current;
+
+    if (offering == null) return;
+
+    navigator.push(
+      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+    );
   }
 
   // Future<void> _setupIsPro() async {

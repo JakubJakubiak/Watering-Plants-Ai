@@ -148,7 +148,11 @@ class GameOverDialog extends StatelessWidget {
                               final offering = offerings.current;
 
                               if (offering != null) {
-                                await RevenueCatUI.presentPaywallIfNeeded("Pro", offering: offering);
+                                // await RevenueCatUI.presentPaywallIfNeeded("Pro", offering: offering);
+
+                                // navigator.push(
+                                //   MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+                                // );
                               }
                             }
                           } catch (e) {
