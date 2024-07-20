@@ -89,6 +89,7 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
                 _buildBenefits(),
                 const SizedBox(height: 16),
                 _buildProductList(),
+                const SizedBox(height: 16),
                 _buildUpgradeButton(),
                 _buildFooter(),
               ],
@@ -125,8 +126,8 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
         ScaleTransition(
           scale: _scaleAnimation,
           child: const Icon(
-            Icons.bug_report,
-            size: 60,
+            Icons.eco,
+            size: 80,
             color: Colors.green,
           ),
         ),
@@ -170,7 +171,7 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
             isSelected: _selectedProduct == widget.offering.weekly,
             onTap: () => setState(() => _selectedProduct = widget.offering.weekly),
           ),
-      ],
+      ].separated(const SizedBox(height: 16)),
     );
   }
 
@@ -178,9 +179,19 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
     return ElevatedButton(
       onPressed: _isLoading ? null : _handleUpgrade,
       style: ElevatedButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: const Size(double.infinity, 50),
+        padding: EdgeInsets.zero,
       ),
-      child: _isLoading ? const CircularProgressIndicator() : const Text('Upgrade Now'),
+      child: _isLoading
+          ? const CircularProgressIndicator()
+          : const Text(
+              'Upgrade Now',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
     );
   }
 
@@ -216,12 +227,12 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
     Purchases.restorePurchases();
   }
 
-  void _showTerms() async{
+  void _showTerms() async {
     // Show terms and conditions dialog
     const url = "https://www.google.com";
 
     if (await canLaunchUrlString(url)) {
-        launchUrlString(url);
+      launchUrlString(url);
     }
   }
 
@@ -261,7 +272,7 @@ class BenefitRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Icon(icon, color: Colors.red),
+          Icon(icon, color: Colors.green),
           const SizedBox(width: 8),
           Text(title),
         ],
@@ -292,7 +303,6 @@ class ProductView extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
@@ -370,5 +380,20 @@ class ProductView extends StatelessWidget {
   String _getPriceText() {
     // Implement logic to get the price text
     return '${product.storeProduct.priceString} / ${_getPeriodText()}';
+  }
+}
+
+extension SeparatedWidgets on List<Widget> {
+  List<Widget> separated(Widget separator) {
+    if (isEmpty) return [];
+    if (length == 1) return this;
+
+    return List.generate(length * 2 - 1, (index) {
+      if (index.isEven) {
+        return this[index ~/ 2];
+      } else {
+        return separator;
+      }
+    });
   }
 }
