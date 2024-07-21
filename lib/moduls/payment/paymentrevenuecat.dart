@@ -150,11 +150,11 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   Widget _buildBenefits() {
     return const Column(
       children: [
-        BenefitRow(title: 'Unlimited Identifications', icon: Icons.compost),
+        BenefitRow(title: 'Unlimited Identifications plants', icon: Icons.compost),
         BenefitRow(title: 'Limitless Chat Messages', icon: Icons.chat_bubble),
-        BenefitRow(title: 'Limitless Chat Messages', icon: Icons.grass),
-        BenefitRow(title: 'Limitless Chat Messages', icon: Icons.forest),
-        BenefitRow(title: 'Ad-Free Experience', icon: Icons.block),
+        BenefitRow(title: 'Tips for watering a flower', icon: Icons.grass),
+        BenefitRow(title: 'Tree recognition in the park', icon: Icons.forest),
+        BenefitRow(title: 'Experience without annoying advertising', icon: Icons.block),
       ],
     );
   }
