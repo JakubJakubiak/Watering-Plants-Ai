@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -19,22 +20,21 @@ class HomeScreen extends StatefulWidget {
   final bool isProActive;
   HomeScreen({super.key, required this.isProActive});
 
-  get counter => null;
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
-  int counter = 5;
+  int counter = 0;
+
+  bool get isPro => widget.isProActive;
 
   BannerAd? _banner;
   RewardedAd? _rewardedAd;
   bool renderActive = false;
-  bool isPro = false;
+  // bool isPro = true;
 
-  int currentHealth = 0;
   int score = 0;
   int currentIndex = 0;
   List<Map<String, dynamic>> generatedHistory = [];
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   void _createBanerAd() {
-    if (!Constants.adsEnabled) return;
+    if (!Constants.adsEnabled || !isPro) return;
     _banner = BannerAd(
       size: AdSize.fullBanner,
       adUnitId: AdMobService.bannerAdUnitId,
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadRewardedAd() async {
-    if (!Constants.adsEnabled) return;
+    if (!Constants.adsEnabled || !isPro) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
       request: const AdRequest(),
@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             ActionChip(
               avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
-              label: Text('$tokens uses'),
+              label: isPro ? const Text('∞') : Text('$tokens uses'),
               side: const BorderSide(
                 color: Colors.blueAccent,
                 width: 2,
