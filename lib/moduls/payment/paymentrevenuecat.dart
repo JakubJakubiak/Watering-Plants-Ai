@@ -216,11 +216,30 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
     );
   }
 
+  Future<void> _setupIsPro() async {
+    try {
+      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+      _updateProStatus(customerInfo);
+      Purchases.addCustomerInfoUpdateListener(_updateProStatus);
+    } catch (e) {
+      print("Error while checking subscription status: $e");
+    }
+  }
+
+  bool isProActive = false;
+  void _updateProStatus(CustomerInfo customerInfo) {
+    EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+    isProActive = (entitlement?.isActive ?? false);
+  }
+
   void _handleUpgrade() async {
     if (_selectedProduct == null) return;
     setState(() => _isLoading = true);
     try {
-      await Purchases.purchaseStoreProduct(_selectedProduct!.storeProduct);
+      final customerInfo = await Purchases.purchaseStoreProduct(_selectedProduct!.storeProduct);
+      if (customerInfo.entitlements.all['Pro']?.isActive ?? false) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       print(e);
     } finally {
