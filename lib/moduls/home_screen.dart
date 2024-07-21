@@ -86,26 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Future<void> _setupIsPro() async {
-  //   DocumentSnapshot userDoc = await _firestore.collection('users').doc(userid).get();
-  //   print(userDoc);
-  //   try {
-  //     CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-  //     _updateProStatus(customerInfo);
-  //     Purchases.addCustomerInfoUpdateListener(_updateProStatus);
-  //   } catch (e) {
-  //     print("Error while checking subscription status: $e");
-  //   }
-  // }
-
-  // void _updateProStatus(CustomerInfo customerInfo) {
-  //   EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
-  //   bool isProActive = (entitlement?.isActive ?? false);
-  //   setState(() {
-  //     isPro = isProActive;
-  //   });
-  // }
-
   void _createBanerAd() {
     if (!Constants.adsEnabled || !isPro) return;
     _banner = BannerAd(
@@ -224,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             ActionChip(
               avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
-              label: isPro ? const Text('∞') : Text('$tokens uses'),
+              label: isPro ? const Text('Pro') : Text('$tokens uses'),
               side: const BorderSide(
                 color: Colors.blueAccent,
                 width: 2,
