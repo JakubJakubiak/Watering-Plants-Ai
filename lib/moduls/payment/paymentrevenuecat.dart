@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purchases_flutter/models/offering_wrapper.dart';
-import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -57,14 +55,12 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   }
 
   void _startCooldownTimer() {
-    Future.delayed(const Duration(milliseconds: 600), () {
+    setState(() {
+      _progress = 0.1;
+    });
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
-        _progress = 1.0;
-      });
-      Future.delayed(const Duration(seconds: 5), () {
-        setState(() {
-          _showCloseButton = true;
-        });
+        _showCloseButton = true;
       });
     });
   }
@@ -105,17 +101,25 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
       alignment: Alignment.topRight,
       child: widget.hasCooldown && !_showCloseButton
           ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                value: _progress,
-                strokeWidth: 3,
-                backgroundColor: Colors.grey.withOpacity(0.1),
-              ),
+              width: 30,
+              height: 30,
+              child: TweenAnimationBuilder(
+                  duration: const Duration(seconds: 5),
+                  tween: Tween<double>(begin: 0.0, end: 1.0),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: CircularProgressIndicator(
+                        value: value,
+                        strokeWidth: 3,
+                        backgroundColor: Colors.grey.withOpacity(0.1),
+                      ),
+                    );
+                  }),
             )
-          : IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
+          : GestureDetector(
+              child: const Icon(Icons.close, size: 30),
+              onTap: () => Navigator.of(context).pop(),
             ),
     );
   }
@@ -146,10 +150,11 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   Widget _buildBenefits() {
     return const Column(
       children: [
-        BenefitRow(title: 'Unlimited Identifications', icon: Icons.search),
+        BenefitRow(title: 'Unlimited Identifications', icon: Icons.compost),
         BenefitRow(title: 'Limitless Chat Messages', icon: Icons.chat_bubble),
+        BenefitRow(title: 'Limitless Chat Messages', icon: Icons.grass),
+        BenefitRow(title: 'Limitless Chat Messages', icon: Icons.forest),
         BenefitRow(title: 'Ad-Free Experience', icon: Icons.block),
-        BenefitRow(title: 'Become a Pro User', icon: Icons.star),
       ],
     );
   }
@@ -347,7 +352,11 @@ class ProductView extends StatelessWidget {
                 ),
                 child: Text(
                   'SAVE $discountPercent%',
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             const SizedBox(width: 8),
