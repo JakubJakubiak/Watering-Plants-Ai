@@ -235,10 +235,11 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   void _handleUpgrade() async {
     if (_selectedProduct == null) return;
     setState(() => _isLoading = true);
+    final navigator = Navigator.of(context);
     try {
       final customerInfo = await Purchases.purchaseStoreProduct(_selectedProduct!.storeProduct);
       if (customerInfo.entitlements.all['Pro']?.isActive ?? false) {
-        Navigator.of(context).pop();
+        navigator.pop();
       }
     } catch (e) {
       print(e);

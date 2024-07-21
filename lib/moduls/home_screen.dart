@@ -17,8 +17,7 @@ import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
-  final bool isProActive;
-  HomeScreen({super.key, required this.isProActive});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -28,12 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   int counter = 0;
 
-  bool get isPro => widget.isProActive;
-
   BannerAd? _banner;
   RewardedAd? _rewardedAd;
   bool renderActive = false;
-  // bool isPro = true;
+  bool isPro = false;
 
   int score = 0;
   int currentIndex = 0;
@@ -66,10 +63,18 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+
+    Purchases.addCustomerInfoUpdateListener((customerInfo) {
+      EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+      bool isProActive = (entitlement?.isActive ?? false);
+      setState(() {
+        isPro = isProActive;
+      });
+    });
   }
 
   Future<void> _showPaywallIfNeeded() async {
-    // check if user is pro
+    if (isPro) return;
     final navigator = Navigator.of(context);
     Offerings offerings = await Purchases.getOfferings();
     final offering = offerings.current;

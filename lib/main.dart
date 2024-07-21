@@ -84,26 +84,9 @@ Future<void> initializePurchases() async {
     await Purchases.configure(purchasesConfiguration);
     // await RevenueCatUI.presentPaywallIfNeeded("Pro");
 
-    await _setupIsPro();
   } catch (e) {
     print('Error configuring purchases: $e');
   }
-}
-
-Future<void> _setupIsPro() async {
-  try {
-    CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-    _updateProStatus(customerInfo);
-    Purchases.addCustomerInfoUpdateListener(_updateProStatus);
-  } catch (e) {
-    print("Error while checking subscription status: $e");
-  }
-}
-
-bool isProActive = false;
-void _updateProStatus(CustomerInfo customerInfo) {
-  EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
-  isProActive = (entitlement?.isActive ?? false);
 }
 
 class MyApp extends StatelessWidget {
@@ -154,7 +137,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: FuturisticWrapper(child: HomeScreen(isProActive: isProActive)),
+      home: FuturisticWrapper(child: HomeScreen()),
     );
   }
 }
