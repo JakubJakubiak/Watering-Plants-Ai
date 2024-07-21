@@ -15,7 +15,6 @@ import 'package:PlantsAI/utils/shared_preferences_helper.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
-import 'moduls/payment/paymentrevenuecat.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

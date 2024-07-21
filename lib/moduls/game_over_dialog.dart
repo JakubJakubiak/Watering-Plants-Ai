@@ -1,10 +1,10 @@
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+// import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'home_screen.dart';
 
@@ -23,32 +23,43 @@ class GameOverDialog extends StatelessWidget {
   // final VoidCallback onPlayAgain;
   final void Function(BuildContext dialogContext) onContinuePlaying;
 
-  void _showPremiumUI() {
-    // Your logic to show premium UI
-    print("Showing Premium UI");
-  }
+  // void _showPremiumUI() {
+  //   print("Showing Premium UI");
+  // }
 
-  void _showFreeUI() {
-    // Your logic to show free UI
-    print("Showing Free UI");
-  }
+  // void _showFreeUI() {
+  //   print("Showing Free UI");
+  // }
 
-  Future<void> _checkPremiumStatus() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        IdTokenResult idTokenResult = await user.getIdTokenResult();
-        if (idTokenResult.claims != null && idTokenResult.claims!['activeEntitlements'] != null && idTokenResult.claims!['activeEntitlements'].contains("Subs")) {
-          // Show premium UI.
-          _showPremiumUI();
-        } else {
-          // Show regular user UI.
-          _showFreeUI();
-        }
-      }
-    } catch (error) {
-      print(error);
-    } finally {}
+  // Future<void> _checkPremiumStatus() async {
+  //   try {
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       IdTokenResult idTokenResult = await user.getIdTokenResult();
+  //       if (idTokenResult.claims != null && idTokenResult.claims!['activeEntitlements'] != null && idTokenResult.claims!['activeEntitlements'].contains("Subs")) {
+  //         // Show premium UI.
+  //         _showPremiumUI();
+  //       } else {
+  //         // Show regular user UI.
+  //         _showFreeUI();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   } finally {}
+  // }
+
+  Future<void> _showPaywallIfNeeded(BuildContext context) async {
+    // check if user is pro
+    final navigator = Navigator.of(context);
+    Offerings offerings = await Purchases.getOfferings();
+    final offering = offerings.current;
+
+    if (offering == null) return;
+
+    navigator.push(
+      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+    );
   }
 
   @override
@@ -139,21 +150,21 @@ class GameOverDialog extends StatelessWidget {
                       child: FilledButton(
                         onPressed: () async {
                           try {
-                            CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+                            // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
 
                             if (isPro) {
-                              launchUrl(Uri.parse(customerInfo.managementURL!));
+                              // launchUrl(Uri.parse(customerInfo.managementURL!));
                             } else {
-                              final offerings = await Purchases.getOfferings();
-                              final offering = offerings.current;
+                              _showPaywallIfNeeded(context);
+                              // final navigator = Navigator.of(context);
+                              // Offerings offerings = await Purchases.getOfferings();
+                              // final offering = offerings.current;
 
-                              if (offering != null) {
-                                // await RevenueCatUI.presentPaywallIfNeeded("Pro", offering: offering);
+                              // if (offering == null) return;
 
-                                // navigator.push(
-                                //   MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
-                                // );
-                              }
+                              // navigator.push(
+                              //   MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+                              // );
                             }
                           } catch (e) {
                             print('Error downloading or displaying an offer: ${e.toString()}');
