@@ -224,12 +224,25 @@ class GameOverDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Spacer(),
-              Text(
-                isPro ? 'You have an active subscription' : 'Choose the option that suits you',
-                style: null,
-                textAlign: TextAlign.center,
-              ),
+              // Image.asset('lib/logoicon/icon.png'),
+
+              // Image.network('https://static.vecteezy.com/system/resources/previews/024/684/150/non_2x/ai-generated-anime-girl-transparent-background-png.png'),
+
+              Transform.scale(
+                  scale: 0.5,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.network(
+                        'https://i.imgur.com/eYOBITC.png',
+                        fit: BoxFit.cover,
+                      ))),
+
+              // const Spacer(),
+              // Text(
+              //   isPro ? 'You have an active subscription' : 'Choose the option that suits you',
+              //   style: null,
+              //   textAlign: TextAlign.center,
+              // ),
               const Spacer(),
               _buildGradientCard(
                 context,
@@ -261,10 +274,19 @@ class GameOverDialog extends StatelessWidget {
                   }
                 },
                 gradient: LinearGradient(
-                  colors: isPro ? [Colors.red, Colors.redAccent] : [Color(0xFFFF5E3A), Color(0xFFFF2A68)],
+                  colors: isPro
+                      ? const [
+                          Colors.red,
+                          Colors.redAccent,
+                        ]
+                      : const [
+                          Color(0xFFFF5E3A),
+                          Color(0xFFFF2A68),
+                        ],
                 ),
               ),
-              const SizedBox(height: 24),
+              // const SizedBox(height: 24),
+              const Spacer(),
               // ElevatedButton.icon(
               //   onPressed: () => _showContinuePlayingDialog(context),
               //   icon: const Icon(Icons.play_arrow),
