@@ -67,7 +67,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const NewChatScreen(),
+            builder: (context) => NewChatScreen(),
           ));
         },
       ),

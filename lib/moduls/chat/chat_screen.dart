@@ -41,6 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final int tokens = Provider.of<int>(context);
     return StreamBuilder<Chat>(
         stream: context.read<ChatNotifier>().watchChat(widget.chatId),
         builder: (context, snapshot) {
@@ -134,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.all(8.0),
                     child: Text('Getting first message...'),
                   ),
-                if (quickQuestions.isNotEmpty)
+                if (quickQuestions.isNotEmpty && tokens > 0)
                   SizedBox(
                     height: 48,
                     child: ListView.builder(
@@ -160,28 +161,36 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _messageController,
-                          decoration: const InputDecoration(hintText: 'Type a message'),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () {
-                          if (_messageController.text.isNotEmpty) {
-                            context.read<ChatNotifier>().sendMessage(
-                                  widget.chatId,
-                                  _messageController.text,
-                                );
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                  child: tokens > 0
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _messageController,
+                                decoration: const InputDecoration(hintText: 'Type a message'),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.send),
+                              onPressed: () {
+                                if (_messageController.text.isNotEmpty) {
+                                  context.read<ChatNotifier>().sendMessage(
+                                        widget.chatId,
+                                        _messageController.text,
+                                      );
+                                  _messageController.clear();
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      : const Column(children: [
+                          Text(
+                            "You have 0 usage, watch an ad or subscribe",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16.0),
+                          )
+                        ]),
                 ),
               ],
             ),

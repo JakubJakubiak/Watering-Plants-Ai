@@ -191,14 +191,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = Provider.of<int>(context);
+    final int tokens = Provider.of<int>(context);
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
         const NewChatScreen(),
         ChatHistoryScreen(key: UniqueKey()),
       ];
-      print('/////isPro///////////$isPro');
       return Scaffold(
         appBar: AppBar(
           actions: [

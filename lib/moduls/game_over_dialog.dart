@@ -12,20 +12,12 @@ class GameOverDialog extends StatelessWidget {
   const GameOverDialog({
     super.key,
     required this.score,
-    // required this.onPlayAgain,
     required this.onContinuePlaying,
     required this.isPro,
-    // required this.limitAdmob
   });
   final int score;
   final bool isPro;
-  // final int limitAdmob;
-  // final VoidCallback onPlayAgain;
   final void Function(BuildContext dialogContext) onContinuePlaying;
-
-  // void _showPremiumUI() {
-  //   print("Showing Premium UI");
-  // }
 
   void _showFreeUI() {
     print("Showing Free UI");
