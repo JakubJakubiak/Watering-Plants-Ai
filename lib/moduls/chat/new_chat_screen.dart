@@ -1,6 +1,6 @@
 import 'dart:io';
 
-// import 'package:PlantsAI/moduls/chat/CameraButton%20.dart';
+// import 'package:PlantsAI/moduls/chat/CameraButton.dart';
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:flutter/material.dart';
@@ -99,11 +99,19 @@ class _NewChatScreenState extends State<NewChatScreen> {
                       color: Colors.white70,
                     ),
                     onPressed: () async {
+                      XFile? files;
                       try {
                         final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
                           context,
                           pickerConfig: CameraPickerConfig(
                             enableRecording: false,
+                            enablePinchToZoom: true,
+                            onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
+                              print('XFile captured: ${capturedFile.path}');
+                              files = capturedFile;
+                              Navigator.of(context).pop();
+                              return true;
+                            },
                             resolutionPreset: ResolutionPreset.medium,
                             imageFormatGroup: ImageFormatGroup.jpeg,
                             preferredLensDirection: CameraLensDirection.back,
@@ -113,29 +121,35 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             ),
                           ),
                         );
+                        // if (pickedAsset == null) {
+                        //   debugPrint("cted.");
+                        //   return;
+                        // }
 
-                        if (pickedAsset == null) {
-                          debugPrint("No image selected.");
+                        if (files == null) {
+                          debugPrint("cted.");
                           return;
                         }
 
-                        final file = await pickedAsset.file;
-                        if (file == null) {
-                          debugPrint("Failed to get file from asset.");
-                          return;
-                        }
+                        // final file = await pickedAsset.file;
+                        // final String file = '${files?.path}';
 
-                        debugPrint('Image selected: ${file.path}');
+                        // if (file == null) {
+                        //   debugPrint("Failed to get file from asset.");
+                        //   return;
+                        // }
+
+                        // debugPrint('Image selected: ${files?.path}');
 
                         final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
-                        final chat = await chatNotifier.createChat(file.path, "What plant is in the photo?");
+                        final chat = await chatNotifier.createChat('${files?.path}', "What plant is in the photo?");
 
                         await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ChatScreen(
                               chatId: chat.id,
                               isNewChat: true,
-                              imagePath: file.path,
+                              imagePath: files?.path,
                             ),
                           ),
                         );

@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _createBanerAd() {
-    if (!Constants.adsEnabled || !isPro) return;
+    if (!Constants.adsEnabled || isPro) return;
     _banner = BannerAd(
       size: AdSize.fullBanner,
       adUnitId: AdMobService.bannerAdUnitId,
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadRewardedAd() async {
-    if (!Constants.adsEnabled || !isPro) return;
+    if (!Constants.adsEnabled || isPro) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
       request: const AdRequest(),
@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const NewChatScreen(),
         ChatHistoryScreen(key: UniqueKey()),
       ];
-
+      print('/////isPro///////////$isPro');
       return Scaffold(
         appBar: AppBar(
           actions: [
