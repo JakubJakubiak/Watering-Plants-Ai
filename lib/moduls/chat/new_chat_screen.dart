@@ -106,12 +106,6 @@ class _NewChatScreenState extends State<NewChatScreen> {
                           pickerConfig: CameraPickerConfig(
                             enableRecording: false,
                             enablePinchToZoom: true,
-                            onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
-                              print('XFile captured: ${capturedFile.path}');
-                              files = capturedFile;
-                              Navigator.of(context).pop();
-                              return true;
-                            },
                             resolutionPreset: ResolutionPreset.medium,
                             imageFormatGroup: ImageFormatGroup.jpeg,
                             preferredLensDirection: CameraLensDirection.back,
@@ -119,6 +113,12 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             theme: ThemeData(
                               colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
                             ),
+                            onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
+                              print('XFile captured: ${capturedFile.path}');
+                              files = capturedFile;
+                              Navigator.of(context).pop();
+                              return true;
+                            },
                           ),
                         );
                         // if (pickedAsset == null) {

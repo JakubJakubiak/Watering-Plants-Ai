@@ -8,7 +8,7 @@ class AdMobService {
       return 'ca-app-pub-3940256099942544/2934735716'; // test ad ID
     }
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5915784054696948/8335435102';
+      return 'ca-app-pub-5915784054696948/6052949323';
     } else if (Platform.isIOS) {
       return 'ca-app-pub-5915784054696948/9426559499';
     } else {
@@ -19,7 +19,7 @@ class AdMobService {
   static String get interstitialAdUnitId {
     if (kDebugMode) return 'ca-app-pub-3940256099942544/5354046379';
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5915784054696948/2504254426';
+      return 'ca-app-pub-5915784054696948/8104397590';
     } else if (Platform.isIOS) {
       return '';
     } else {
@@ -30,7 +30,7 @@ class AdMobService {
   static String get rewardedAdUnitID {
     if (kDebugMode) return 'ca-app-pub-3940256099942544/5224354917';
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5915784054696948/2504254426';
+      return 'ca-app-pub-5915784054696948/8104397590';
     } else if (Platform.isIOS) {
       return 'ca-app-pub-5915784054696948/6894892781';
     } else {
