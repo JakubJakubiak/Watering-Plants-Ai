@@ -18,6 +18,8 @@ import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,29 +93,15 @@ Future<void> initializePurchases() async {
   }
 }
 
-final supportedLanguages = {
-  'en': const Locale('en'),
-  'pl': const Locale('pl'),
-};
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Locale systemLocale = PlatformDispatcher.instance.locale;
-    print('//////systemLocale////////$systemLocale');
-    print('//////systemLocale////////${supportedLanguages.values.toList()}');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Caption',
-      locale: systemLocale,
-      supportedLocales: supportedLanguages.values.toList(),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      // locale: systemLocale,
       theme: ThemeData(
         brightness: Brightness.dark,
         // brightness: Brightness.light,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:PlantsAI/main.dart';
 import 'package:PlantsAI/moduls/chat/chat_history_screen.dart';
@@ -103,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _createBanerAd() {
-    if (!Constants.adsEnabled || isPro) return;
+    if (!Constants.adsEnabled || !isPro) return;
     _banner = BannerAd(
       size: AdSize.fullBanner,
       adUnitId: AdMobService.bannerAdUnitId,
@@ -170,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadRewardedAd() async {
-    if (!Constants.adsEnabled || isPro) return;
+    if (!Constants.adsEnabled || !isPro) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
       request: const AdRequest(),

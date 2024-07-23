@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/models/response_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 class ChatRepository {
   final ChatDatabase _db;
@@ -28,7 +30,6 @@ class ChatRepository {
     // Create a new chat
     final chat = await _db.into(_db.chats).insertReturning(ChatsCompanion.insert(
           name: '',
-          // iconChat: Value(imagePath),
           quickQuestions: const Value([]),
           createdAt: DateTime.now(),
           imagePath: Value(imagePath),
@@ -51,9 +52,11 @@ class ChatRepository {
     final File imageFile = File(imagePath);
     final List<int> imageBytes = await imageFile.readAsBytes();
     final String base64Image = base64Encode(imageBytes);
+    final systemLocale = await getLanguageName(locale);
 
     final botResponse = await _firebaseFunctions.httpsCallable('createChat').call({
       'image': base64Image,
+      "language": systemLocale,
     });
 
     final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
@@ -70,6 +73,25 @@ class ChatRepository {
         ));
   }
 
+  final Locale locale = PlatformDispatcher.instance.locale;
+  Future<String> getLanguageName(Locale locale) async {
+    final Map<String, String> languageNames = {
+      'en': 'English',
+      'pl': 'Polski',
+      'es': 'Spanish',
+      'de': 'German',
+      'fr': 'French',
+      'ar': 'Arabic',
+      'as': 'India',
+      'ja': 'Japanese',
+      'zh': 'China',
+      'uk': 'Ukrainian',
+    };
+
+    String languageCode = locale.toString().substring(0, 2);
+    return languageNames[languageCode] ?? 'English';
+  }
+
   Future<void> sendMessage(int chatId, String content) async {
     // Create new user message
     final userMessage = MessagesCompanion.insert(
@@ -82,6 +104,8 @@ class ChatRepository {
     await _db.updateLastMessage(chatId, content);
 
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
+    // final Locale systemLocale = PlatformDispatcher.instance.locale;
+    final systemLocale = await getLanguageName(locale);
 
     final botResponse = await _firebaseFunctions.httpsCallable('sendMessage').call({
       'chatHistory': chatHistory
@@ -90,6 +114,7 @@ class ChatRepository {
                 'role': m.isUserMessage ? 'user' : 'assistant',
               })
           .toList(),
+      "language": systemLocale
     });
 
     final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -203,6 +205,21 @@ class GameOverDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final Locale locale = PlatformDispatcher.instance.locale;
+    // String getLanguageName(Locale locale) {
+    //   final Map<String, String> languageNames = {
+    //     'en': 'English',
+    //     'pl': 'Polski',
+    //     'es': 'Spanish',
+    //     'de': 'German',
+    //     'fr': 'French',
+    //   };
+
+    //   String languageCode = locale.toString().substring(0, 2);
+    //   return languageNames[languageCode] ?? 'English';
+    // }
+    // final lenglish = getLanguageName(locale);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Coins and subscriptions'),
