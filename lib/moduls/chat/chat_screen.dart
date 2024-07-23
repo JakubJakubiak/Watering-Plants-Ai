@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:PlantsAI/database/chat_database.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class ChatScreen extends StatefulWidget {
   final int chatId;
@@ -20,10 +21,18 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   bool _isLoading = false;
+  bool isPro = false;
 
   @override
   void initState() {
     super.initState();
+    Purchases.addCustomerInfoUpdateListener((customerInfo) {
+      EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+      bool isProActive = (entitlement?.isActive ?? false);
+      setState(() {
+        isPro = isProActive;
+      });
+    });
     if (widget.isNewChat) {
       _getFirstMessage();
     }
@@ -135,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.all(8.0),
                     child: Text('Getting first message...'),
                   ),
-                if (quickQuestions.isNotEmpty && tokens > 0)
+                if (quickQuestions.isNotEmpty && (tokens > 0 || isPro))
                   SizedBox(
                     height: 48,
                     child: ListView.builder(
@@ -161,7 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: tokens > 0
+                  child: tokens > 0 || isPro
                       ? Row(
                           children: [
                             Expanded(

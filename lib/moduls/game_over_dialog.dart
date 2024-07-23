@@ -238,16 +238,22 @@ class GameOverDialog extends StatelessWidget {
               const Spacer(),
               _buildGradientCard(
                 context,
-                title: 'Add coins',
+                title: isPro ? "Only for No Premiun" : 'Add coins',
                 icon: Icons.monetization_on,
-                onTap: () => _showContinuePlayingDialog(context),
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF005BEA),
-                    Color.fromARGB(197, 0, 197, 251),
-                  ],
+                onTap: () => isPro ? null : _showContinuePlayingDialog(context),
+                gradient: LinearGradient(
+                  colors: isPro
+                      ? const [
+                          Color.fromARGB(255, 62, 64, 68),
+                          Color.fromARGB(197, 1, 14, 18),
+                        ]
+                      : const [
+                          Color(0xFF005BEA),
+                          Color.fromARGB(197, 0, 197, 251),
+                        ],
                 ),
               ),
+
               const SizedBox(height: 16),
               _buildGradientCard(
                 context,

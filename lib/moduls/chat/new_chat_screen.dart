@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 // import 'package:PlantsAI/moduls/chat/CameraButton.dart';
@@ -15,8 +16,8 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:PlantsAI/moduls/game_over_dialog.dart';
 
 class NewChatScreen extends StatefulWidget {
-  // final int tokens ;
-  const NewChatScreen({super.key});
+  final bool isProlocal;
+  const NewChatScreen({super.key, this.isProlocal = false});
 
   @override
   State<NewChatScreen> createState() => _NewChatScreenState();
@@ -24,11 +25,12 @@ class NewChatScreen extends StatefulWidget {
 
 class _NewChatScreenState extends State<NewChatScreen> {
   final imagePicker = ImagePicker();
+  get isPro => widget.isProlocal;
   final timeMilliseconds = const Duration(milliseconds: 250);
+
   @override
   Widget build(BuildContext context) {
     final int tokens = Provider.of<int>(context);
-    // const int tokens = 0;
     return Scaffold(
       appBar: AppBar(title: const Text('New Plant Identification')),
       body: Center(
@@ -50,7 +52,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
               borderRadius: BorderRadius.circular(20.0),
               border: Border.all(width: 2, color: Colors.white70),
             ),
-            child: tokens > 0
+            child: (tokens > 0 || isPro)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

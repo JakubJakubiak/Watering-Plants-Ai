@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _createBanerAd();
     _loadRewardedAd();
-    // _setupIsPro();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showPaywallIfNeeded();
@@ -212,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
-        const NewChatScreen(),
+        NewChatScreen(isProlocal: isPro),
         ChatHistoryScreen(key: UniqueKey()),
       ];
       return Scaffold(
