@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
+import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -67,10 +68,26 @@ class _HomeScreenState extends State<HomeScreen> {
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
       bool isProActive = (entitlement?.isActive ?? false);
+
+      updateSubscription(isProActive);
       setState(() {
         isPro = isProActive;
       });
     });
+  }
+
+  Future<void> updateSubscription(bool isProActive) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String userId = user.uid;
+      try {
+        await _firestore.collection('users').doc(userId).update({
+          'subscription': isProActive,
+        });
+      } catch (e) {
+        print('Error updating subscription: $e');
+      }
+    }
   }
 
   Future<void> _showPaywallIfNeeded() async {

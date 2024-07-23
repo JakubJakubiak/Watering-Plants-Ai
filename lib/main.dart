@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/moduls/home_screen.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
@@ -15,6 +17,7 @@ import 'package:PlantsAI/utils/shared_preferences_helper.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,20 +86,34 @@ Future<void> initializePurchases() async {
     await Purchases.setLogLevel(LogLevel.debug);
     await Purchases.configure(purchasesConfiguration);
     // await RevenueCatUI.presentPaywallIfNeeded("Pro");
-
   } catch (e) {
     print('Error configuring purchases: $e');
   }
 }
+
+final supportedLanguages = {
+  'en': const Locale('en'),
+  'pl': const Locale('pl'),
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Locale systemLocale = PlatformDispatcher.instance.locale;
+    print('//////systemLocale////////$systemLocale');
+    print('//////systemLocale////////${supportedLanguages.values.toList()}');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Caption',
+      locale: systemLocale,
+      supportedLocales: supportedLanguages.values.toList(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         brightness: Brightness.dark,
         // brightness: Brightness.light,
@@ -175,7 +192,7 @@ class RewardedAdProvider with ChangeNotifier {
 }
 
 class CounterModel with ChangeNotifier {
-  int _counter = 0;
+  int _counter = 1;
   int get counter => _counter;
 
   void updateCounter(int counter) {

@@ -85,9 +85,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                           color: message.isUserMessage ? Colors.blue[700] : Colors.green[700],
                                         ),
                                       ),
-                                      SizedBox(height: 4),
+                                      const SizedBox(height: 4),
                                       Container(
-                                        padding: EdgeInsets.all(12),
+                                        padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
                                           color: message.isUserMessage ? Colors.blue[700] : Colors.grey[900],
                                           borderRadius: BorderRadius.circular(12),
@@ -105,11 +105,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
-                                            if (message.imagePath != null) SizedBox(height: 8),
+                                            if (message.imagePath != null) const SizedBox(height: 8),
                                             MarkdownBody(
                                               data: message.content,
                                               styleSheet: MarkdownStyleSheet(
-                                                p: TextStyle(fontSize: 16),
+                                                p: const TextStyle(fontSize: 16),
                                               ),
                                             ),
                                           ],
