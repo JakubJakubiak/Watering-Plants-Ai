@@ -7,9 +7,9 @@ import 'package:PlantsAI/utils/gaps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
-// import 'package:camera/camera.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -27,6 +27,35 @@ class _NewChatScreenState extends State<NewChatScreen> {
   final imagePicker = ImagePicker();
   get isPro => widget.isProlocal;
   final timeMilliseconds = const Duration(milliseconds: 250);
+
+  // final InAppReview inAppReview = InAppReview.instance;
+
+  // openRatingDialog() async {
+  //   print("Rozpoczęcie funkcji openRatingDialog");
+
+  //   try {
+  //     bool isAvailable = await inAppReview.isAvailable();
+  //     print("isAvailable: $isAvailable");
+  //     await inAppReview.openStoreListing(
+  //       appStoreId: 'com.inu.plantsai',
+  //     );
+
+  //     if (isAvailable) {
+  //       print("InAppReview jest dostępne");
+  //       await inAppReview.requestReview();
+  //       print("Wywołano requestReview");
+  //     } else {
+  //       print("InAppReview nie jest dostępne, otwieram stronę w sklepie");
+  //       await inAppReview.openStoreListing(
+  //         appStoreId: 'com.inu.plantsai',
+  //       );
+  //     }
+  //   } catch (e) {
+  //     print("Wystąpił błąd: $e");
+  //   }
+
+  //   print("Zakończenie funkcji openRatingDialog");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -122,32 +151,17 @@ class _NewChatScreenState extends State<NewChatScreen> {
                                   colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
                                 ),
                                 onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
-                                  print('XFile captured: ${capturedFile.path}');
                                   files = capturedFile;
                                   Navigator.of(context).pop();
                                   return true;
                                 },
                               ),
                             );
-                            // if (pickedAsset == null) {
-                            //   debugPrint("cted.");
-                            //   return;
-                            // }
 
                             if (files == null) {
                               debugPrint("cted.");
                               return;
                             }
-
-                            // final file = await pickedAsset.file;
-                            // final String file = '${files?.path}';
-
-                            // if (file == null) {
-                            //   debugPrint("Failed to get file from asset.");
-                            //   return;
-                            // }
-
-                            // debugPrint('Image selected: ${files?.path}');
 
                             final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
                             final chat = await chatNotifier.createChat('${files?.path}', "What plant is in the photo?");

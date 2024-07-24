@@ -67,6 +67,9 @@ dependencies:
     sdk: flutter
   lottie: ^3.1.2
   flutter_rating_bar: ^4.0.1
+  in_app_review: ^2.0.9
+  animated_text_kit: ^4.2.2
+  loading_indicator: ^3.1.1
 
 
 

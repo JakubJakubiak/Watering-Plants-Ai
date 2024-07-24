@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:PlantsAI/moduls/admob_service.dart';
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> generatedHistory = [];
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final InAppReview inAppReview = InAppReview.instance;
   late StreamSubscription<DocumentSnapshot> _tokensSubscription;
 
   User? user;
@@ -175,6 +176,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadRewardedAd() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    }
     if (isPro || !Constants.adsEnabled) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
