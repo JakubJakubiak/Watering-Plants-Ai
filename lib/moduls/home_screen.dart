@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _createBanerAd() {
-    if (!Constants.adsEnabled || !isPro) return;
+    if (isPro || !Constants.adsEnabled) return;
     _banner = BannerAd(
       size: AdSize.fullBanner,
       adUnitId: AdMobService.bannerAdUnitId,
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadRewardedAd() async {
-    if (!Constants.adsEnabled || !isPro) return;
+    if (isPro || !Constants.adsEnabled) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
       request: const AdRequest(),
@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 double bannerHeight = 60;
                 double bannerWidth = constraints.maxWidth;
 
-                return (_banner == null && renderActive == false)
+                return (_banner == null && renderActive == false || isPro)
                     ? Container(height: 0)
                     : SizedBox(
                         height: bannerHeight,
