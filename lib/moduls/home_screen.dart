@@ -57,16 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
       turialOneScrine();
     });
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => TutorialScreen()));
-    // });
-
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
         try {
-          final idRevenuecat = await Purchases.logIn(user.uid);
-          _saveUserIDRevenuecat('$idRevenuecat');
-          print('User ID: ${user.uid}');
+          await Purchases.logIn(user.uid);
+          _saveUserIDRevenuecat(user.uid);
         } catch (e) {
           print("Sign in error: ${e.toString()}");
         }
@@ -75,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
-      print('///////entitlement/////////$entitlement');
       bool isProActive = (entitlement?.isActive ?? false);
       setState(() {
         isPro = isProActive;
