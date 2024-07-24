@@ -3,6 +3,7 @@ import 'dart:io';
 
 // import 'package:PlantsAI/moduls/chat/CameraButton.dart';
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
+import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -28,34 +30,17 @@ class _NewChatScreenState extends State<NewChatScreen> {
   get isPro => widget.isProlocal;
   final timeMilliseconds = const Duration(milliseconds: 250);
 
-  // final InAppReview inAppReview = InAppReview.instance;
+  Future<void> _showPaywallIfNeeded() async {
+    final navigator = Navigator.of(context);
+    Offerings offerings = await Purchases.getOfferings();
+    final offering = offerings.current;
 
-  // openRatingDialog() async {
-  //   print("Rozpoczęcie funkcji openRatingDialog");
+    if (offering == null) return;
 
-  //   try {
-  //     bool isAvailable = await inAppReview.isAvailable();
-  //     print("isAvailable: $isAvailable");
-  //     await inAppReview.openStoreListing(
-  //       appStoreId: 'com.inu.plantsai',
-  //     );
-
-  //     if (isAvailable) {
-  //       print("InAppReview jest dostępne");
-  //       await inAppReview.requestReview();
-  //       print("Wywołano requestReview");
-  //     } else {
-  //       print("InAppReview nie jest dostępne, otwieram stronę w sklepie");
-  //       await inAppReview.openStoreListing(
-  //         appStoreId: 'com.inu.plantsai',
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print("Wystąpił błąd: $e");
-  //   }
-
-  //   print("Zakończenie funkcji openRatingDialog");
-  // }
+    navigator.push(
+      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,15 +183,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                         color: Color.fromARGB(179, 213, 36, 36),
                       ),
                       onPressed: () {
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => const GameOverDialog(
-                        //       isPro: false,
-                        //       score: 0,
-                        //       onContinuePlaying: null,
-                        //     ),
-                        //   ));
-
-                        // showGameOverDialog();
+                        _showPaywallIfNeeded();
                       },
                     ),
                     const Text(
