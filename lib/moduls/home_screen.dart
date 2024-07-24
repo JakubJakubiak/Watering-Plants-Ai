@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late StreamSubscription<DocumentSnapshot> _tokensSubscription;
 
   User? user;
-  String userid = "";
 
   @override
   void initState() {
@@ -55,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showPaywallIfNeeded();
-      turialOneEkran();
+      turialOneScrine();
     });
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -65,7 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
         try {
-          await Purchases.logIn(user.uid);
+          final idRevenuecat = await Purchases.logIn(user.uid);
+          _saveUserIDRevenuecat('$idRevenuecat');
+          print('User ID: ${user.uid}');
         } catch (e) {
           print("Sign in error: ${e.toString()}");
         }
@@ -74,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
+      print('///////entitlement/////////$entitlement');
       bool isProActive = (entitlement?.isActive ?? false);
       setState(() {
         isPro = isProActive;
@@ -81,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> turialOneEkran() async {
+  Future<void> turialOneScrine() async {
     bool hasSeenTutorial = await _loadTutorialStatusFromStorage();
     if (!hasSeenTutorial) {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => TutorialScreen()));
@@ -91,6 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> _loadTutorialStatusFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('hasSeenTutorial') ?? false;
+  }
+
+  Future<void> _saveUserIDRevenuecat(String idRevenuecat) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('saveUserIDRevenuecat', idRevenuecat);
   }
 
   Future<void> _showPaywallIfNeeded() async {

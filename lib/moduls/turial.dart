@@ -27,7 +27,7 @@ class _TutorialScreenState extends State<TutorialScreen> with SingleTickerProvid
 
   Future<void> _markTutorialAsCompleted() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('hasSeenTutorial', false);
+    await prefs.setBool('hasSeenTutorial', true);
   }
 
   @override

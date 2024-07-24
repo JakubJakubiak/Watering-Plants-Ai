@@ -7,6 +7,8 @@ import 'package:PlantsAI/models/response_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatRepository {
   final ChatDatabase _db;
@@ -53,10 +55,12 @@ class ChatRepository {
     final List<int> imageBytes = await imageFile.readAsBytes();
     final String base64Image = base64Encode(imageBytes);
     final systemLocale = await getLanguageName(locale);
+    final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('createChat').call({
       'image': base64Image,
       "language": systemLocale,
+      "revenuecatToken": revenuecatkeyUser,
     });
 
     final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
@@ -92,6 +96,12 @@ class ChatRepository {
     return languageNames[languageCode] ?? 'English';
   }
 
+  Future<String> loadUserIDRevenuecat() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('saveUserIDRevenuecat');
+    return userId ?? "";
+  }
+
   Future<void> sendMessage(int chatId, String content) async {
     // Create new user message
     final userMessage = MessagesCompanion.insert(
@@ -106,6 +116,7 @@ class ChatRepository {
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
     // final Locale systemLocale = PlatformDispatcher.instance.locale;
     final systemLocale = await getLanguageName(locale);
+    final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('sendMessage').call({
       'chatHistory': chatHistory
@@ -114,7 +125,8 @@ class ChatRepository {
                 'role': m.isUserMessage ? 'user' : 'assistant',
               })
           .toList(),
-      "language": systemLocale
+      "language": systemLocale,
+      "revenuecatToken": revenuecatkeyUser,
     });
 
     final responseMessage = ResponseMessage.fromJson(botResponse.data['message'] as String);
