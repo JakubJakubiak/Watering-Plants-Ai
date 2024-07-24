@@ -65,6 +65,8 @@ dependencies:
   wechat_camera_picker: ^4.3.1
   flutter_localizations:
     sdk: flutter
+  lottie: ^3.1.2
+  flutter_rating_bar: ^4.0.1
 
 
 

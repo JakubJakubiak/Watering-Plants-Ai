@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isPro) return;
     final navigator = Navigator.of(context);
     Offerings offerings = await Purchases.getOfferings();
-    final offering = offerings.current; 
+    final offering = offerings.current;
 
     if (offering == null) return;
 

@@ -1,108 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class Step {
-  final String image;
-  final String titlScrin;
-  final String description;
-
-  Step({required this.image, required this.titlScrin, required this.description});
-}
+import 'package:lottie/lottie.dart';
 
 class TutorialScreen extends StatefulWidget {
   @override
   _TutorialScreenState createState() => _TutorialScreenState();
 }
 
-class _TutorialScreenState extends State<TutorialScreen> {
-  int currentStep = 0;
-  List<Step> steps = [
-    Step(image: 'assets/step1.png', titlScrin: 'Step 1 description', description: "ff"),
-    Step(image: 'assets/step2.png', titlScrin: 'Step 2 description', description: "ff"),
-    Step(image: 'assets/step3.png', titlScrin: 'Step 3 description', description: "ff"),
-  ];
+class _TutorialScreenState extends State<TutorialScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
 
-  void nextStep() {
-    setState(() {
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-      } else {
-        Navigator.of(context).pop();
-        _loadTutorialStatusFromStorage();
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    )..repeat(reverse: true);
   }
 
-  Future<bool> _loadTutorialStatusFromStorage() async {
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _markTutorialAsCompleted() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('hasSeenTutorial') ?? false;
+    await prefs.setBool('hasSeenTutorial', false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 50),
+            const Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Take a photo to identify the plant ',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Fast and accurate detection of plant species with a single photo. Simply take a photo and identify!',
+                style: TextStyle(fontSize: 16, color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(steps.length, (index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
-                        width: 12.0,
-                        height: 12.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: currentStep == index ? Colors.white : Colors.grey,
-                        ),
-                      );
-                    }),
-                  ),
-                  const Spacer(),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      steps[currentStep].titlScrin,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                  const Icon(Icons.grass, color: Colors.green, size: 200),
+                  Positioned(
+                    right: 40,
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 20 * _animationController.value),
+                          child: const Icon(Icons.phone_android_rounded, color: Color.fromARGB(255, 183, 203, 183), size: 200),
+                        );
+                      },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      steps[currentStep].description,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Image.asset(
-                    steps[currentStep].image,
-                    height: 200,
-                    width: 200,
-                  ),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: nextStep,
-                    child: Text(currentStep < steps.length - 1 ? 'Continue' : 'Complete'),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                  ),
-                  Spacer(),
                 ],
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  _markTutorialAsCompleted();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Continue'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  textStyle: TextStyle(fontSize: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
