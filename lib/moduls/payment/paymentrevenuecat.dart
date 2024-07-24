@@ -154,7 +154,7 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
         BenefitRow(title: 'Limitless Chat Messages', icon: Icons.chat_bubble),
         BenefitRow(title: 'Tips for watering a flower', icon: Icons.grass),
         BenefitRow(title: 'Tree recognition in the park', icon: Icons.forest),
-        BenefitRow(title: 'Experience without annoying advertising', icon: Icons.block),
+        BenefitRow(title: 'Remove annoying paywalls', icon: Icons.block),
       ],
     );
   }

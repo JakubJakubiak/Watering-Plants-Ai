@@ -75,8 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       EntitlementInfo? entitlement = customerInfo.entitlements.all['Pro'];
       bool isProActive = (entitlement?.isActive ?? false);
-
-      updateSubscription(isProActive);
       setState(() {
         isPro = isProActive;
       });
@@ -95,25 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return prefs.getBool('hasSeenTutorial') ?? false;
   }
 
-  Future<void> updateSubscription(bool isProActive) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      String userId = user.uid;
-      try {
-        await _firestore.collection('users').doc(userId).update({
-          'subscription': isProActive,
-        });
-      } catch (e) {
-        print('Error updating subscription: $e');
-      }
-    }
-  }
-
   Future<void> _showPaywallIfNeeded() async {
     if (isPro) return;
     final navigator = Navigator.of(context);
     Offerings offerings = await Purchases.getOfferings();
-    final offering = offerings.current;
+    final offering = offerings.current; 
 
     if (offering == null) return;
 
