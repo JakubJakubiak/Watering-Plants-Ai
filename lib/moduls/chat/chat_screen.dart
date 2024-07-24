@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -38,6 +38,18 @@ class _ChatScreenState extends State<ChatScreen> {
     if (widget.isNewChat) {
       _getFirstMessage();
     }
+  }
+
+  Future<void> _showPaywallIfNeeded() async {
+    final navigator = Navigator.of(context);
+    Offerings offerings = await Purchases.getOfferings();
+    final offering = offerings.current;
+
+    if (offering == null) return;
+
+    navigator.push(
+      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+    );
   }
 
   Future<void> _getFirstMessage() async {
@@ -114,6 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageItem(Message message) {
+    final int tokens = Provider.of<int>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Align(
@@ -162,6 +175,43 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
+              if (tokens <= 0 && !isPro)
+                Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: message.isUserMessage ? const Color.fromARGB(255, 44, 75, 106) : Colors.grey[800],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(children: [
+                      const Text(
+                        "You have reached your daily  limit. Upgrade to premium for  unlimited access",
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            _showPaywallIfNeeded();
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: message.isUserMessage ? Colors.blue[900] : Colors.green[800],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Row(
+                            // mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.lock_open,
+                                color: Color.fromARGB(255, 209, 214, 217),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Unlock Premium',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ))
+                    ])),
             ],
           ),
         ),
@@ -218,35 +268,34 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildInputArea(int tokens) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: tokens > 0 || isPro
-          ? Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(hintText: 'Type a message'),
+        padding: const EdgeInsets.all(8.0),
+        child: (tokens <= 0 && !isPro)
+            ? const Column(children: [
+                Text(
+                  "You have 0 usage, watch an ad or subscribe",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16.0),
+                )
+              ])
+            : Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(hintText: 'Type a message'),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    if (_messageController.text.isNotEmpty) {
-                      _sendMessage(_messageController.text);
-                      _messageController.clear();
-                    }
-                  },
-                ),
-              ],
-            )
-          : const Column(children: [
-              Text(
-                "You have 0 usage, watch an ad or subscribe",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0),
-              )
-            ]),
-    );
+                  IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      if (_messageController.text.isNotEmpty) {
+                        _sendMessage(_messageController.text);
+                        _messageController.clear();
+                      }
+                    },
+                  ),
+                ],
+              ));
   }
 
   void _sendMessage(String message) {
