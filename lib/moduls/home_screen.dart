@@ -6,6 +6,7 @@ import 'package:PlantsAI/moduls/chat/chat_history_screen.dart';
 import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
 import 'package:PlantsAI/moduls/game_over_dialog.dart';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
+import 'package:PlantsAI/moduls/turial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -53,7 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showPaywallIfNeeded();
+      turialOneEkran();
     });
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => TutorialScreen()));
+    // });
 
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
@@ -74,6 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
         isPro = isProActive;
       });
     });
+  }
+
+  Future<void> turialOneEkran() async {
+    bool hasSeenTutorial = await _loadTutorialStatusFromStorage();
+    if (!hasSeenTutorial) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => TutorialScreen()));
+    }
+  }
+
+  Future<bool> _loadTutorialStatusFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('hasSeenTutorial') ?? false;
   }
 
   Future<void> updateSubscription(bool isProActive) async {
