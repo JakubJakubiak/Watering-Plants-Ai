@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   final int chatId;
@@ -22,6 +25,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final InAppReview inAppReview = InAppReview.instance;
   bool _isLoading = false;
   bool isPro = false;
 
@@ -74,9 +78,26 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  _evaluationAPK(int tokens) async {
+    final int randomToken = Random().nextInt(8) + 1;
+
+    if (tokens == randomToken) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int lastPromptTimestamp = prefs.getInt('lastPromptTimestamp') ?? 0;
+      int currentTime = DateTime.now().millisecondsSinceEpoch;
+      const int oneMonthMillis = 30 * 24 * 60 * 60 * 1000;
+
+      if (currentTime - lastPromptTimestamp > oneMonthMillis && await InAppReview.instance.isAvailable()) {
+        await InAppReview.instance.requestReview();
+        prefs.setInt('lastPromptTimestamp', currentTime);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final int tokens = Provider.of<int>(context);
+
     return StreamBuilder<Chat>(
       stream: context.read<ChatNotifier>().watchChat(widget.chatId),
       builder: (context, snapshot) {
@@ -118,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
               if (_isLoading) _buildLoadingIndicator(),
               if (quickQuestions.isNotEmpty && (tokens > 0 || isPro)) _buildQuickQuestionsBar(quickQuestions),
               _buildInputArea(tokens),
+              _evaluationAPK(tokens),
             ],
           ),
         );
@@ -198,7 +220,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                           child: const Row(
-                            // mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
                                 Icons.lock_open,

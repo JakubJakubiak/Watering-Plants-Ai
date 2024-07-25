@@ -30,7 +30,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
   get isPro => widget.isProlocal;
   final timeMilliseconds = const Duration(milliseconds: 250);
 
-  Future<void> _showPaywallIfNeeded() async {
+  _showPaywallIfNeeded() async {
     final navigator = Navigator.of(context);
     Offerings offerings = await Purchases.getOfferings();
     final offering = offerings.current;
@@ -55,14 +55,17 @@ class _NewChatScreenState extends State<NewChatScreen> {
             width: 300,
             height: 300,
             decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   begin: Alignment.topLeft,
-              //   end: Alignment.bottomRight,
-              //   colors: [
-              //     Colors.blueAccent.withOpacity(0.1),
-              //     Colors.purpleAccent.withOpacity(0.1),
-              //   ],
-              // ),
+              //   gradient: const LinearGradient(
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //     colors: [
+              //       // Colors.blueAccent.withOpacity(0.1),
+              //       // Colors.purpleAccent.withOpacity(0.1),
+              //       // Colors.white70,
+              //       // Colors.purpleAccent.withOpacity(0.1),
+              //       // Colors.white70,
+              //     ],
+              //   ),
               borderRadius: BorderRadius.circular(20.0),
               border: Border.all(width: 2, color: Colors.white70),
             ),

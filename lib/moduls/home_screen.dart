@@ -42,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> generatedHistory = [];
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final InAppReview inAppReview = InAppReview.instance;
   late StreamSubscription<DocumentSnapshot> _tokensSubscription;
 
   User? user;
@@ -161,24 +160,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void addPoints() async {
-    // CounterModel counterModel = Provider.of<CounterModel>(context, listen: false);
-    // int counter = counterModel.counter;
     try {
       final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('runPoinst');
       await callable.call();
     } catch (error) {
       print(error);
     }
-    // setState(() {
-    //   counter += 4;
-    //   saveBestScore(counter);
-    // });
   }
 
   Future<void> _loadRewardedAd() async {
-    if (await inAppReview.isAvailable()) {
-      inAppReview.requestReview();
-    }
     if (isPro || !Constants.adsEnabled) return;
     await RewardedAd.load(
       adUnitId: AdMobService.rewardedAdUnitID,
