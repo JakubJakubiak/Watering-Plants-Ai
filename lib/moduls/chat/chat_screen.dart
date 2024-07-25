@@ -79,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _evaluationAPK(int tokens) async {
-    final int randomToken = Random().nextInt(8) + 1;
+    final int randomToken = Random().nextInt(tokens) + 1;
 
     if (tokens == randomToken) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
