@@ -136,10 +136,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   },
                 ),
               ),
-              if (_isLoading) _buildLoadingIndicator(),
+              if (_isLoading) ...[_buildLoadingIndicator(), _evaluationAPK(tokens)],
               if (quickQuestions.isNotEmpty && (tokens > 0 || isPro)) _buildQuickQuestionsBar(quickQuestions),
               _buildInputArea(tokens),
-              _evaluationAPK(tokens),
             ],
           ),
         );
