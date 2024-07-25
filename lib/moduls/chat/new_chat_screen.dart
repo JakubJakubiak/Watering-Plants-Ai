@@ -46,7 +46,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
   Widget build(BuildContext context) {
     final int tokens = Provider.of<int>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('New Plant Identification')),
+      // appBar: AppBar(title: const Text('New Plant Identification')),
       body: Center(
           child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

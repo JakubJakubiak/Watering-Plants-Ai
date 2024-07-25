@@ -78,23 +78,23 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  _evaluationAPK(int tokens) async {
-    final int randomToken = Random().nextInt(tokens) + 1;
+  // _evaluationAPK(int tokens) async {
+  //   final int randomToken = Random().nextInt(tokens) + 1;
 
-    if (tokens == randomToken) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int lastPromptTimestamp = prefs.getInt('lastPromptTimestamp') ?? 0;
-      int currentTime = DateTime.now().millisecondsSinceEpoch;
-      const int oneMonthMillis = 30 * 24 * 60 * 60 * 1000;
+  //   if (tokens == randomToken) {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     int lastPromptTimestamp = prefs.getInt('lastPromptTimestamp') ?? 0;
+  //     int currentTime = DateTime.now().millisecondsSinceEpoch;
+  //     const int oneMonthMillis = 30 * 24 * 60 * 60 * 1000;
 
-      if (currentTime - lastPromptTimestamp > oneMonthMillis && await InAppReview.instance.isAvailable()) {
-        await InAppReview.instance.requestReview();
-        prefs.setInt('lastPromptTimestamp', currentTime);
-      }
-    } else {
-      return;
-    }
-  }
+  //     if (currentTime - lastPromptTimestamp > oneMonthMillis && await InAppReview.instance.isAvailable()) {
+  //       await InAppReview.instance.requestReview();
+  //       prefs.setInt('lastPromptTimestamp', currentTime);
+  //     }
+  //   } else {
+  //     return;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
