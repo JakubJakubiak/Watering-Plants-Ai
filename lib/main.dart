@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
-                color: Colors.blueAccent.withOpacity(0.5),
+                color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
                 blurRadius: 10,
               ),
             ],
@@ -142,7 +142,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: FuturisticWrapper(child: HomeScreen()),
+      home: const FuturisticWrapper(child: HomeScreen()),
     );
   }
 }

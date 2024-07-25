@@ -91,6 +91,8 @@ class _ChatScreenState extends State<ChatScreen> {
         await InAppReview.instance.requestReview();
         prefs.setInt('lastPromptTimestamp', currentTime);
       }
+    } else {
+      return;
     }
   }
 
@@ -136,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   },
                 ),
               ),
-              if (_isLoading) ...[_buildLoadingIndicator(), _evaluationAPK(tokens)],
+              if (_isLoading) _buildLoadingIndicator(),
               if (quickQuestions.isNotEmpty && (tokens > 0 || isPro)) _buildQuickQuestionsBar(quickQuestions),
               _buildInputArea(tokens),
             ],

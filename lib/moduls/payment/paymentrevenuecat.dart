@@ -253,8 +253,7 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   }
 
   void _showTerms() async {
-    // Show terms and conditions dialog
-    const url = "https://www.google.com";
+    const url = "https://sites.google.com/view/privacy-policy-inudev/strona-g%C5%82%C3%B3wna";
 
     if (await canLaunchUrlString(url)) {
       launchUrlString(url);
