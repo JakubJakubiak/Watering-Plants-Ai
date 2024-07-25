@@ -46,84 +46,69 @@ class _NewChatScreenState extends State<NewChatScreen> {
   Widget build(BuildContext context) {
     final int tokens = Provider.of<int>(context);
     return Scaffold(
-      // appBar: AppBar(title: const Text('New Plant Identification')),
       body: Center(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-              //   gradient: const LinearGradient(
-              //     begin: Alignment.topLeft,
-              //     end: Alignment.bottomRight,
-              //     colors: [
-              //       // Colors.blueAccent.withOpacity(0.1),
-              //       // Colors.purpleAccent.withOpacity(0.1),
-              //       // Colors.white70,
-              //       // Colors.purpleAccent.withOpacity(0.1),
-              //       // Colors.white70,
-              //     ],
-              //   ),
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(width: 2, color: Colors.white70),
-            ),
-            child: (tokens > 0 || isPro)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ),
-                          child: const Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 80,
-                            color: Colors.white70,
-                          ),
-                          onPressed: () async {
-                            try {
-                              final navigator = Navigator.of(context);
-                              final pickedFile = await imagePicker.pickImage(
-                                source: ImageSource.gallery,
-                                imageQuality: 80,
-                                maxWidth: 800,
-                                maxHeight: 800,
-                              );
+        child: Container(
+          width: 300,
+          height: 300,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            border: Border.all(width: 2, color: Colors.white70),
+          ),
+          child: (tokens > 0 || widget.isProlocal)
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          try {
+                            final navigator = Navigator.of(context);
+                            final pickedFile = await imagePicker.pickImage(
+                              source: ImageSource.gallery,
+                              imageQuality: 80,
+                              maxWidth: 800,
+                              maxHeight: 800,
+                            );
 
-                              if (pickedFile != null && context.mounted) {
-                                final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
+                            if (pickedFile != null && context.mounted) {
+                              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
 
-                                navigator.push(MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                    chatId: chat.id,
-                                    isNewChat: true,
-                                    imagePath: pickedFile.path,
-                                  ),
-                                ));
-                              }
-                            } catch (e, stackTrace) {
-                              print('Error in onPressed: $e');
-                              print('Stack trace: $stackTrace');
+                              navigator.push(MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                  chatId: chat.id,
+                                  isNewChat: true,
+                                  imagePath: pickedFile.path,
+                                ),
+                              ));
                             }
-                          }),
-                      const VerticalDivider(
-                        thickness: 2,
-                        color: Colors.white70,
+                          } catch (e, stackTrace) {
+                            print('Error in onPressed: $e');
+                            print('Stack trace: $stackTrace');
+                          }
+                        },
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_photo_alternate_outlined,
+                              size: 60,
+                              color: Colors.white70,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Gallery',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ],
+                        ),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt_outlined,
-                          size: 80,
-                          color: Colors.white70,
-                        ),
-                        onPressed: () async {
+                    ),
+                    Container(
+                      width: 2,
+                      color: Colors.white70,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
                           XFile? files;
                           try {
                             final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
@@ -147,7 +132,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             );
 
                             if (files == null) {
-                              debugPrint("cted.");
+                              debugPrint("Cancelled.");
                               return;
                             }
 
@@ -171,33 +156,48 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             );
                           }
                         },
-                      )
-                    ],
-                  )
-                : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.camera_alt_outlined,
+                              size: 60,
+                              color: Colors.white70,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Camera',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.cancel_outlined,
-                        size: 200,
-                        color: Color.fromARGB(179, 213, 36, 36),
-                      ),
-                      onPressed: () {
-                        _showPaywallIfNeeded();
-                      },
                     ),
-                    const Text(
-                      "You have 0 usage, watch an ad or subscribe",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16.0),
-                    )
-                  ]),
-          ),
-        ],
-      )),
+                  ],
+                )
+              : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child: const Icon(
+                      Icons.cancel_outlined,
+                      size: 200,
+                      color: Color.fromARGB(179, 213, 36, 36),
+                    ),
+                    onPressed: () {
+                      _showPaywallIfNeeded();
+                    },
+                  ),
+                  const Text(
+                    "You have 0 usage, watch an ad or subscribe",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16.0),
+                  )
+                ]),
+        ),
+      ),
     );
   }
 }
