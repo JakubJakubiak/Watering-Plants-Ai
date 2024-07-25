@@ -240,11 +240,12 @@ class GameOverDialog extends StatelessWidget {
               Transform.scale(
                   scale: 0.5,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        'https://i.imgur.com/eYOBITC.png',
-                        fit: BoxFit.cover,
-                      ))),
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.asset(
+                      'lib/logoicon/icon.png',
+                      fit: BoxFit.cover,
+                    ),
+                  )),
 
               // const Spacer(),
               // Text(

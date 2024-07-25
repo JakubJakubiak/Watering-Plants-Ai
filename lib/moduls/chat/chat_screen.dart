@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -9,7 +8,6 @@ import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   final int chatId;
@@ -164,38 +162,40 @@ class _ChatScreenState extends State<ChatScreen> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: message.isUserMessage ? Colors.blue[700] : Colors.green[700],
+                  color: message.isUserMessage ? Colors.blue.shade700 : Colors.green[700],
                 ),
               ),
               const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: message.isUserMessage ? Colors.blue[700] : Colors.grey[900],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (message.imagePath != null) ...[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(message.imagePath!),
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
+              Card(
+                color: message.isUserMessage ? Colors.blue.shade700 : null,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (message.imagePath != null) ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(message.imagePath!),
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      MarkdownBody(
+                        data: message.content,
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            fontSize: 16,
+                            color: message.isUserMessage ? Colors.white : null,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 8),
                     ],
-                    MarkdownBody(
-                      data: message.content,
-                      styleSheet: MarkdownStyleSheet(
-                        p: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -232,8 +232,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
-                          ))
-                    ])),
+                          ),)
+                    ],),),
             ],
           ),
         ),
@@ -273,10 +273,6 @@ class _ChatScreenState extends State<ChatScreen> {
           return Padding(
             padding: const EdgeInsets.all(2.0),
             child: FilledButton.tonal(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.grey[900],
-              ),
               onPressed: () {
                 _sendMessage(question);
               },

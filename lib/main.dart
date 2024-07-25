@@ -95,36 +95,17 @@ Future<void> initializePurchases() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+// Colors.white70
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Caption',
       // locale: systemLocale,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        // brightness: Brightness.light,
-        useMaterial3: true,
-        // scaffoldBackgroundColor: Colors.black,
-        appBarTheme: AppBarTheme(
-          // backgroundColor: Colors.transparent,
-          elevation: 0,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            shadows: [
-              Shadow(
-                color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
-                blurRadius: 10,
-              ),
-            ],
-          ),
-        ),
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white70),
+      themeMode: ThemeMode.system,
+      darkTheme: ThemeData.dark().copyWith(
+        iconTheme: const IconThemeData(
+          color: Colors.white70,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -135,10 +116,17 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        cardTheme: CardTheme(
-          // color: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+      ),
+      theme: ThemeData.light().copyWith(
+        // scaffoldBackgroundColor: Colors.black,
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
         ),
       ),

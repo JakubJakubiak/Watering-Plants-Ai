@@ -45,6 +45,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
   @override
   Widget build(BuildContext context) {
     final int tokens = Provider.of<int>(context);
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -52,61 +53,72 @@ class _NewChatScreenState extends State<NewChatScreen> {
           height: 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(width: 2, color: Colors.white70),
+            border: Border.all(width: 2, color: Theme.of(context).dividerColor),
+            color: Theme.of(context).cardColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 0),
+              ),
+            ],
           ),
           child: (tokens > 0 || widget.isProlocal)
               ? Row(
                   children: [
                     Expanded(
-                      child: InkWell(
-                        onTap: () async {
-                          try {
-                            final navigator = Navigator.of(context);
-                            final pickedFile = await imagePicker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 80,
-                              maxWidth: 800,
-                              maxHeight: 800,
-                            );
+                      child: Material(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: InkWell(
+                            onTap: () async {
+                              try {
+                                final navigator = Navigator.of(context);
+                                final pickedFile = await imagePicker.pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 80,
+                                  maxWidth: 800,
+                                  maxHeight: 800,
+                                );
 
-                            if (pickedFile != null && context.mounted) {
-                              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
+                                if (pickedFile != null && context.mounted) {
+                                  final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
 
-                              navigator.push(MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  chatId: chat.id,
-                                  isNewChat: true,
-                                  imagePath: pickedFile.path,
+                                  navigator.push(MaterialPageRoute(
+                                    builder: (context) => ChatScreen(
+                                      chatId: chat.id,
+                                      isNewChat: true,
+                                      imagePath: pickedFile.path,
+                                    ),
+                                  ));
+                                }
+                              } catch (e, stackTrace) {
+                                print('Error in onPressed: $e');
+                                print('Stack trace: $stackTrace');
+                              }
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  size: 60,
                                 ),
-                              ));
-                            }
-                          } catch (e, stackTrace) {
-                            print('Error in onPressed: $e');
-                            print('Stack trace: $stackTrace');
-                          }
-                        },
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_photo_alternate_outlined,
-                              size: 60,
-                              color: Colors.white70,
+                                SizedBox(height: 8),
+                                Text(
+                                  'Gallery',
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Gallery',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ],
-                        ),
-                      ),
+                          )),
                     ),
                     Container(
                       width: 2,
-                      color: Colors.white70,
+                      color: Theme.of(context).dividerColor,
                     ),
                     Expanded(
+                        child: Material(
+                      borderRadius: BorderRadius.circular(20.0),
                       child: InkWell(
                         onTap: () async {
                           XFile? files;
@@ -162,17 +174,15 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             Icon(
                               Icons.camera_alt_outlined,
                               size: 60,
-                              color: Colors.white70,
                             ),
                             SizedBox(height: 8),
                             Text(
                               'Camera',
-                              style: TextStyle(color: Colors.white70),
                             ),
                           ],
                         ),
                       ),
-                    ),
+                    )),
                   ],
                 )
               : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
