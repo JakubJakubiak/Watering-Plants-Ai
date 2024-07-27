@@ -83,13 +83,13 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             final navigator = Navigator.of(context);
                             final pickedFile = await imagePicker.pickImage(
                               source: ImageSource.gallery,
-                              imageQuality: 80,
-                              maxWidth: 1024,
-                              maxHeight: 1024,
+                              imageQuality: 90,
+                              maxWidth: 800,
+                              maxHeight: 800,
                             );
 
                             if (pickedFile != null && context.mounted) {
-                              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What insect is in the photo?");
+                              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
 
                               navigator.push(MaterialPageRoute(
                                 builder: (context) => ChatScreen(
@@ -197,7 +197,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                     ),
                     child: const Icon(
                       Icons.cancel_outlined,
-                      size: 200,
+                      size: 100,
                       color: Color.fromARGB(179, 213, 36, 36),
                     ),
                     onPressed: () {

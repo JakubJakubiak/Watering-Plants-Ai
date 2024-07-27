@@ -81,6 +81,7 @@ class ChatRepository {
     String _selectedLanguage = 'English';
     final prefs = await SharedPreferences.getInstance();
     _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
+    print('///////_selectedLanguage////////////$_selectedLanguage');
     return _selectedLanguage;
   }
 
