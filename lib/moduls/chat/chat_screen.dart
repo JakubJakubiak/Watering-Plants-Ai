@@ -201,39 +201,43 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(height: 10),
               if (tokens <= 0 && !isPro)
                 Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: message.isUserMessage ? const Color.fromARGB(255, 44, 75, 106) : Colors.grey[800],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(children: [
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: message.isUserMessage ? const Color.fromARGB(255, 44, 75, 106) : Colors.grey[800],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
                       const Text(
                         "You have reached your daily  limit. Upgrade to premium for  unlimited access",
                       ),
                       TextButton(
-                          onPressed: () {
-                            _showPaywallIfNeeded();
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: message.isUserMessage ? Colors.blue[900] : Colors.green[800],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                        onPressed: () {
+                          _showPaywallIfNeeded();
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: message.isUserMessage ? Colors.blue[900] : Colors.green[800],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.lock_open,
-                                color: Color.fromARGB(255, 209, 214, 217),
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Unlock Premium',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),)
-                    ],),),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.lock_open,
+                              color: Color.fromARGB(255, 209, 214, 217),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Unlock Premium',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

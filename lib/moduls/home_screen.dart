@@ -217,6 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           actions: [
             ActionChip(
+              // avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
               avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
               label: isPro ? const Text('Pro') : Text('$tokens uses'),
               side: const BorderSide(

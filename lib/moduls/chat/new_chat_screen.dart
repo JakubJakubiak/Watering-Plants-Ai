@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -50,14 +51,22 @@ class _NewChatScreenState extends State<NewChatScreen> {
       body: Center(
         child: Container(
           width: 300,
-          height: 300,
+          height: 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
             border: Border.all(width: 2, color: Theme.of(context).dividerColor),
-            color: Theme.of(context).cardColor,
+            // color: Theme.of(context).cardColor,
+            gradient: LinearGradient(
+              colors: [
+                Colors.blueAccent.withOpacity(0.2),
+                Colors.purpleAccent.withOpacity(0.2),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.1),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(0, 0),
@@ -68,119 +77,114 @@ class _NewChatScreenState extends State<NewChatScreen> {
               ? Row(
                   children: [
                     Expanded(
-                      child: Material(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: InkWell(
-                            onTap: () async {
-                              try {
-                                final navigator = Navigator.of(context);
-                                final pickedFile = await imagePicker.pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 80,
-                                  maxWidth: 800,
-                                  maxHeight: 800,
-                                );
-
-                                if (pickedFile != null && context.mounted) {
-                                  final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
-
-                                  navigator.push(MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                      chatId: chat.id,
-                                      isNewChat: true,
-                                      imagePath: pickedFile.path,
-                                    ),
-                                  ));
-                                }
-                              } catch (e, stackTrace) {
-                                print('Error in onPressed: $e');
-                                print('Stack trace: $stackTrace');
-                              }
-                            },
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate_outlined,
-                                  size: 60,
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Gallery',
-                                ),
-                              ],
-                            ),
-                          )),
-                    ),
-                    Container(
-                      width: 2,
-                      color: Theme.of(context).dividerColor,
-                    ),
-                    Expanded(
-                        child: Material(
-                      borderRadius: BorderRadius.circular(20.0),
                       child: InkWell(
                         onTap: () async {
-                          XFile? files;
                           try {
-                            final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
-                              context,
-                              pickerConfig: CameraPickerConfig(
-                                enableRecording: false,
-                                enablePinchToZoom: true,
-                                resolutionPreset: ResolutionPreset.medium,
-                                imageFormatGroup: ImageFormatGroup.jpeg,
-                                preferredLensDirection: CameraLensDirection.back,
-                                textDelegate: const EnglishCameraPickerTextDelegate(),
-                                theme: ThemeData(
-                                  colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
-                                ),
-                                onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
-                                  files = capturedFile;
-                                  Navigator.of(context).pop();
-                                  return true;
-                                },
-                              ),
+                            final navigator = Navigator.of(context);
+                            final pickedFile = await imagePicker.pickImage(
+                              source: ImageSource.gallery,
+                              imageQuality: 80,
+                              maxWidth: 1024,
+                              maxHeight: 1024,
                             );
 
-                            if (files == null) {
-                              debugPrint("Cancelled.");
-                              return;
-                            }
+                            if (pickedFile != null && context.mounted) {
+                              final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What insect is in the photo?");
 
-                            final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
-                            final chat = await chatNotifier.createChat('${files?.path}', "What plant is in the photo?");
-
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
+                              navigator.push(MaterialPageRoute(
                                 builder: (context) => ChatScreen(
                                   chatId: chat.id,
                                   isNewChat: true,
-                                  imagePath: files?.path,
+                                  imagePath: pickedFile.path,
                                 ),
-                              ),
-                            );
+                              ));
+                            }
                           } catch (e, stackTrace) {
-                            debugPrint('Error in image picking: $e');
-                            debugPrint('Stack trace: $stackTrace');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('An error occurred while picking the image.')),
-                            );
+                            print('Error in onPressed: $e');
+                            print('Stack trace: $stackTrace');
                           }
                         },
                         child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.camera_alt_outlined,
+                              LucideIcons.imagePlus,
                               size: 60,
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Camera',
+                              'Gallery',
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    Container(
+                      width: 2,
+                      color: Theme.of(context).dividerColor,
+                    ),
+                    Expanded(
+                        child: InkWell(
+                      onTap: () async {
+                        XFile? files;
+                        try {
+                          final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
+                            context,
+                            pickerConfig: CameraPickerConfig(
+                              enableRecording: false,
+                              enablePinchToZoom: true,
+                              resolutionPreset: ResolutionPreset.medium,
+                              imageFormatGroup: ImageFormatGroup.jpeg,
+                              preferredLensDirection: CameraLensDirection.back,
+                              textDelegate: const EnglishCameraPickerTextDelegate(),
+                              theme: ThemeData(
+                                colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
+                              ),
+                              onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
+                                files = capturedFile;
+                                Navigator.of(context).pop();
+                                return true;
+                              },
+                            ),
+                          );
+
+                          if (files == null) {
+                            debugPrint("Cancelled.");
+                            return;
+                          }
+
+                          final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+                          final chat = await chatNotifier.createChat('${files?.path}', "What do you see in the picture?");
+
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                chatId: chat.id,
+                                isNewChat: true,
+                                imagePath: files?.path,
+                              ),
+                            ),
+                          );
+                        } catch (e, stackTrace) {
+                          debugPrint('Error in image picking: $e');
+                          debugPrint('Stack trace: $stackTrace');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('An error occurred while picking the image.')),
+                          );
+                        }
+                      },
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            LucideIcons.camera,
+                            size: 60,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Camera',
+                          ),
+                        ],
                       ),
                     )),
                   ],

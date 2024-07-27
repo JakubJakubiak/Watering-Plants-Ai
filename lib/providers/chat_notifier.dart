@@ -36,4 +36,6 @@ class ChatNotifier extends ChangeNotifier {
   Stream<Chat> watchChat(int chatId) {
     return _repository.watchChat(chatId);
   }
+
+  void deleteChat(int id) {}
 }

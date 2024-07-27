@@ -54,7 +54,7 @@ class ChatRepository {
     final File imageFile = File(imagePath);
     final List<int> imageBytes = await imageFile.readAsBytes();
     final String base64Image = base64Encode(imageBytes);
-    final systemLocale = await getLanguageName(locale);
+    final systemLocale = await getLanguageName();
     final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('createChat').call({
@@ -77,23 +77,11 @@ class ChatRepository {
         ));
   }
 
-  final Locale locale = PlatformDispatcher.instance.locale;
-  Future<String> getLanguageName(Locale locale) async {
-    final Map<String, String> languageNames = {
-      'en': 'English',
-      'pl': 'Polski',
-      'es': 'Spanish',
-      'de': 'German',
-      'fr': 'French',
-      'ar': 'Arabic',
-      'as': 'India',
-      'ja': 'Japanese',
-      'zh': 'China',
-      'uk': 'Ukrainian',
-    };
-
-    String languageCode = locale.toString().substring(0, 2);
-    return languageNames[languageCode] ?? 'English';
+  Future<String> getLanguageName() async {
+    String _selectedLanguage = 'English';
+    final prefs = await SharedPreferences.getInstance();
+    _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
+    return _selectedLanguage;
   }
 
   Future<String> loadUserIDRevenuecat() async {
@@ -115,7 +103,7 @@ class ChatRepository {
 
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
     // final Locale systemLocale = PlatformDispatcher.instance.locale;
-    final systemLocale = await getLanguageName(locale);
+    final systemLocale = await getLanguageName();
     final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('sendMessage').call({
