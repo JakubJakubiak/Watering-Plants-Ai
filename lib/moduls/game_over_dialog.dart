@@ -63,7 +63,7 @@ class GameOverDialog extends StatelessWidget {
                   )),
               const Spacer(),
               Expanded(
-                flex: isPro ? 1 : 3,
+                flex: isPro ? 2 : 3,
                 child: const LanguageSelectorWidget(),
               ),
               const SizedBox(height: 16),
