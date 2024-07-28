@@ -15,28 +15,14 @@ import 'languageSelectorWidget.dart';
 class GameOverDialog extends StatelessWidget {
   const GameOverDialog({
     super.key,
-    required this.score,
     required this.onContinuePlaying,
     required this.isPro,
   });
-  final int score;
   final bool isPro;
   final void Function(BuildContext dialogContext) onContinuePlaying;
 
   void _showFreeUI() {
     print("Showing Free UI");
-  }
-
-  Future<void> _showPaywallIfNeeded(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    Offerings offerings = await Purchases.getOfferings();
-    final offering = offerings.current;
-
-    if (offering == null) return;
-
-    navigator.push(
-      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
-    );
   }
 
   @override
@@ -53,7 +39,6 @@ class GameOverDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // const Spacer(),
               const SizedBox(height: 16),
               Expanded(
                 flex: 1,
@@ -87,72 +72,6 @@ class GameOverDialog extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildGradientCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-    required Gradient gradient,
-  }) {
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-          decoration: BoxDecoration(
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: Colors.white, size: 36),
-              const SizedBox(width: 16),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              const Icon(Icons.arrow_forward_ios, color: Colors.white),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showContinuePlayingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Continue playing?'),
-          content: const Text('Do you want to watch a commercial to continue playing?'),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('No'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onContinuePlaying(context);
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

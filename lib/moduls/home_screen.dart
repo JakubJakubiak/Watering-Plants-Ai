@@ -129,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => GameOverDialog(
-          score: counter,
           isPro: isPro,
           onContinuePlaying: (BuildContext dialogContext) async {
             if (_rewardedAd != null && Constants.adsEnabled) {
