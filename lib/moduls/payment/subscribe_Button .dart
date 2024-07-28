@@ -39,7 +39,7 @@ class _SubscribeButtonState extends State<SubscribeButton> {
                 icon: Icons.monetization_on,
                 onTap: () => isPro ? null : _showContinuePlayingDialog(context),
                 gradient: const LinearGradient(
-                  colors:  [
+                  colors: [
                     Color(0xFF005BEA),
                     Color.fromARGB(197, 0, 197, 251),
                   ],
@@ -86,7 +86,9 @@ class _SubscribeButtonState extends State<SubscribeButton> {
     if (offering == null) return;
 
     navigator.push(
-      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+      MaterialPageRoute(
+        builder: (context) => PaywallView(offering: offering, loadingX: true),
+      ),
     );
   }
 

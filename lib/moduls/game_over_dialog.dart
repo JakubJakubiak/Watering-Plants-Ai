@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -73,52 +74,10 @@ class GameOverDialog extends StatelessWidget {
                     children: [
                       const LanguageSelectorWidget(),
                       const SizedBox(height: 16),
-                      isPro
-                          ? const Column()
-                          : _buildGradientCard(
-                              context,
-                              title: isPro ? "Only For No Premiun" : 'Add Coins',
-                              icon: Icons.monetization_on,
-                              onTap: () => isPro ? null : _showContinuePlayingDialog(context),
-                              gradient: LinearGradient(
-                                colors: isPro
-                                    ? const [
-                                        Color.fromARGB(255, 62, 64, 68),
-                                        Color.fromARGB(197, 1, 14, 18),
-                                      ]
-                                    : const [
-                                        Color(0xFF005BEA),
-                                        Color.fromARGB(197, 0, 197, 251),
-                                      ],
-                              ),
-                            ),
-                      const SizedBox(height: 16),
-                      _buildGradientCard(
-                        context,
-                        title: isPro ? 'Unsubscribe' : 'Subscribe',
-                        icon: Icons.star,
-                        onTap: () async {
-                          try {
-                            if (isPro) {
-                              CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-                              launchUrl(Uri.parse(customerInfo.managementURL!));
-                            } else {
-                              _showPaywallIfNeeded(context);
-                            }
-                          } catch (e) {
-                            print('Error downloading or displaying an offer: ${e.toString()}');
-                          }
-                        },
-                        gradient: LinearGradient(
-                          colors: isPro
-                              ? const [
-                                  Colors.red,
-                                  Colors.redAccent,
-                                ]
-                              : const [
-                                  Color(0xFFFF5E3A),
-                                  Color(0xFFFF2A68),
-                                ],
+                      SizedBox(
+                        child: SubscribeButton(
+                          isPro: isPro,
+                          onContinuePlaying: onContinuePlaying,
                         ),
                       ),
                     ],

@@ -5,11 +5,13 @@ import 'package:url_launcher/url_launcher_string.dart';
 class PaywallView extends StatefulWidget {
   final Offering offering;
   final bool hasCooldown;
+  final bool loadingX;
 
   const PaywallView({
     super.key,
     required this.offering,
     this.hasCooldown = true,
+    this.loadingX = false,
   });
 
   @override
@@ -30,6 +32,7 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
     super.initState();
     _setupAnimations();
     _setupInitialProduct();
+    _showCloseButton = widget.loadingX;
     if (widget.hasCooldown) {
       _startCooldownTimer();
     }

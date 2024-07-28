@@ -53,13 +53,21 @@ class _NewChatScreenState extends State<NewChatScreen> {
 
     return Scaffold(
       body: Center(
-        child: Column(children: [
-          SizedBox(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          if (isPro)
+            const Spacer(flex: 1)
+          else ...[
+            SizedBox(
               width: 300,
               child: SubscribeButton(
+                isPro: isPro,
                 onContinuePlaying: onContinuePlaying,
-              )),
-          const SizedBox(height: 16),
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+          ],
           Container(
             width: 300,
             height: 180,
@@ -221,7 +229,8 @@ class _NewChatScreenState extends State<NewChatScreen> {
                       style: TextStyle(fontSize: 16.0),
                     )
                   ]),
-          )
+          ),
+          const Spacer()
         ]),
       ),
     );
