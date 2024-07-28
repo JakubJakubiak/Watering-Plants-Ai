@@ -210,7 +210,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Consumer<CounterModel>(builder: (context, counterModel, _) {
       final _pages = [
-        NewChatScreen(isProlocal: isPro),
+        NewChatScreen(
+          isProlocal: isPro,
+          onContinuePlaying: (BuildContext dialogContext) async {
+            if (_rewardedAd != null && Constants.adsEnabled) {
+              await _rewardedAd?.show(
+                onUserEarnedReward: (ad, reward) {
+                  addPoints();
+                  Navigator.of(dialogContext).pop();
+                },
+              );
+            } else {
+              Navigator.of(dialogContext).pop();
+            }
+          },
+        ),
         ChatHistoryScreen(key: UniqueKey()),
       ];
       return Scaffold(

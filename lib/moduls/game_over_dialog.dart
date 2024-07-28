@@ -50,72 +50,80 @@ class GameOverDialog extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Transform.scale(
-                  scale: 0.5,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: Image.asset(
-                      'lib/logoicon/icon.png',
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-              const Spacer(),
+              // const Spacer(),
+              const SizedBox(height: 16),
               Expanded(
-                flex: isPro ? 2 : 3,
-                child: const LanguageSelectorWidget(),
-              ),
-              const SizedBox(height: 16),
-              isPro
-                  ? Column()
-                  : _buildGradientCard(
-                      context,
-                      title: isPro ? "Only For No Premiun" : 'Add Coins',
-                      icon: Icons.monetization_on,
-                      onTap: () => isPro ? null : _showContinuePlayingDialog(context),
-                      gradient: LinearGradient(
-                        colors: isPro
-                            ? const [
-                                Color.fromARGB(255, 62, 64, 68),
-                                Color.fromARGB(197, 1, 14, 18),
-                              ]
-                            : const [
-                                Color(0xFF005BEA),
-                                Color.fromARGB(197, 0, 197, 251),
-                              ],
+                flex: 1,
+                child: Transform.scale(
+                    scale: 0.8,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.asset(
+                        'lib/logoicon/icon.png',
+                        fit: BoxFit.cover,
                       ),
-                    ),
-              const SizedBox(height: 16),
-              _buildGradientCard(
-                context,
-                title: isPro ? 'Unsubscribe' : 'Subscribe',
-                icon: Icons.star,
-                onTap: () async {
-                  try {
-                    if (isPro) {
-                      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-                      launchUrl(Uri.parse(customerInfo.managementURL!));
-                    } else {
-                      _showPaywallIfNeeded(context);
-                    }
-                  } catch (e) {
-                    print('Error downloading or displaying an offer: ${e.toString()}');
-                  }
-                },
-                gradient: LinearGradient(
-                  colors: isPro
-                      ? const [
-                          Colors.red,
-                          Colors.redAccent,
-                        ]
-                      : const [
-                          Color(0xFFFF5E3A),
-                          Color(0xFFFF2A68),
-                        ],
-                ),
+                    )),
               ),
-              const Spacer(),
+              const SizedBox(height: 16),
+              Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      const LanguageSelectorWidget(),
+                      const SizedBox(height: 16),
+                      isPro
+                          ? const Column()
+                          : _buildGradientCard(
+                              context,
+                              title: isPro ? "Only For No Premiun" : 'Add Coins',
+                              icon: Icons.monetization_on,
+                              onTap: () => isPro ? null : _showContinuePlayingDialog(context),
+                              gradient: LinearGradient(
+                                colors: isPro
+                                    ? const [
+                                        Color.fromARGB(255, 62, 64, 68),
+                                        Color.fromARGB(197, 1, 14, 18),
+                                      ]
+                                    : const [
+                                        Color(0xFF005BEA),
+                                        Color.fromARGB(197, 0, 197, 251),
+                                      ],
+                              ),
+                            ),
+                      const SizedBox(height: 16),
+                      _buildGradientCard(
+                        context,
+                        title: isPro ? 'Unsubscribe' : 'Subscribe',
+                        icon: Icons.star,
+                        onTap: () async {
+                          try {
+                            if (isPro) {
+                              CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+                              launchUrl(Uri.parse(customerInfo.managementURL!));
+                            } else {
+                              _showPaywallIfNeeded(context);
+                            }
+                          } catch (e) {
+                            print('Error downloading or displaying an offer: ${e.toString()}');
+                          }
+                        },
+                        gradient: LinearGradient(
+                          colors: isPro
+                              ? const [
+                                  Colors.red,
+                                  Colors.redAccent,
+                                ]
+                              : const [
+                                  Color(0xFFFF5E3A),
+                                  Color(0xFFFF2A68),
+                                ],
+                        ),
+                      ),
+                    ],
+                  )),
+              const SizedBox(height: 16),
             ],
           ),
         ),
