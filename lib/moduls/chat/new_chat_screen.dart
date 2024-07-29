@@ -7,6 +7,7 @@ import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
 import 'package:PlantsAI/utils/gaps.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -53,10 +54,11 @@ class _NewChatScreenState extends State<NewChatScreen> {
 
     return Scaffold(
       body: Center(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           if (isPro)
             const Spacer(flex: 1)
           else ...[
+            const Spacer(flex: 1),
             SizedBox(
               width: 300,
               child: SubscribeButton(
@@ -64,9 +66,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                 onContinuePlaying: onContinuePlaying,
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 50),
           ],
           Container(
             width: 300,
