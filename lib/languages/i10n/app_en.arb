@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "appTitle": "Caption",
+    "homeScreenTitle": "Home",
+    "settingsTitle": "Settings",
+    "@appTitle": {
+      "description": "The title of the application"
+    },
+    "@homeScreenTitle": {
+      "description": "The title of the home screen"
+    },
+    "@settingsTitle": {
+      "description": "The title of the settings screen"
+    }
+  }

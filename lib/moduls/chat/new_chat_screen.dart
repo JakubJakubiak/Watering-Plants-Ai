@@ -1,24 +1,15 @@
-import 'dart:ffi';
-import 'dart:io';
-
 // import 'package:PlantsAI/moduls/chat/CameraButton.dart';
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
-import 'package:PlantsAI/utils/gaps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
-
-import 'package:PlantsAI/moduls/game_over_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewChatScreen extends StatefulWidget {
   final bool isProlocal;
@@ -68,6 +59,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
             ),
             const SizedBox(height: 50),
           ],
+          Text(AppLocalizations.of(context).title),
           Container(
             width: 300,
             height: 180,
@@ -134,6 +126,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                               Text(
                                 'Gallery',
                               ),
+                              // Text(AppLocalizations.of(context)!.appTitle),
                             ],
                           ),
                         ),

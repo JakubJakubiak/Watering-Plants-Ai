@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:convert';
 
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/moduls/home_screen.dart';
@@ -14,12 +14,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:PlantsAI/utils/shared_preferences_helper.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,8 +93,35 @@ Future<void> initializePurchases() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _selectedLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedLanguage();
+  }
+
+  void _loadSelectedLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? selectedLanguageJson = prefs.getString('selectedLanguage');
+
+    if (selectedLanguageJson != null) {
+      Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
+      setState(() {
+        _selectedLocale = Locale(selectedLanguage['languageshort']);
+      });
+    }
+  }
+
+// Locale(Intl.getCurrentLocale()),
 // Colors.white70
   @override
   Widget build(BuildContext context) {
@@ -102,6 +129,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Caption',
       // locale: systemLocale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _selectedLocale ?? Locale(Intl.getCurrentLocale()),
       themeMode: ThemeMode.system,
       darkTheme: ThemeData.dark().copyWith(
         iconTheme: const IconThemeData(

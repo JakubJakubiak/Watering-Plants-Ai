@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +12,7 @@ class LanguageSelectorWidget extends StatefulWidget {
 
 class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
   String _selectedLanguage = 'English';
+  // String _selectedLangShort = 'En';
 
   final Map<String, String> languageNames = {
     'en': 'English',
@@ -32,14 +35,23 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
 
   void _loadSelectedLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
-    });
+    String? selectedLanguageJson = prefs.getString('selectedLanguage');
+
+    if (selectedLanguageJson != null) {
+      Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
+      setState(() {
+        _selectedLanguage = selectedLanguage['language'] ?? 'English';
+
+        // _selectedLangShort = selectedLanguage['languageshort'] ?? 'en';
+      });
+    }
   }
 
-  void _saveSelectedLanguage(String language) async {
+  void _saveSelectedLanguage(String language, String languageshort) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selectedLanguage', language);
+    Map<String, String> selectedLanguage = {'language': language, 'languageshort': languageshort};
+    String selectedLanguageJson = jsonEncode(selectedLanguage);
+    await prefs.setString('selectedLanguage', selectedLanguageJson);
   }
 
   @override
@@ -106,14 +118,16 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
           title: const Text('Select language'),
           content: SingleChildScrollView(
             child: ListBody(
-              children: languageNames.values.map((String language) {
+              children: languageNames.keys.map((String langShort) {
+                String? language = languageNames[langShort];
                 return ListTile(
-                  title: Text(language),
+                  title: Text(language!),
                   onTap: () {
                     setState(() {
                       _selectedLanguage = language;
+                      // _selectedLangShort = langShort;
                     });
-                    _saveSelectedLanguage(language);
+                    _saveSelectedLanguage(language, langShort);
                     Navigator.of(context).pop();
                   },
                 );

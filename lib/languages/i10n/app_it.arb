@@ -1,0 +1,7 @@
+{
+    "@@locale": "it",
+    "title": "Hello World",
+    "@title": {
+    "description": "The application title"
+    }
+}

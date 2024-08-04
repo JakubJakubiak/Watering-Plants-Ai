@@ -20,6 +20,7 @@ import 'package:PlantsAI/moduls/admob_service.dart';
 import 'package:PlantsAI/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
