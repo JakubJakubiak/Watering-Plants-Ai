@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/models/response_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatRepository {
@@ -50,11 +47,11 @@ class ChatRepository {
     return chat;
   }
 
-  Future<void> getFirstMessage(int chatId, String imagePath) async {
+  Future<void> getFirstMessage(int chatId, String imagePath, String languageName) async {
     final File imageFile = File(imagePath);
     final List<int> imageBytes = await imageFile.readAsBytes();
     final String base64Image = base64Encode(imageBytes);
-    final systemLocale = await getLanguageName();
+    final systemLocale = languageName;
     final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('createChat').call({
@@ -77,21 +74,13 @@ class ChatRepository {
         ));
   }
 
-  Future<String> getLanguageName() async {
-    String _selectedLanguage = 'English';
-    final prefs = await SharedPreferences.getInstance();
-    _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
-    print('///////_selectedLanguage////////////$_selectedLanguage');
-    return _selectedLanguage;
-  }
-
   Future<String> loadUserIDRevenuecat() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('saveUserIDRevenuecat');
     return userId ?? "";
   }
 
-  Future<void> sendMessage(int chatId, String content) async {
+  Future<void> sendMessage(int chatId, String content, String languageName) async {
     // Create new user message
     final userMessage = MessagesCompanion.insert(
       chatId: chatId,
@@ -104,7 +93,7 @@ class ChatRepository {
 
     final chatHistory = await (_db.select(_db.messages)..where((m) => m.chatId.equals(chatId))).get();
     // final Locale systemLocale = PlatformDispatcher.instance.locale;
-    final systemLocale = await getLanguageName();
+    final systemLocale = languageName;
     final revenuecatkeyUser = await loadUserIDRevenuecat();
 
     final botResponse = await _firebaseFunctions.httpsCallable('sendMessage').call({

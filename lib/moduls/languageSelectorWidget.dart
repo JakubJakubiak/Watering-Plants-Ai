@@ -1,73 +1,41 @@
 import 'dart:convert';
 
+import 'package:PlantsAI/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageSelectorWidget extends StatefulWidget {
-  const LanguageSelectorWidget({Key? key}) : super(key: key);
+  const LanguageSelectorWidget({super.key});
 
   @override
-  _LanguageSelectorWidgetState createState() => _LanguageSelectorWidgetState();
+  State<LanguageSelectorWidget> createState() => _LanguageSelectorWidgetState();
 }
 
 class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
-  String _selectedLanguage = 'English';
   // String _selectedLangShort = 'En';
-
-  final Map<String, String> languageNames = {
-    'en': 'English',
-    'pl': 'Polski',
-    'es': 'Español',
-    'de': 'Deutsch',
-    'fr': 'Français',
-    'ar': 'العربية',
-    'hi': 'हिन्दी',
-    'ja': '日本語',
-    'zh': '中文',
-    'uk': 'Українська',
-  };
 
   @override
   void initState() {
     super.initState();
-    _loadSelectedLanguage();
-  }
-
-  void _loadSelectedLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? selectedLanguageJson = prefs.getString('selectedLanguage');
-
-    if (selectedLanguageJson != null) {
-      Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
-      setState(() {
-        _selectedLanguage = selectedLanguage['language'] ?? 'English';
-
-        // _selectedLangShort = selectedLanguage['languageshort'] ?? 'en';
-      });
-    }
-  }
-
-  void _saveSelectedLanguage(String language, String languageshort) async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, String> selectedLanguage = {'language': language, 'languageshort': languageshort};
-    String selectedLanguageJson = jsonEncode(selectedLanguage);
-    await prefs.setString('selectedLanguage', selectedLanguageJson);
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildGradientCard(
-      context,
-      title: "Language $_selectedLanguage",
-      icon: Icons.language,
-      onTap: () => _showLanguageDialog(context),
-      gradient: const LinearGradient(
-        colors: [
-          Color.fromARGB(255, 0, 234, 66),
-          Color.fromARGB(197, 0, 197, 251),
-        ],
-      ),
-    );
+    return Consumer<LocaleProvider>(builder: (context, provider, _) {
+      return _buildGradientCard(
+        context,
+        title: "Language ${provider.selectedLanguage}",
+        icon: Icons.language,
+        onTap: () => _showLanguageDialog(context),
+        gradient: const LinearGradient(
+          colors: [
+            Color.fromARGB(255, 0, 234, 66),
+            Color.fromARGB(197, 0, 197, 251),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildGradientCard(
@@ -111,6 +79,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    final languageNames = Provider.of<LocaleProvider>(context, listen: false).supportedLanguages;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -123,11 +92,8 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
                 return ListTile(
                   title: Text(language!),
                   onTap: () {
-                    setState(() {
-                      _selectedLanguage = language;
-                      // _selectedLangShort = langShort;
-                    });
-                    _saveSelectedLanguage(language, langShort);
+                    Provider.of<LocaleProvider>(context, listen: false).updateSelectedLanguage(langShort);
+
                     Navigator.of(context).pop();
                   },
                 );

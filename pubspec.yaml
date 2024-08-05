@@ -2,7 +2,7 @@ name: PlantsAI
 description: Plants AI
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: none # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -57,8 +57,8 @@ dependencies:
   purchases_ui_flutter: ^6.29.4
   font_awesome_flutter: ^10.7.0
   flutter_animate: ^4.5.0
-  mobile_device_identifier: 
-    git: 
+  mobile_device_identifier:
+    git:
       url: https://github.com/Tughra/mobile_device_identifier.git
       ref: master
   wechat_assets_picker: ^9.1.0
@@ -75,8 +75,6 @@ dependencies:
     sdk: flutter
   intl: any
 
-
-
 dev_dependencies:
   build_runner: ^2.4.11
   dart_mappable_builder: ^4.2.3
@@ -92,10 +90,6 @@ flutter:
     - lib/logoicon/icon.png
 
 flutter_icons:
-  android: "launcher_icon"
+  android: launcher_icon
   ios: true
-  image_path: "lib/logoIcon/icon.png"
-
-
-
-    
+  image_path: lib/logoIcon/icon.png

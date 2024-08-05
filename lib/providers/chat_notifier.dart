@@ -21,12 +21,12 @@ class ChatNotifier extends ChangeNotifier {
     return chat;
   }
 
-  Future<void> getFirstMessage(int chatId, String imagePath) async {
-    await _repository.getFirstMessage(chatId, imagePath);
+  Future<void> getFirstMessage(int chatId, String imagePath, String languageName) async {
+    await _repository.getFirstMessage(chatId, imagePath, languageName);
   }
 
-  Future<void> sendMessage(int chatId, String content) async {
-    await _repository.sendMessage(chatId, content);
+  Future<void> sendMessage(int chatId, String content, String languageName) async {
+    await _repository.sendMessage(chatId, content, languageName);
   }
 
   Stream<List<Message>> watchMessages(int chatId) {

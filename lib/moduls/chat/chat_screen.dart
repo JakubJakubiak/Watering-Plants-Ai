@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:PlantsAI/main.dart';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -55,10 +56,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _getFirstMessage() async {
+    final currentLanguage = Provider.of<LocaleProvider>(context, listen: false).selectedLanguage;
     setState(() {
       _isLoading = true;
     });
-    await context.read<ChatNotifier>().getFirstMessage(widget.chatId, widget.imagePath!);
+    await context.read<ChatNotifier>().getFirstMessage(widget.chatId, widget.imagePath!, currentLanguage);
     setState(() {
       _isLoading = false;
     });
@@ -321,10 +323,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage(String message) {
+    final language = Provider.of<LocaleProvider>(context, listen: false).selectedLanguage;
     setState(() {
       _isLoading = true;
     });
-    context.read<ChatNotifier>().sendMessage(widget.chatId, message).then((_) {
+
+    context.read<ChatNotifier>().sendMessage(widget.chatId, message, language).then((_) {
       setState(() {
         _isLoading = false;
       });

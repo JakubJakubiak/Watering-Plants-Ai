@@ -31,7 +31,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await initializePurchases();
-  await signInAnonymously();
+  signInAnonymously();
 
   final db = ChatDatabase();
   final firebaseFunctions = FirebaseFunctions.instance;
@@ -52,8 +52,11 @@ void main() async {
         Provider<ChatRepository>(
           create: (_) => ChatRepository(db, firebaseFunctions),
         ),
+        ChangeNotifierProvider<LocaleProvider>(
+          create: (_) => LocaleProvider(),
+        ),
         ChangeNotifierProxyProvider<ChatRepository, ChatNotifier>(
-            create: (context) => ChatNotifier(context.read<ChatRepository>()), update: (context, repository, previous) => ChatNotifier(repository))
+            create: (context) => ChatNotifier(context.read<ChatRepository>()), update: (context, repository, previous) => ChatNotifier(repository)),
       ],
       child: const MyApp(),
     ),
@@ -63,6 +66,10 @@ void main() async {
 final purchasesConfiguration = PurchasesConfiguration('goog_JAECeoDvUtPzyJCMILswDqaphZy');
 
 Future<void> signInAnonymously() async {
+  if (FirebaseAuth.instance.currentUser != null) {
+    return;
+  }
+
   try {
     final mobileDeviceId = await MobileDeviceIdentifier().getDeviceId();
     final response = await FirebaseFunctions.instance.httpsCallable('createCustomToken').call<Map<String, dynamic>>({
@@ -93,6 +100,49 @@ Future<void> initializePurchases() async {
   }
 }
 
+class LocaleProvider with ChangeNotifier {
+  final Map<String, String> languageNames = {
+    'en': 'English',
+    'pl': 'Polski',
+    'es': 'Español',
+    'de': 'Deutsch',
+    'fr': 'Français',
+    'ar': 'العربية',
+    'hi': 'हिन्दी',
+    'ja': '日本語',
+    'zh': '中文',
+    'uk': 'Українська',
+  };
+
+  Locale? _selectedLocale;
+
+  LocaleProvider() {
+    _loadSelectedLanguage();
+  }
+
+  Locale get selectedLocale => _selectedLocale ?? Locale(Intl.getCurrentLocale());
+  String get selectedLanguage => languageNames[_selectedLocale?.languageCode ?? Intl.getCurrentLocale()] ?? 'English';
+  Map<String, String> get supportedLanguages => languageNames;
+
+  Future<void> _loadSelectedLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? selectedLanguage = prefs.getString('selectedLanguage');
+
+    if (selectedLanguage != null) {
+      _selectedLocale = Locale(selectedLanguage);
+    }
+
+    notifyListeners();
+  }
+
+  void updateSelectedLanguage(String shortCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguage', shortCode);
+    _selectedLocale = Locale(shortCode);
+    notifyListeners();
+  }
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -101,67 +151,69 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _selectedLocale;
+  // Locale? _selectedLocale;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSelectedLanguage();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadSelectedLanguage();
+  // }
 
-  void _loadSelectedLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? selectedLanguageJson = prefs.getString('selectedLanguage');
+  // void _loadSelectedLanguage() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String? selectedLanguageJson = prefs.getString('selectedLanguage');
 
-    if (selectedLanguageJson != null) {
-      Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
-      setState(() {
-        _selectedLocale = Locale(selectedLanguage['languageshort']);
-      });
-    }
-  }
+  //   if (selectedLanguageJson != null) {
+  //     Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
+  //     setState(() {
+  //       _selectedLocale = Locale(selectedLanguage['languageshort']);
+  //     });
+  //   }
+  // }
 
 // Locale(Intl.getCurrentLocale()),
 // Colors.white70
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Caption',
-      // locale: systemLocale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: _selectedLocale ?? Locale(Intl.getCurrentLocale()),
-      themeMode: ThemeMode.system,
-      darkTheme: ThemeData.dark().copyWith(
-        iconTheme: const IconThemeData(
-          color: Colors.white70,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+    return Consumer<LocaleProvider>(builder: (context, localeProvider, _) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Caption',
+        // locale: systemLocale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: localeProvider.selectedLocale ?? Locale(Intl.getCurrentLocale()),
+        themeMode: ThemeMode.system,
+        darkTheme: ThemeData.dark().copyWith(
+          iconTheme: const IconThemeData(
+            color: Colors.white70,
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
           ),
         ),
-      ),
-      theme: ThemeData.light().copyWith(
-        // scaffoldBackgroundColor: Colors.black,
+        theme: ThemeData.light().copyWith(
+          // scaffoldBackgroundColor: Colors.black,
 
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
           ),
         ),
-      ),
-      home: const FuturisticWrapper(child: HomeScreen()),
-    );
+        home: const FuturisticWrapper(child: HomeScreen()),
+      );
+    });
   }
 }
 
