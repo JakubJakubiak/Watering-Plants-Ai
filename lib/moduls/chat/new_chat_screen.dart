@@ -59,7 +59,6 @@ class _NewChatScreenState extends State<NewChatScreen> {
             ),
             const SizedBox(height: 50),
           ],
-          Text(AppLocalizations.of(context).title),
           Container(
             width: 300,
             height: 180,
@@ -115,18 +114,17 @@ class _NewChatScreenState extends State<NewChatScreen> {
                               print('Stack trace: $stackTrace');
                             }
                           },
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 LucideIcons.imagePlus,
                                 size: 60,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
-                                'Gallery',
+                                AppLocalizations.of(context).gallery,
                               ),
-                              // Text(AppLocalizations.of(context)!.appTitle),
                             ],
                           ),
                         ),
@@ -185,20 +183,22 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             );
                           }
                         },
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               LucideIcons.camera,
                               size: 60,
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
-                              'Camera',
+                              AppLocalizations.of(context).camera,
                             ),
                           ],
                         ),
                       )),
+                      // Text(AppLocalizations.of(context).title),
+                      // Text(AppLocalizations.of(context).camera),
                     ],
                   )
                 : Column(mainAxisAlignment: MainAxisAlignment.center, children: [

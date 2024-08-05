@@ -21,6 +21,7 @@ import 'package:PlantsAI/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -277,14 +278,14 @@ class _HomeScreenState extends State<HomeScreen> {
               _currentIndex = index;
             });
           },
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.chat),
-              label: 'New Chat',
+              icon: const Icon(Icons.chat),
+              label: AppLocalizations.of(context).chat,
             ),
             NavigationDestination(
-              icon: Icon(Icons.history),
-              label: 'Chat History',
+              icon: const Icon(Icons.history),
+              label: AppLocalizations.of(context).chatHistory,
             ),
           ],
         ),

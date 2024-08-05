@@ -1,9 +1,15 @@
 {
   "@@locale": "en",
-  "appTitle": "Caption",
-    "homeScreenTitle": "Home",
-    "settingsTitle": "Settings",
-    "@appTitle": {
+    "appTitle": "Caption",
+    "camera":"Camera",
+    "addCoins":"Add Coins",
+    "unsubscribe" : "Unsubscribe",
+    "subscribe":"Subscribe ",
+    "gallery":"Gallery ",
+    "chat":"New Chat ",
+    "chatHistory":"Chat History",
+    
+  "@appTitle": {
       "description": "The title of the application"
     },
     "@homeScreenTitle": {
@@ -11,5 +17,8 @@
     },
     "@settingsTitle": {
       "description": "The title of the settings screen"
+    },
+    "@camera": {
+      "description": "camera ooo  cc"
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SubscribeButton extends StatefulWidget {
   final bool isPro;
@@ -35,7 +36,7 @@ class _SubscribeButtonState extends State<SubscribeButton> {
             ? const Column()
             : _buildGradientCard(
                 context,
-                title: 'Add Coins',
+                title: AppLocalizations.of(context).addCoins,
                 icon: Icons.monetization_on,
                 onTap: () => isPro ? null : _showContinuePlayingDialog(context),
                 gradient: const LinearGradient(
@@ -48,7 +49,7 @@ class _SubscribeButtonState extends State<SubscribeButton> {
         const SizedBox(height: 16),
         _buildGradientCard(
           context,
-          title: isPro ? 'Unsubscribe' : 'Subscribe',
+          title: isPro ? AppLocalizations.of(context).unsubscribe : AppLocalizations.of(context).subscribe,
           icon: Icons.star,
           onTap: () async {
             try {

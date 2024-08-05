@@ -1,6 +1,13 @@
 {
     "@@locale": "pl",
-    "title": "polki word",
+    "appTitle": "Caption",
+    "camera":"Kamera",
+    "addCoins":"Add Coins",
+    "unsubscribe" : "Unsubscribe",
+    "subscribe":"Subscribe ",
+    "gallery":"Galeria ",
+    "chat":"Nowy Czat",
+    "chatHistory":"Historia czatu",
     "@title": {
     "description": "oo po polsku "
     }

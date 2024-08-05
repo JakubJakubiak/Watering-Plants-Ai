@@ -151,28 +151,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // Locale? _selectedLocale;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadSelectedLanguage();
-  // }
-
-  // void _loadSelectedLanguage() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String? selectedLanguageJson = prefs.getString('selectedLanguage');
-
-  //   if (selectedLanguageJson != null) {
-  //     Map<String, dynamic> selectedLanguage = jsonDecode(selectedLanguageJson);
-  //     setState(() {
-  //       _selectedLocale = Locale(selectedLanguage['languageshort']);
-  //     });
-  //   }
-  // }
-
-// Locale(Intl.getCurrentLocale()),
-// Colors.white70
   @override
   Widget build(BuildContext context) {
     return Consumer<LocaleProvider>(builder: (context, localeProvider, _) {

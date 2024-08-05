@@ -1,6 +1,14 @@
 {
     "@@locale": "de",
-    "title": "Hello World",
+    "appTitle": "Caption",
+    "camera":"Camera",
+    "addCoins":"Add Coins",
+    "unsubscribe" : "Unsubscribe",
+    "subscribe":"Subscribe ",
+    "gallery":"Gallery ",
+    "chat":"New Chat ",
+    "chatHistory":"Chat History",
+    
     "@title": {
     "description": "The application title"
     }
