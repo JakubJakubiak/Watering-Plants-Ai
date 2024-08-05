@@ -7,5 +7,12 @@
     "subscribe": "S'abonner",
     "gallery": "Galerie",
     "chat": "Nouveau chat",
-    "chatHistory": "Historique des discussions"
+    "chatHistory": "Historique des discussions",
+    "unlimitedAccess": "Accès illimité",
+    "upgradeNow": "Mettre à niveau maintenant",
+    "identifications": "Identifications illimitées des plantes",
+    "limitlessChat": "Messages de chat illimités",
+    "tips": "Conseils pour arroser une fleur",
+    "tips2": "Reconnaissance des arbres dans le parc",
+    "removeAds": "Supprimer les paywalls gênants"
 }

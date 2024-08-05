@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PaywallView extends StatefulWidget {
   final Offering offering;
@@ -141,9 +142,9 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Unlimited Access',
-          style: TextStyle(
+        Text(
+          AppLocalizations.of(context).unlimitedAccess,
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -153,13 +154,13 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
   }
 
   Widget _buildBenefits() {
-    return const Column(
+    return Column(
       children: [
-        BenefitRow(title: 'Unlimited Identifications plants', icon: Icons.compost),
-        BenefitRow(title: 'Limitless Chat Messages', icon: Icons.chat_bubble),
-        BenefitRow(title: 'Tips for watering a flower', icon: Icons.grass),
-        BenefitRow(title: 'Tree recognition in the park', icon: Icons.forest),
-        BenefitRow(title: 'Remove annoying paywalls', icon: Icons.block),
+        BenefitRow(title: AppLocalizations.of(context).identifications, icon: Icons.compost),
+        BenefitRow(title: AppLocalizations.of(context).limitlessChat, icon: Icons.chat_bubble),
+        BenefitRow(title: AppLocalizations.of(context).tips, icon: Icons.grass),
+        BenefitRow(title: AppLocalizations.of(context).tips2, icon: Icons.forest),
+        BenefitRow(title: AppLocalizations.of(context).removeAds, icon: Icons.block),
       ],
     );
   }
@@ -196,9 +197,9 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
       ),
       child: _isLoading
           ? const CircularProgressIndicator()
-          : const Text(
-              'Upgrade Now',
-              style: TextStyle(
+          : Text(
+              AppLocalizations.of(context).upgradeNow,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),

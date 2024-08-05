@@ -8,7 +8,17 @@
     "gallery":"Galeria ",
     "chat":"Nowy Czat",
     "chatHistory":"Historia czatu",
-    "@title": {
-    "description": "oo po polsku "
-    }
+    "unlimitedAccess": "Nieograniczony dostęp",
+    "upgradeNow": "Ulepsz teraz",
+    "identifications": "Nieograniczona identyfikacja roślin",
+    "limitlessChat": "Nieograniczone wiadomości na czacie",
+    "tips": "Wskazówki dotyczące podlewania kwiatów",
+    "tips2": "Rozpoznawanie drzew w parku",
+    "removeAds": "Usuń irytujące ściany płatności"
 }
+
+
+
+
+
+
