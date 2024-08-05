@@ -107,6 +107,7 @@ class LocaleProvider with ChangeNotifier {
     'es': 'Español',
     'de': 'Deutsch',
     'fr': 'Français',
+    'it': 'Italiano',
     'ar': 'العربية',
     'hi': 'हिन्दी',
     'ja': '日本語',

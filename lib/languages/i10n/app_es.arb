@@ -1,14 +1,11 @@
 {
   "@@locale": "es",
   "appTitle": "Caption",
-  "camera":"Camera",
-  "addCoins":"Add Coins",
-  "unsubscribe" : "Unsubscribe",
-  "subscribe":"Subscribe ",
-  "gallery":"Gallery ",
-  "chat":"New Chat ",
-  "chatHistory":"Chat History",
-  "@title": {
-  "description": "The application title"
-  }
+  "camera": "Cámara",
+  "addCoins": "Agregar monedas",
+  "unsubscribe": "Darse de baja",
+  "subscribe": "Suscribirse",
+  "gallery": "Galería",
+  "chat": "Nuevo Chat",
+  "chatHistory": "Historial de chat"
 }
