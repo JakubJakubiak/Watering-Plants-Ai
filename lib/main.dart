@@ -121,7 +121,8 @@ class LocaleProvider with ChangeNotifier {
     _loadSelectedLanguage();
   }
 
-  Locale get selectedLocale => _selectedLocale ?? Locale(Intl.getCurrentLocale());
+  String loaacles = Locale(Intl.getCurrentLocale().split('_')[0]).languageCode;
+  Locale get selectedLocale => _selectedLocale ?? Locale(loaacles);
   String get selectedLanguage => languageNames[_selectedLocale?.languageCode ?? Intl.getCurrentLocale()] ?? 'English';
   Map<String, String> get supportedLanguages => languageNames;
 
@@ -158,10 +159,9 @@ class _MyAppState extends State<MyApp> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Caption',
-        // locale: systemLocale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: localeProvider.selectedLocale ?? Locale(Intl.getCurrentLocale()),
+        locale: localeProvider.selectedLocale ?? Locale("en"),
         themeMode: ThemeMode.system,
         darkTheme: ThemeData.dark().copyWith(
           iconTheme: const IconThemeData(
