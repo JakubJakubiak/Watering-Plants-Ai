@@ -74,6 +74,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  image_cropper: ^8.0.1
 
 dev_dependencies:
   build_runner: ^2.4.11

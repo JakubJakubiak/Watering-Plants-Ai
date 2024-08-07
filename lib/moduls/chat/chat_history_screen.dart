@@ -8,13 +8,15 @@ import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
 import 'package:PlantsAI/providers/chat_notifier.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
-  const ChatHistoryScreen({super.key});
+  final void Function(BuildContext dialogContext) onContinuePlaying;
+  const ChatHistoryScreen({super.key, required this.onContinuePlaying});
 
   @override
   State<ChatHistoryScreen> createState() => _ChatHistoryScreenState();
 }
 
 class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
+  get onContinuePlaying => widget.onContinuePlaying;
   @override
   void initState() {
     super.initState();
@@ -108,6 +110,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                     builder: (context) => ChatScreen(
                       chatId: chat.id,
                       isNewChat: false,
+                      onContinuePlaying: onContinuePlaying,
                     ),
                   ));
                 },

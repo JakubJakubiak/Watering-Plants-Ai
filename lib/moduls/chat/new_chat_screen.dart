@@ -11,6 +11,13 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:provider/provider.dart';
+import 'package:camera/camera.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 class NewChatScreen extends StatefulWidget {
   final bool isProlocal;
   final void Function(BuildContext dialogContext) onContinuePlaying;
@@ -106,6 +113,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                                     chatId: chat.id,
                                     isNewChat: true,
                                     imagePath: pickedFile.path,
+                                    onContinuePlaying: onContinuePlaying,
                                   ),
                                 ));
                               }
@@ -172,6 +180,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                                   chatId: chat.id,
                                   isNewChat: true,
                                   imagePath: files?.path,
+                                  onContinuePlaying: onContinuePlaying,
                                 ),
                               ),
                             );
@@ -197,8 +206,6 @@ class _NewChatScreenState extends State<NewChatScreen> {
                           ],
                         ),
                       )),
-                      // Text(AppLocalizations.of(context).title),
-                      // Text(AppLocalizations.of(context).camera),
                     ],
                   )
                 : Column(mainAxisAlignment: MainAxisAlignment.center, children: [

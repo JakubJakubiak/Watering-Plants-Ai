@@ -14,8 +14,15 @@ class ChatScreen extends StatefulWidget {
   final int chatId;
   final bool isNewChat;
   final String? imagePath;
+  final void Function(BuildContext dialogContext) onContinuePlaying;
 
-  const ChatScreen({super.key, required this.chatId, required this.isNewChat, this.imagePath});
+  const ChatScreen({
+    super.key,
+    required this.chatId,
+    required this.isNewChat,
+    this.imagePath,
+    required this.onContinuePlaying,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -27,6 +34,20 @@ class _ChatScreenState extends State<ChatScreen> {
   final InAppReview inAppReview = InAppReview.instance;
   bool _isLoading = false;
   bool isPro = false;
+  get onContinuePlaying => widget.onContinuePlaying;
+
+  void _showContinuePlayingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        Future.microtask(() {
+          Navigator.of(dialogContext).pop();
+          widget.onContinuePlaying(dialogContext);
+        });
+        return const SizedBox();
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -324,6 +345,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage(String message) {
     final language = Provider.of<LocaleProvider>(context, listen: false).selectedLanguage;
+    _showContinuePlayingDialog(context);
     setState(() {
       _isLoading = true;
     });

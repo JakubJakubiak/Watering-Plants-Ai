@@ -120,7 +120,6 @@ class LocaleProvider with ChangeNotifier {
   LocaleProvider() {
     _loadSelectedLanguage();
   }
-
   String loaacles = Locale(Intl.getCurrentLocale().split('_')[0]).languageCode;
   Locale get selectedLocale => _selectedLocale ?? Locale(loaacles);
   String get selectedLanguage => languageNames[_selectedLocale?.languageCode ?? Intl.getCurrentLocale()] ?? 'English';

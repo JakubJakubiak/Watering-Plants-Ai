@@ -226,7 +226,21 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-        ChatHistoryScreen(key: UniqueKey()),
+        ChatHistoryScreen(
+          key: UniqueKey(),
+          onContinuePlaying: (BuildContext dialogContext) async {
+            if (_rewardedAd != null && Constants.adsEnabled) {
+              await _rewardedAd?.show(
+                onUserEarnedReward: (ad, reward) {
+                  addPoints();
+                  Navigator.of(dialogContext).pop();
+                },
+              );
+            } else {
+              Navigator.of(dialogContext).pop();
+            }
+          },
+        ),
       ];
       return Scaffold(
         appBar: AppBar(
