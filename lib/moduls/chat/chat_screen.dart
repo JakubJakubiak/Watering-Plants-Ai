@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:PlantsAI/main.dart';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
@@ -301,7 +302,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: const EdgeInsets.all(2.0),
             child: FilledButton.tonal(
               onPressed: () {
-                _sendMessage(question);
+                _sendMessage(question, isPro);
               },
               child: Text(question),
             ),
@@ -334,7 +335,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(Icons.send),
                     onPressed: () {
                       if (_messageController.text.isNotEmpty) {
-                        _sendMessage(_messageController.text);
+                        _sendMessage(_messageController.text, isPro);
                         _messageController.clear();
                       }
                     },
@@ -343,9 +344,12 @@ class _ChatScreenState extends State<ChatScreen> {
               ));
   }
 
-  void _sendMessage(String message) {
+  void _sendMessage(String message, bool isPro) {
+    // Random random = Random();
     final language = Provider.of<LocaleProvider>(context, listen: false).selectedLanguage;
-    _showContinuePlayingDialog(context);
+    // final int tokens = Provider.of<int>(context);
+    // int randomNumber = random.nextInt(tokens);
+    if (!isPro) _showContinuePlayingDialog(context);
     setState(() {
       _isLoading = true;
     });
