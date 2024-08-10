@@ -28,10 +28,14 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+          </activity>
             <meta-data
               android:name="flutterEmbedding"
               android:value="2"/>
+          <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
             <meta-data    
               android:name="com.google.android.gms.ads.APPLICATION_ID"
               android:value="ca-app-pub-5915784054696948~3370095608"/>   

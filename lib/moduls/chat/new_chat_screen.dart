@@ -194,12 +194,8 @@ class _NewChatScreenState extends State<NewChatScreen> {
 Future<void> _handleCameraCapture(BuildContext context, onContinuePlaying) async {
   try {
     final XFile? capturedFile = await _captureImage(context);
-    await _imageTrimming(capturedFile);
-
     if (capturedFile != null) {
-      // if (cimageTrimmingFile != null) {
-      // await _processCapture(context, capturedFile, onContinuePlaying);
-      // await _processCapture(context, cimageTrimmingFile, onContinuePlaying);
+      await _processCapture(context, capturedFile, onContinuePlaying);
     } else {
       _showSnackBar(context, 'Image capture cancelled.');
     }
@@ -229,20 +225,18 @@ Future<XFile?> _captureImage(BuildContext context) async {
       },
     ),
   );
-
-  return capturedFile;
+  final imagescrypt = await _imageTrimming(capturedFile);
+  return imagescrypt;
 }
 
-Future<XFile?> _imageTrimming(capturedFile) async {
-  XFile? capturedFile;
+Future<XFile?> _imageTrimming(XFile? capturedFile) async {
   if (capturedFile != null) {
-    print("////////////capturedFile/////////////////////$capturedFile");
     final croppedFile = await ImageCropper().cropImage(
-      sourcePath: capturedFile!.path,
+      sourcePath: capturedFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 100,
-      maxWidth: 1080,
-      maxHeight: 1080,
+      maxWidth: 500,
+      maxHeight: 500,
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop Image',
@@ -256,12 +250,11 @@ Future<XFile?> _imageTrimming(capturedFile) async {
         ),
       ],
     );
-    print("////////////capturedFile///////333333333//////////////$croppedFile");
     if (croppedFile != null) {
       return XFile(croppedFile.path);
     }
   }
-  return capturedFile;
+  return null;
 }
 
 Future<void> _processCapture(BuildContext context, XFile capturedFile, onContinuePlaying) async {
