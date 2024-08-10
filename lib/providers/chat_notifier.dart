@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:PlantsAI/database/chat_database.dart';
 import 'package:PlantsAI/repositories/chat_repository.dart';
 import 'package:flutter/widgets.dart';
@@ -37,5 +38,34 @@ class ChatNotifier extends ChangeNotifier {
     return _repository.watchChat(chatId);
   }
 
-  void deleteChat(int id) {}
+  Future<void> deleteChat(int id) async {
+    try {
+      final chat = await _repository.getChatById(id);
+      if (chat != null) {
+        await _repository.deleteChat(id);
+        if (chat.imagePath != null && chat.imagePath!.isNotEmpty) {
+          final file = File('${chat.imagePath}');
+          if (await file.exists()) {
+            await file.delete();
+          }
+        }
+        _chats.removeWhere((c) => c.id == id);
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error deleting chat: $e');
+    }
+  }
+
+  // Future<void> deleteUnknownChats() async {
+  //   try {
+  //     List<Chat> chatsToDelete = _chats.where((chat) => chat.name == "Unknown" || chat.name == "Chat ${chat.id}").toList();
+
+  //     for (var chat in chatsToDelete) {
+  //       await deleteChat(chat.id);
+  //     }
+  //   } catch (e) {
+  //     print('Error deleting unknown chats: $e');
+  //   }
+  // }
 }

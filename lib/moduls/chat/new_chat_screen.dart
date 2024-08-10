@@ -191,7 +191,6 @@ class _NewChatScreenState extends State<NewChatScreen> {
   }
 }
 
-// Funkcja obsługująca zrobienie zdjęcia
 Future<void> _handleCameraCapture(BuildContext context, onContinuePlaying) async {
   try {
     final XFile? capturedFile = await _captureImage(context);

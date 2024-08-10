@@ -20,8 +20,11 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<ChatNotifier>(context, listen: false).loadChats();
+    Future.microtask(() async {
+      // Provider.of<ChatNotifier>(context, listen: false).loadChats();
+      final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+      await chatNotifier.loadChats();
+      // await chatNotifier.deleteUnknownChats();
     });
   }
 
@@ -55,12 +58,17 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           itemBuilder: (context, index) {
             final chat = chatNotifier.chats[index];
             final chatName = chatNotifier.chats[index].name;
-            final chatTitle = chatName.isNotEmpty ? chatName : 'Chat $index';
+            final chatTitle = chatName.isNotEmpty ? chatName : 'Chat ${chat.id}';
             final chatAvatarPath = chatNotifier.chats[index].imagePath;
             final lastMessage = chatNotifier.chats[index].lastMessage;
 
+            // if (chatTitle == "Unknown" || chatTitle == "Chat ${chat.id}") {
+            //   Future.microtask(() => chatNotifier.deleteChat(chat.id));
+            //   return Text("data");
+            // }
+
             return Dismissible(
-              key: Key(chatName),
+              key: Key('$chatName${chat.id}'),
               direction: DismissDirection.endToStart,
               confirmDismiss: (direction) async {
                 return await showDialog(

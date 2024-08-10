@@ -120,4 +120,17 @@ class ChatRepository {
           isUserMessage: false,
         ));
   }
+
+  // getChatById(int id) {}
+
+  // deleteChat(int id) {}
+
+  Future<Chat?> getChatById(int id) async {
+    return await (_db.select(_db.chats)..where((c) => c.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<void> deleteChat(int id) async {
+    await (_db.delete(_db.messages)..where((m) => m.chatId.equals(id))).go();
+    await (_db.delete(_db.chats)..where((c) => c.id.equals(id))).go();
+  }
 }
