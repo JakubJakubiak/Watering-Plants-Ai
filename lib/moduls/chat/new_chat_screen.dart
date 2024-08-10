@@ -142,70 +142,23 @@ class _NewChatScreenState extends State<NewChatScreen> {
                         color: Theme.of(context).dividerColor,
                       ),
                       Expanded(
-                          child: InkWell(
-                        onTap: () async {
-                          XFile? files;
-                          try {
-                            final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
-                              context,
-                              pickerConfig: CameraPickerConfig(
-                                enableRecording: false,
-                                enablePinchToZoom: true,
-                                resolutionPreset: ResolutionPreset.medium,
-                                imageFormatGroup: ImageFormatGroup.jpeg,
-                                preferredLensDirection: CameraLensDirection.back,
-                                textDelegate: const EnglishCameraPickerTextDelegate(),
-                                theme: ThemeData(
-                                  colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
-                                ),
-                                onXFileCaptured: (XFile capturedFile, CameraPickerViewType viewType) {
-                                  files = capturedFile;
-                                  Navigator.of(context).pop();
-                                  return true;
-                                },
+                        child: InkWell(
+                          onTap: () => _handleCameraCapture(context, onContinuePlaying),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                LucideIcons.camera,
+                                size: 60,
                               ),
-                            );
-
-                            if (files == null) {
-                              debugPrint("Cancelled.");
-                              return;
-                            }
-
-                            final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
-                            final chat = await chatNotifier.createChat('${files?.path}', "What do you see in the picture?");
-
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  chatId: chat.id,
-                                  isNewChat: true,
-                                  imagePath: files?.path,
-                                  onContinuePlaying: onContinuePlaying,
-                                ),
+                              const SizedBox(height: 8),
+                              Text(
+                                AppLocalizations.of(context).camera,
                               ),
-                            );
-                          } catch (e, stackTrace) {
-                            debugPrint('Error in image picking: $e');
-                            debugPrint('Stack trace: $stackTrace');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('An error occurred while picking the image.')),
-                            );
-                          }
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              LucideIcons.camera,
-                              size: 60,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              AppLocalizations.of(context).camera,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      )),
+                      )
                     ],
                   )
                 : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -235,4 +188,105 @@ class _NewChatScreenState extends State<NewChatScreen> {
       ),
     );
   }
+}
+
+// Funkcja obsługująca zrobienie zdjęcia
+Future<void> _handleCameraCapture(BuildContext context, onContinuePlaying) async {
+  try {
+    final XFile? capturedFile = await _captureImage(context);
+    await _imageTrimming(capturedFile);
+
+    if (capturedFile != null) {
+      // if (cimageTrimmingFile != null) {
+      // await _processCapture(context, capturedFile, onContinuePlaying);
+      // await _processCapture(context, cimageTrimmingFile, onContinuePlaying);
+    } else {
+      _showSnackBar(context, 'Image capture cancelled.');
+    }
+  } catch (e) {
+    _handleError(context, e);
+  }
+}
+
+Future<XFile?> _captureImage(BuildContext context) async {
+  XFile? capturedFile;
+  final AssetEntity? pickedAsset = await CameraPicker.pickFromCamera(
+    context,
+    pickerConfig: CameraPickerConfig(
+      enableRecording: false,
+      enablePinchToZoom: true,
+      resolutionPreset: ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+      preferredLensDirection: CameraLensDirection.back,
+      textDelegate: const EnglishCameraPickerTextDelegate(),
+      theme: ThemeData(
+        colorScheme: const ColorScheme.dark().copyWith(secondary: Colors.black),
+      ),
+      onXFileCaptured: (XFile file, CameraPickerViewType _) {
+        capturedFile = file;
+        Navigator.of(context).pop();
+        return true;
+      },
+    ),
+  );
+
+  return capturedFile;
+}
+
+Future<XFile?> _imageTrimming(capturedFile) async {
+  XFile? capturedFile;
+  if (capturedFile != null) {
+    print("////////////capturedFile/////////////////////$capturedFile");
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: capturedFile!.path,
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 100,
+      maxWidth: 1080,
+      maxHeight: 1080,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Crop Image',
+        ),
+      ],
+    );
+    print("////////////capturedFile///////333333333//////////////$croppedFile");
+    if (croppedFile != null) {
+      return XFile(croppedFile.path);
+    }
+  }
+  return capturedFile;
+}
+
+Future<void> _processCapture(BuildContext context, XFile capturedFile, onContinuePlaying) async {
+  final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+  final chat = await chatNotifier.createChat(capturedFile.path, "What do you see in the picture?");
+
+  await Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => ChatScreen(
+        chatId: chat.id,
+        isNewChat: true,
+        imagePath: capturedFile.path,
+        onContinuePlaying: onContinuePlaying,
+      ),
+    ),
+  );
+}
+
+void _showSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+
+void _handleError(BuildContext context, dynamic error) {
+  debugPrint('Error in image capture: $error');
+  _showSnackBar(context, 'An error occurred while capturing the image.');
 }
