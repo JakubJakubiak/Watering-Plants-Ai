@@ -105,14 +105,15 @@ class _NewChatScreenState extends State<NewChatScreen> {
                                 maxHeight: 800,
                               );
 
-                              if (pickedFile != null && context.mounted) {
-                                final chat = await context.read<ChatNotifier>().createChat(pickedFile.path, "What plant is in the photo?");
+                              final imagescrypt = await _imageTrimming(pickedFile);
+                              if (imagescrypt != null && context.mounted) {
+                                final chat = await context.read<ChatNotifier>().createChat(imagescrypt.path, "What plant is in the photo?");
 
                                 navigator.push(MaterialPageRoute(
                                   builder: (context) => ChatScreen(
                                     chatId: chat.id,
                                     isNewChat: true,
-                                    imagePath: pickedFile.path,
+                                    imagePath: imagescrypt.path,
                                     onContinuePlaying: onContinuePlaying,
                                   ),
                                 ));
