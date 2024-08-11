@@ -25,23 +25,40 @@ class _DataVisulisationState extends State<DataVisulisation> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: stones.length,
-      itemBuilder: (context, index) {
-        return Card(
-          child: ListTile(
-            leading: Image.network(
-              stones[index]['imageUrl'],
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
+    return Scaffold(
+      body: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: stones.length,
+        itemBuilder: (context, index) {
+          return SizedBox(
+            width: 150,
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(
+                    stones[index]['imageUrl'] ?? "",
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(stones[index]['name'], style: Theme.of(context).textTheme.titleMedium),
+                        Text(stones[index]['subtitle'], style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            title: Text(stones[index]['name']),
-            subtitle: Text(stones[index]['subtitle']),
-            onTap: () {},
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
