@@ -24,7 +24,6 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
   final timeMilliseconds = const Duration(milliseconds: 250);
 
   final ImagePicker _picker = ImagePicker();
-  // XFile? _image;
   String base64Image = "";
   String? mimeType = "";
 
@@ -193,20 +192,6 @@ class _ImagePickerModuleState extends State<ImagePickerModule> {
             if (base64Image.isNotEmpty) ...[
               gapH24,
               _buildAnalyzeButton(),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     Map<String, String?> imageData = await _pickImage();
-              //     if (imageData.isNotEmpty) {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => HistoryModule(imageData: imageData),
-              //         ),
-              //       );
-              //     }
-              //   },
-              //   child: Text('Take Picture and Open History'),
-              // ),
             ],
             if (!_isUploading && generatedText.isNotEmpty) ...[
               gapH24,

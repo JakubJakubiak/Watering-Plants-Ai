@@ -178,7 +178,9 @@ class _MyAppState extends State<MyApp> {
         ),
         theme: ThemeData.light().copyWith(
           // scaffoldBackgroundColor: Colors.black,
-
+          // iconTheme: const IconThemeData(
+          //   color: Colors.white70,
+          // ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blueAccent,

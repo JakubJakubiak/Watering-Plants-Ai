@@ -1,5 +1,6 @@
 // import 'package:PlantsAI/moduls/chat/CameraButton.dart';
 import 'package:PlantsAI/moduls/chat/chat_screen.dart';
+import 'package:PlantsAI/moduls/data_jeson/data_Visulisation%20.dart';
 import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
 import 'package:flutter/material.dart';
@@ -51,141 +52,166 @@ class _NewChatScreenState extends State<NewChatScreen> {
     final int tokens = Provider.of<int>(context);
 
     return Scaffold(
-      body: Center(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          if (isPro)
-            const Spacer(flex: 1)
-          else ...[
-            const Spacer(flex: 1),
-            SizedBox(
-              width: 300,
-              child: SubscribeButton(
-                isPro: isPro,
-                onContinuePlaying: onContinuePlaying,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-            ),
-            const SizedBox(height: 50),
-          ],
-          Container(
-            width: 300,
-            height: 180,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(width: 2, color: Theme.of(context).dividerColor),
-              // color: Theme.of(context).cardColor,
-              gradient: LinearGradient(
-                colors: [
-                  Colors.blueAccent.withOpacity(0.2),
-                  Colors.purpleAccent.withOpacity(0.2),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: (tokens > 0 || widget.isProlocal)
-                ? Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            try {
-                              final navigator = Navigator.of(context);
-                              final pickedFile = await imagePicker.pickImage(
-                                source: ImageSource.gallery,
-                                imageQuality: 90,
-                                maxWidth: 800,
-                                maxHeight: 800,
-                              );
-
-                              final imagescrypt = await _imageTrimming(pickedFile);
-                              if (imagescrypt != null && context.mounted) {
-                                final chat = await context.read<ChatNotifier>().createChat(imagescrypt.path, "What plant is in the photo?");
-
-                                navigator.push(MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                    chatId: chat.id,
-                                    isNewChat: true,
-                                    imagePath: imagescrypt.path,
-                                    onContinuePlaying: onContinuePlaying,
-                                  ),
-                                ));
-                              }
-                            } catch (e, stackTrace) {
-                              print('Error in onPressed: $e');
-                              print('Stack trace: $stackTrace');
-                            }
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                LucideIcons.imagePlus,
-                                size: 60,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                AppLocalizations.of(context).gallery,
-                              ),
-                            ],
-                          ),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (!isPro) ...[
+                      const SizedBox(height: 50),
+                      SizedBox(
+                        width: 300,
+                        child: SubscribeButton(
+                          isPro: isPro,
+                          onContinuePlaying: onContinuePlaying,
                         ),
                       ),
-                      Container(
-                        width: 2,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () => _handleCameraCapture(context, onContinuePlaying),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                LucideIcons.camera,
-                                size: 60,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                AppLocalizations.of(context).camera,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                      const SizedBox(height: 50),
                     ],
-                  )
-                : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
+                    Expanded(
+                      child: Center(
+                        child: Container(
+                          width: 300,
+                          height: 180,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(width: 2, color: Theme.of(context).dividerColor),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blueAccent.withOpacity(0.2),
+                                Colors.purpleAccent.withOpacity(0.2),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: (tokens > 0 || isPro)
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () async {
+                                          try {
+                                            final navigator = Navigator.of(context);
+                                            final pickedFile = await imagePicker.pickImage(
+                                              source: ImageSource.gallery,
+                                              imageQuality: 90,
+                                              maxWidth: 800,
+                                              maxHeight: 800,
+                                            );
+
+                                            final imagescrypt = await _imageTrimming(pickedFile);
+                                            if (imagescrypt != null && context.mounted) {
+                                              final chat = await context.read<ChatNotifier>().createChat(imagescrypt.path, "What plant is in the photo?");
+
+                                              navigator.push(MaterialPageRoute(
+                                                builder: (context) => ChatScreen(
+                                                  chatId: chat.id,
+                                                  isNewChat: true,
+                                                  imagePath: imagescrypt.path,
+                                                  onContinuePlaying: onContinuePlaying,
+                                                ),
+                                              ));
+                                            }
+                                          } catch (e, stackTrace) {
+                                            print('Error in onPressed: $e');
+                                            print('Stack trace: $stackTrace');
+                                          }
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              LucideIcons.imagePlus,
+                                              size: 60,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              AppLocalizations.of(context).gallery,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 2,
+                                      color: Theme.of(context).dividerColor,
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () => _handleCameraCapture(context, onContinuePlaying),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              LucideIcons.camera,
+                                              size: 60,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              AppLocalizations.of(context).camera,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                      ),
+                                      child: const Icon(
+                                        Icons.cancel_outlined,
+                                        size: 100,
+                                        color: Color.fromARGB(179, 213, 36, 36),
+                                      ),
+                                      onPressed: _showPaywallIfNeeded,
+                                    ),
+                                    const Text(
+                                      "You have 0 usage, watch an ad or subscribe",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                  ],
+                                ),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.cancel_outlined,
-                        size: 100,
-                        color: Color.fromARGB(179, 213, 36, 36),
-                      ),
-                      onPressed: () {
-                        _showPaywallIfNeeded();
-                      },
                     ),
-                    const Text(
-                      "You have 0 usage, watch an ad or subscribe",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16.0),
-                    )
-                  ]),
-          ),
-          const Spacer()
-        ]),
+                    // const Spacer(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                        width: 300,
+                        height: 500,
+                        child: Expanded(
+                          child: DataVisulisation(),
+                        ))
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
