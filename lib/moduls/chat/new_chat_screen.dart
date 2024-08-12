@@ -43,7 +43,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
     if (offering == null) return;
 
     navigator.push(
-      MaterialPageRoute(builder: (context) => PaywallView(offering: offering)),
+      MaterialPageRoute(builder: (context) => PaywallView(offering: offering, loadingX: true)),
     );
   }
 
@@ -65,13 +65,48 @@ class _NewChatScreenState extends State<NewChatScreen> {
                   children: [
                     if (!isPro) ...[
                       const SizedBox(height: 50),
-                      SizedBox(
-                        width: 300,
-                        child: SubscribeButton(
-                          isPro: isPro,
-                          onContinuePlaying: onContinuePlaying,
+                      // SizedBox(
+                      //   width: 300,
+                      //   child: SubscribeButton(
+                      //     isPro: isPro,
+                      //     onContinuePlaying: onContinuePlaying,
+                      //   ),
+                      // ),
+
+                      GestureDetector(
+                        onTap: () => _showPaywallIfNeeded(),
+                        child: SizedBox(
+                          width: 150,
+                          child: Card(
+                            color: const Color(0xFFFFD700),
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            elevation: 6.0,
+                            shadowColor: Colors.black54,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).subscribe ?? "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
+
                       const SizedBox(height: 50),
                     ],
                     Expanded(
@@ -202,7 +237,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                     ),
                     SizedBox(
                         width: 350,
-                        height: 250,
+                        height: 220,
                         child: Expanded(
                           child: DataVisulisation(),
                         ))

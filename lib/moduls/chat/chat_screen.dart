@@ -79,9 +79,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _getFirstMessage() async {
     final currentLanguage = Provider.of<LocaleProvider>(context, listen: false).selectedLanguage;
+
     setState(() {
       _isLoading = true;
     });
+    if (!isPro) _showContinuePlayingDialog(context);
     await context.read<ChatNotifier>().getFirstMessage(widget.chatId, widget.imagePath!, currentLanguage);
     setState(() {
       _isLoading = false;
