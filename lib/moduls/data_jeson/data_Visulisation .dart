@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class DataVisulisation extends StatefulWidget {
@@ -8,7 +8,7 @@ class DataVisulisation extends StatefulWidget {
 }
 
 class _DataVisulisationState extends State<DataVisulisation> {
-  List<dynamic> stones = [];
+  List<dynamic> items = [];
 
   @override
   void initState() {
@@ -19,8 +19,16 @@ class _DataVisulisationState extends State<DataVisulisation> {
   Future<void> loadStones() async {
     String jsonString = await rootBundle.loadString('lib/moduls/data_jeson/data_Visulisation.json');
     setState(() {
-      stones = json.decode(jsonString);
+      items = json.decode(jsonString);
     });
+  }
+
+  void _showDetailView(BuildContext context, Map<String, dynamic> item) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DetailView(item: item),
+      ),
+    );
   }
 
   @override
@@ -28,36 +36,108 @@ class _DataVisulisationState extends State<DataVisulisation> {
     return Scaffold(
       body: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: stones.length,
+        itemCount: items.length,
         itemBuilder: (context, index) {
-          return SizedBox(
-            width: 150,
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    stones[index]['imageUrl'] ?? "",
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(stones[index]['name'], style: Theme.of(context).textTheme.titleMedium),
-                        Text(stones[index]['subtitle'], style: Theme.of(context).textTheme.bodySmall),
-                      ],
+          return GestureDetector(
+            onTap: () => _showDetailView(context, items[index]),
+            child: SizedBox(
+              width: 150,
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Hero(
+                      tag: items[index]['name'],
+                      child: Image.network(
+                        items[index]['image'] ?? "",
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(items[index]['name'], style: Theme.of(context).textTheme.titleMedium),
+                          Text(items[index]['details']?['Life form'] ?? "Unknown Family", style: Theme.of(context).textTheme.bodySmall),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class DetailView extends StatelessWidget {
+  final Map<String, dynamic> item;
+
+  const DetailView({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(item['name']),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Hero(
+              tag: item['name'],
+              child: Image.network(
+                item['image'] ?? "",
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ...item['details']
+                      .entries
+                      .map(
+                        (entry) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text("${entry.key}:", style: const TextStyle(fontWeight: FontWeight.bold)),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(entry.value),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
