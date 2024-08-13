@@ -236,11 +236,10 @@ class _NewChatScreenState extends State<NewChatScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                        width: 350,
-                        height: 220,
-                        child: Expanded(
-                          child: DataVisulisation(),
-                        ))
+                      width: 350,
+                      height: 220,
+                      child: DataVisulisation(),
+                    )
                   ],
                 ),
               ),
