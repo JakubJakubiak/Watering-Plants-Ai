@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rockidentifie/moduls/chat/chat_screen.dart';
-import 'package:rockidentifie/moduls/chat/new_chat_screen.dart';
-import 'package:rockidentifie/providers/chat_notifier.dart';
+import 'package:PlantsAI/moduls/chat/chat_screen.dart';
+import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
+import 'package:PlantsAI/providers/chat_notifier.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
   final void Function(BuildContext dialogContext) onContinuePlaying;

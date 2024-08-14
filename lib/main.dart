@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:rockidentifie/database/chat_database.dart';
-import 'package:rockidentifie/moduls/home_screen.dart';
-import 'package:rockidentifie/providers/chat_notifier.dart';
-import 'package:rockidentifie/repositories/chat_repository.dart';
+import 'package:PlantsAI/database/chat_database.dart';
+import 'package:PlantsAI/moduls/home_screen.dart';
+import 'package:PlantsAI/providers/chat_notifier.dart';
+import 'package:PlantsAI/repositories/chat_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:rockidentifie/utils/shared_preferences_helper.dart';
+import 'package:PlantsAI/utils/shared_preferences_helper.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "360562826180",
-    "project_id": "rock-identifier-stone-ai",
-    "storage_bucket": "rock-identifier-stone-ai.appspot.com"
+    "project_number": "87898950358",
+    "project_id": "watering-plants-ai",
+    "storage_bucket": "watering-plants-ai.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:360562826180:android:0536c5a8e7f256b21b2291",
+        "mobilesdk_app_id": "1:87898950358:android:0f9a95bbe14d57c6209777",
         "android_client_info": {
-          "package_name": "com.inu.rockidentifie"
+          "package_name": "com.inu.plantsai"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "87898950358-k05scqmq21telab9tq8575h37k1kn72k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyA8aOO80Esz2uEpPrpzqPUjc49dqLESGXo"
+          "current_key": "AIzaSyD2JPlKPFm7CHh96dBMnAjaqugQ30TaBKI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87898950358-k05scqmq21telab9tq8575h37k1kn72k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

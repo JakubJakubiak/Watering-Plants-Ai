@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:rockidentifie/main.dart';
-import 'package:rockidentifie/moduls/payment/paymentrevenuecat.dart';
+import 'package:PlantsAI/main.dart';
+import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
-import 'package:rockidentifie/providers/chat_notifier.dart';
-import 'package:rockidentifie/database/chat_database.dart';
+import 'package:PlantsAI/providers/chat_notifier.dart';
+import 'package:PlantsAI/database/chat_database.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 

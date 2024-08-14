@@ -1,4 +1,4 @@
-import 'package:rockidentifie/models/chat.dart';
+import 'package:PlantsAI/models/chat.dart';
 import 'package:drift/drift.dart';
 
 class Messages extends Table {

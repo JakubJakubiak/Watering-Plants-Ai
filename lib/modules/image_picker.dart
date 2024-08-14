@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:rockidentifie/main.dart';
-import 'package:rockidentifie/moduls/chat_screen.dart';
-import 'package:rockidentifie/moduls/modern_full_width_button.dart';
-import 'package:rockidentifie/utils/gaps.dart';
+import 'package:PlantsAI/main.dart';
+import 'package:PlantsAI/moduls/chat_screen.dart';
+import 'package:PlantsAI/moduls/modern_full_width_button.dart';
+import 'package:PlantsAI/utils/gaps.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
