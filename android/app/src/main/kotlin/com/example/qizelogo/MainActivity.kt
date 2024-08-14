@@ -1,4 +1,4 @@
-package com.inu.rockidentifie
+package com.inu.plantsai
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
