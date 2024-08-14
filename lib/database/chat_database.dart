@@ -1,4 +1,4 @@
-import 'package:PlantsAI/models/models.dart';
+import 'package:rockidentifie/models/models.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:PlantsAI/main.dart';
-import 'package:PlantsAI/moduls/text_generator.dart';
+import 'package:rockidentifie/main.dart';
+import 'package:rockidentifie/moduls/text_generator.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
 class GameScreen extends StatefulWidget {

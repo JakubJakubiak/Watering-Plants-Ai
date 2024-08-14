@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:PlantsAI/database/chat_database.dart';
-import 'package:PlantsAI/models/response_message.dart';
+import 'package:rockidentifie/database/chat_database.dart';
+import 'package:rockidentifie/models/response_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drift/drift.dart';
 import 'package:shared_preferences/shared_preferences.dart';

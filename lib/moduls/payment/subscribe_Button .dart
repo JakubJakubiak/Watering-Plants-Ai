@@ -1,4 +1,4 @@
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
+import 'package:rockidentifie/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';

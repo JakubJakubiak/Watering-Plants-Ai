@@ -1,11 +1,11 @@
 import 'dart:ui';
 
-import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
-import 'package:PlantsAI/utils/gaps.dart';
+import 'package:rockidentifie/moduls/payment/subscribe_Button%20.dart';
+import 'package:rockidentifie/utils/gaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
-import 'package:PlantsAI/utils/gaps.dart';
+import 'package:rockidentifie/moduls/payment/paymentrevenuecat.dart';
+import 'package:rockidentifie/utils/gaps.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 // import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';

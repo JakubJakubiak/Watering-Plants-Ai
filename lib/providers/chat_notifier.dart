@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:PlantsAI/database/chat_database.dart';
-import 'package:PlantsAI/repositories/chat_repository.dart';
+import 'package:rockidentifie/database/chat_database.dart';
+import 'package:rockidentifie/repositories/chat_repository.dart';
 import 'package:flutter/widgets.dart';
 
 class ChatNotifier extends ChangeNotifier {
