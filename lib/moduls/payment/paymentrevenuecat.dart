@@ -365,7 +365,7 @@ class ProductView extends StatelessWidget {
                         const SizedBox(width: 8),
                         if (discountValue != null)
                           Text(
-                            product.storeProduct.priceString,
+                            '${product.storeProduct.price.toInt() * 12} ${product.storeProduct.currencyCode}',
                             style: const TextStyle(
                               decoration: TextDecoration.lineThrough,
                               color: Colors.grey,
