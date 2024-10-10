@@ -217,7 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
             if (_rewardedAd != null && Constants.adsEnabled) {
               await _rewardedAd?.show(
                 onUserEarnedReward: (ad, reward) {
-                  addPoints();
                   Navigator.of(dialogContext).pop();
                 },
               );
@@ -232,7 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
             if (_rewardedAd != null && Constants.adsEnabled) {
               await _rewardedAd?.show(
                 onUserEarnedReward: (ad, reward) {
-                  addPoints();
                   Navigator.of(dialogContext).pop();
                 },
               );
