@@ -8,5 +8,5 @@
 	"files.watcherExclude": {
 	  "**/.fvm": true
 	},
-	"CodeGPT.apiKey": "Ollama"
+	"CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

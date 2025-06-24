@@ -2,18 +2,18 @@
     "@@locale": "pl",
     "appTitle": "Caption",
     "camera":"Kamera",
-    "addCoins":"Add Coins",
+    "addCoins":"Dodaj monety",
     "unsubscribe" : "Unsubscribe",
-    "subscribe":"Subscribe ",
+    "subscribe":"Subskrybuj ",
     "gallery":"Galeria ",
     "chat":"Nowy Czat",
     "chatHistory":"Historia czatu",
     "unlimitedAccess": "Nieograniczony dostęp",
     "upgradeNow": "Ulepsz teraz",
-    "identifications": "Nieograniczona identyfikacja roślin",
+    "identifications": "Nieograniczona identyfikacja",
     "limitlessChat": "Nieograniczone wiadomości na czacie",
-    "tips": "Wskazówki dotyczące podlewania kwiatów",
-    "tips2": "Rozpoznawanie drzew w parku",
+    "tips": "Stwórz własne Ai",
+    "tips2": "Dobrze spędzony czas",
     "removeAds": "Usuń irytujące płatności"
 }
 

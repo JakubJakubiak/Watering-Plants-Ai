@@ -1,10 +1,10 @@
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
+import 'package:plantsai/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plantsai/languages/i10n/app_localizations.dart';
 
 class SubscribeButton extends StatefulWidget {
   final bool isPro;

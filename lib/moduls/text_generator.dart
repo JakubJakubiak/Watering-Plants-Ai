@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:PlantsAI/moduls/modern_full_width_button.dart';
-import 'package:PlantsAI/utils/gaps.dart';
+import 'package:plantsai/moduls/modern_full_width_button.dart';
+import 'package:plantsai/utils/gaps.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

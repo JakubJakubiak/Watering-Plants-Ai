@@ -28,8 +28,6 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _quickQuestionsMeta =
-      const VerificationMeta('quickQuestions');
   @override
   late final GeneratedColumnWithTypeConverter<List<String>, String>
       quickQuestions = GeneratedColumn<String>(
@@ -78,7 +76,6 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
-    context.handle(_quickQuestionsMeta, const VerificationResult.success());
     if (data.containsKey('last_message')) {
       context.handle(
           _lastMessageMeta,
@@ -726,22 +723,176 @@ typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<String?> imagePath,
 });
 
+final class $$ChatsTableReferences
+    extends BaseReferences<_$ChatDatabase, $ChatsTable, Chat> {
+  $$ChatsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$MessagesTable, List<Message>> _messagesRefsTable(
+          _$ChatDatabase db) =>
+      MultiTypedResultKey.fromTable(db.messages,
+          aliasName: $_aliasNameGenerator(db.chats.id, db.messages.chatId));
+
+  $$MessagesTableProcessedTableManager get messagesRefs {
+    final manager = $$MessagesTableTableManager($_db, $_db.messages)
+        .filter((f) => f.chatId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_messagesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$ChatsTableFilterComposer extends Composer<_$ChatDatabase, $ChatsTable> {
+  $$ChatsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get quickQuestions => $composableBuilder(
+          column: $table.quickQuestions,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get lastMessage => $composableBuilder(
+      column: $table.lastMessage, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> messagesRefs(
+      Expression<bool> Function($$MessagesTableFilterComposer f) f) {
+    final $$MessagesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.messages,
+        getReferencedColumn: (t) => t.chatId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MessagesTableFilterComposer(
+              $db: $db,
+              $table: $db.messages,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$ChatsTableOrderingComposer
+    extends Composer<_$ChatDatabase, $ChatsTable> {
+  $$ChatsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get quickQuestions => $composableBuilder(
+      column: $table.quickQuestions,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastMessage => $composableBuilder(
+      column: $table.lastMessage, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
+}
+
+class $$ChatsTableAnnotationComposer
+    extends Composer<_$ChatDatabase, $ChatsTable> {
+  $$ChatsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get quickQuestions =>
+      $composableBuilder(
+          column: $table.quickQuestions, builder: (column) => column);
+
+  GeneratedColumn<String> get lastMessage => $composableBuilder(
+      column: $table.lastMessage, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  Expression<T> messagesRefs<T extends Object>(
+      Expression<T> Function($$MessagesTableAnnotationComposer a) f) {
+    final $$MessagesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.messages,
+        getReferencedColumn: (t) => t.chatId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MessagesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.messages,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
 class $$ChatsTableTableManager extends RootTableManager<
     _$ChatDatabase,
     $ChatsTable,
     Chat,
     $$ChatsTableFilterComposer,
     $$ChatsTableOrderingComposer,
+    $$ChatsTableAnnotationComposer,
     $$ChatsTableCreateCompanionBuilder,
-    $$ChatsTableUpdateCompanionBuilder> {
+    $$ChatsTableUpdateCompanionBuilder,
+    (Chat, $$ChatsTableReferences),
+    Chat,
+    PrefetchHooks Function({bool messagesRefs})> {
   $$ChatsTableTableManager(_$ChatDatabase db, $ChatsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$ChatsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$ChatsTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$ChatsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ChatsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ChatsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -774,92 +925,47 @@ class $$ChatsTableTableManager extends RootTableManager<
             lastMessage: lastMessage,
             imagePath: imagePath,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$ChatsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({messagesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (messagesRefs) db.messages],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (messagesRefs)
+                    await $_getPrefetchedData<Chat, $ChatsTable, Message>(
+                        currentTable: table,
+                        referencedTable:
+                            $$ChatsTableReferences._messagesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ChatsTableReferences(db, table, p0).messagesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.chatId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
-class $$ChatsTableFilterComposer
-    extends FilterComposer<_$ChatDatabase, $ChatsTable> {
-  $$ChatsTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get createdAt => $state.composableBuilder(
-      column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
-      get quickQuestions => $state.composableBuilder(
-          column: $state.table.quickQuestions,
-          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
-              column,
-              joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get lastMessage => $state.composableBuilder(
-      column: $state.table.lastMessage,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get imagePath => $state.composableBuilder(
-      column: $state.table.imagePath,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ComposableFilter messagesRefs(
-      ComposableFilter Function($$MessagesTableFilterComposer f) f) {
-    final $$MessagesTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $state.db.messages,
-        getReferencedColumn: (t) => t.chatId,
-        builder: (joinBuilder, parentComposers) =>
-            $$MessagesTableFilterComposer(ComposerState(
-                $state.db, $state.db.messages, joinBuilder, parentComposers)));
-    return f(composer);
-  }
-}
-
-class $$ChatsTableOrderingComposer
-    extends OrderingComposer<_$ChatDatabase, $ChatsTable> {
-  $$ChatsTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
-      column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get quickQuestions => $state.composableBuilder(
-      column: $state.table.quickQuestions,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get lastMessage => $state.composableBuilder(
-      column: $state.table.lastMessage,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get imagePath => $state.composableBuilder(
-      column: $state.table.imagePath,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
+typedef $$ChatsTableProcessedTableManager = ProcessedTableManager<
+    _$ChatDatabase,
+    $ChatsTable,
+    Chat,
+    $$ChatsTableFilterComposer,
+    $$ChatsTableOrderingComposer,
+    $$ChatsTableAnnotationComposer,
+    $$ChatsTableCreateCompanionBuilder,
+    $$ChatsTableUpdateCompanionBuilder,
+    (Chat, $$ChatsTableReferences),
+    Chat,
+    PrefetchHooks Function({bool messagesRefs})>;
 typedef $$MessagesTableCreateCompanionBuilder = MessagesCompanion Function({
   Value<int> id,
   required int chatId,
@@ -877,22 +983,183 @@ typedef $$MessagesTableUpdateCompanionBuilder = MessagesCompanion Function({
   Value<bool> isUserMessage,
 });
 
+final class $$MessagesTableReferences
+    extends BaseReferences<_$ChatDatabase, $MessagesTable, Message> {
+  $$MessagesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ChatsTable _chatIdTable(_$ChatDatabase db) => db.chats
+      .createAlias($_aliasNameGenerator(db.messages.chatId, db.chats.id));
+
+  $$ChatsTableProcessedTableManager get chatId {
+    final $_column = $_itemColumn<int>('chat_id')!;
+
+    final manager = $$ChatsTableTableManager($_db, $_db.chats)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_chatIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$MessagesTableFilterComposer
+    extends Composer<_$ChatDatabase, $MessagesTable> {
+  $$MessagesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get content => $composableBuilder(
+      column: $table.content, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isUserMessage => $composableBuilder(
+      column: $table.isUserMessage, builder: (column) => ColumnFilters(column));
+
+  $$ChatsTableFilterComposer get chatId {
+    final $$ChatsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableFilterComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$MessagesTableOrderingComposer
+    extends Composer<_$ChatDatabase, $MessagesTable> {
+  $$MessagesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get content => $composableBuilder(
+      column: $table.content, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isUserMessage => $composableBuilder(
+      column: $table.isUserMessage,
+      builder: (column) => ColumnOrderings(column));
+
+  $$ChatsTableOrderingComposer get chatId {
+    final $$ChatsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableOrderingComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$MessagesTableAnnotationComposer
+    extends Composer<_$ChatDatabase, $MessagesTable> {
+  $$MessagesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+
+  GeneratedColumn<bool> get isUserMessage => $composableBuilder(
+      column: $table.isUserMessage, builder: (column) => column);
+
+  $$ChatsTableAnnotationComposer get chatId {
+    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
 class $$MessagesTableTableManager extends RootTableManager<
     _$ChatDatabase,
     $MessagesTable,
     Message,
     $$MessagesTableFilterComposer,
     $$MessagesTableOrderingComposer,
+    $$MessagesTableAnnotationComposer,
     $$MessagesTableCreateCompanionBuilder,
-    $$MessagesTableUpdateCompanionBuilder> {
+    $$MessagesTableUpdateCompanionBuilder,
+    (Message, $$MessagesTableReferences),
+    Message,
+    PrefetchHooks Function({bool chatId})> {
   $$MessagesTableTableManager(_$ChatDatabase db, $MessagesTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$MessagesTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$MessagesTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$MessagesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MessagesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MessagesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> chatId = const Value.absent(),
@@ -925,90 +1192,59 @@ class $$MessagesTableTableManager extends RootTableManager<
             timestamp: timestamp,
             isUserMessage: isUserMessage,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$MessagesTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({chatId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (chatId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.chatId,
+                    referencedTable: $$MessagesTableReferences._chatIdTable(db),
+                    referencedColumn:
+                        $$MessagesTableReferences._chatIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
-class $$MessagesTableFilterComposer
-    extends FilterComposer<_$ChatDatabase, $MessagesTable> {
-  $$MessagesTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get content => $state.composableBuilder(
-      column: $state.table.content,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get imagePath => $state.composableBuilder(
-      column: $state.table.imagePath,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get timestamp => $state.composableBuilder(
-      column: $state.table.timestamp,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get isUserMessage => $state.composableBuilder(
-      column: $state.table.isUserMessage,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  $$ChatsTableFilterComposer get chatId {
-    final $$ChatsTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.chatId,
-        referencedTable: $state.db.chats,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) => $$ChatsTableFilterComposer(
-            ComposerState(
-                $state.db, $state.db.chats, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
-
-class $$MessagesTableOrderingComposer
-    extends OrderingComposer<_$ChatDatabase, $MessagesTable> {
-  $$MessagesTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get content => $state.composableBuilder(
-      column: $state.table.content,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get imagePath => $state.composableBuilder(
-      column: $state.table.imagePath,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get timestamp => $state.composableBuilder(
-      column: $state.table.timestamp,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get isUserMessage => $state.composableBuilder(
-      column: $state.table.isUserMessage,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  $$ChatsTableOrderingComposer get chatId {
-    final $$ChatsTableOrderingComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.chatId,
-        referencedTable: $state.db.chats,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder, parentComposers) => $$ChatsTableOrderingComposer(
-            ComposerState(
-                $state.db, $state.db.chats, joinBuilder, parentComposers)));
-    return composer;
-  }
-}
+typedef $$MessagesTableProcessedTableManager = ProcessedTableManager<
+    _$ChatDatabase,
+    $MessagesTable,
+    Message,
+    $$MessagesTableFilterComposer,
+    $$MessagesTableOrderingComposer,
+    $$MessagesTableAnnotationComposer,
+    $$MessagesTableCreateCompanionBuilder,
+    $$MessagesTableUpdateCompanionBuilder,
+    (Message, $$MessagesTableReferences),
+    Message,
+    PrefetchHooks Function({bool chatId})>;
 
 class $ChatDatabaseManager {
   final _$ChatDatabase _db;

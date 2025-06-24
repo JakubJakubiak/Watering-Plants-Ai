@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:PlantsAI/main.dart';
-import 'package:PlantsAI/moduls/chat/chat_history_screen.dart';
-import 'package:PlantsAI/moduls/chat/new_chat_screen.dart';
-import 'package:PlantsAI/moduls/game_over_dialog.dart';
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
-import 'package:PlantsAI/moduls/turial.dart';
+import 'package:plantsai/main.dart';
+import 'package:plantsai/moduls/chat/chat_history_screen.dart';
+import 'package:plantsai/moduls/chat/new_chat_screen.dart';
+import 'package:plantsai/moduls/game_over_dialog.dart';
+import 'package:plantsai/moduls/payment/paymentrevenuecat.dart';
+import 'package:plantsai/moduls/turial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,12 +16,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:PlantsAI/moduls/admob_service.dart';
-import 'package:PlantsAI/utils/constants.dart';
+import 'package:plantsai/moduls/admob_service.dart';
+import 'package:plantsai/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plantsai/languages/i10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:PlantsAI/main.dart';
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
+import 'package:plantsai/main.dart';
+import 'package:plantsai/moduls/payment/paymentrevenuecat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
-import 'package:PlantsAI/providers/chat_notifier.dart';
-import 'package:PlantsAI/database/chat_database.dart';
+import 'package:plantsai/providers/chat_notifier.dart';
+import 'package:plantsai/database/chat_database.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -211,15 +211,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                         const SizedBox(height: 8),
                       ],
-                      MarkdownBody(
-                        data: message.content,
-                        styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(
-                            fontSize: 16,
-                            color: message.isUserMessage ? Colors.white : null,
-                          ),
+
+                      Text(
+                        message.content,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: message.isUserMessage ? Colors.white : null,
                         ),
-                      ),
+                      )
+
+                      // MarkdownBody(
+                      //   data: message.content,
+                      //   styleSheet: MarkdownStyleSheet(
+                      //     p: TextStyle(
+                      //       fontSize: 16,
+                      //       color: message.isUserMessage ? Colors.white : null,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

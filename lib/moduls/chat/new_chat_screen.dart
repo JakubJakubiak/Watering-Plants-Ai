@@ -1,17 +1,16 @@
-// import 'package:PlantsAI/moduls/chat/CameraButton.dart';
-import 'package:PlantsAI/moduls/chat/chat_screen.dart';
-import 'package:PlantsAI/moduls/data_jeson/data_Visulisation%20.dart';
-import 'package:PlantsAI/moduls/payment/paymentrevenuecat.dart';
-import 'package:PlantsAI/moduls/payment/subscribe_Button%20.dart';
+// import 'package:plantsai/moduls/chat/CameraButton.dart';
+import 'package:plantsai/moduls/chat/chat_screen.dart';
+import 'package:plantsai/moduls/data_jeson/data_Visulisation%20.dart';
+import 'package:plantsai/moduls/payment/paymentrevenuecat.dart';
+import 'package:plantsai/moduls/payment/subscribe_Button%20.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:PlantsAI/providers/chat_notifier.dart';
+import 'package:plantsai/providers/chat_notifier.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:plantsai/languages/i10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
@@ -145,8 +144,8 @@ class _NewChatScreenState extends State<NewChatScreen> {
                                             final pickedFile = await imagePicker.pickImage(
                                               source: ImageSource.gallery,
                                               imageQuality: 90,
-                                              maxWidth: 800,
-                                              maxHeight: 800,
+                                              maxWidth: 1024,
+                                              maxHeight: 1024,
                                             );
 
                                             final imagescrypt = await _imageTrimming(pickedFile);
