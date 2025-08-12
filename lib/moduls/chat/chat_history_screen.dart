@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:plantsai/moduls/chat/chat_screen.dart';
 import 'package:plantsai/moduls/chat/new_chat_screen.dart';
@@ -31,7 +31,10 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat History')),
+      appBar: AppBar(
+        title: const Text('Chat History'),
+        backgroundColor: const Color(0xFF16213e),
+      ),
       body: Consumer<ChatNotifier>(builder: (context, chatNotifier, child) {
         if (chatNotifier.chats.isEmpty) {
           return const Center(

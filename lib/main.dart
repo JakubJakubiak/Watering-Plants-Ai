@@ -191,7 +191,10 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        home: const FuturisticWrapper(child: HomeScreen()),
+        builder: (context, child) {
+          return FuturisticWrapper(child: child ?? const SizedBox());
+        },
+        home: const HomeScreen(),
       );
     });
   }

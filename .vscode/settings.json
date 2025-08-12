@@ -8,5 +8,6 @@
 	"files.watcherExclude": {
 	  "**/.fvm": true
 	},
-	"CodeGPT.apiKey": "CodeGPT Plus Beta"
+	"CodeGPT.apiKey": "CodeGPT Plus Beta",
+	"java.configuration.updateBuildConfiguration": "interactive"
 }

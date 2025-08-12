@@ -330,87 +330,105 @@ class ProductView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isLoading = true;
-    return PopScope(
-      canPop: !_isLoading,
-      onPopInvoked: (didPop) async {
-        if (didPop) {
-          return;
-        }
-      },
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.5),
-              width: 2,
-            ),
+    final bgGradient = LinearGradient(
+      colors: isSelected ? [Colors.blueAccent.withOpacity(0.3), Colors.blueAccent.withOpacity(0.1)] : [const Color(0xFF1a1a2e), const Color(0xFF0f3460)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: bgGradient,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.blueAccent : Colors.white10,
+            width: 2,
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          _getTitleText(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+          boxShadow: [
+            if (isSelected)
+              BoxShadow(
+                color: Colors.blueAccent.withOpacity(0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        _getTitleText(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
-                        const SizedBox(width: 8),
-                        if (discountValue != null)
-                          Text(
-                            '${product.storeProduct.price.toInt() * 12} ${product.storeProduct.currencyCode}',
-                            style: const TextStyle(
-                              decoration: TextDecoration.lineThrough,
-                              color: Colors.grey,
-                            ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (discountValue != null)
+                        Text(
+                          '${product.storeProduct.price.toInt() * 12} ${product.storeProduct.currencyCode}',
+                          style: const TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.white54,
+                            fontSize: 12,
                           ),
-                      ],
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _getPriceText(),
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
                     ),
-                    Text(_getPriceText()),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            if (discountPercent != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'SAVE $discountPercent%',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              if (discountPercent != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Text(
-                    'SAVE $discountPercent%',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              if (product.storeProduct.introductoryPrice != null && product.storeProduct.introductoryPrice?.price == 0) ...[
-                const SizedBox(width: 8),
-                const Text(
-                  "FREE",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ],
+            if (product.storeProduct.introductoryPrice != null && product.storeProduct.introductoryPrice?.price == 0) ...[
               const SizedBox(width: 8),
-              Icon(
-                isSelected ? Icons.check_circle : Icons.circle_outlined,
-                color: isSelected ? Colors.blue : Colors.grey,
+              const Text(
+                "FREE",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  letterSpacing: 1.5,
+                  color: Colors.greenAccent,
+                ),
               ),
             ],
-          ),
+            const SizedBox(width: 8),
+            Icon(
+              isSelected ? Icons.check_circle : Icons.circle_outlined,
+              color: isSelected ? Colors.blueAccent : Colors.white54,
+            ),
+          ],
         ),
       ),
     );
@@ -418,11 +436,9 @@ class ProductView extends StatelessWidget {
 
   String _getTitleText() {
     final introductoryPrice = product.storeProduct.introductoryPrice;
-
     if (introductoryPrice != null) {
       return '${introductoryPrice.periodNumberOfUnits}-${introductoryPrice.periodUnit.name.toLowerCase()} Trial';
     }
-
     return switch (product.packageType) {
       PackageType.annual => 'Yearly',
       PackageType.weekly => 'Weekly',
@@ -444,7 +460,6 @@ class ProductView extends StatelessWidget {
     if (introductoryPrice != null && fullPricePhase != null) {
       return 'then ${product.storeProduct.priceString} per ${fullPricePhase.billingPeriod?.value ?? 0} ${fullPricePhase.billingPeriod?.unit.name.toLowerCase()}';
     }
-    // Implement logic to get the price text
     return '${product.storeProduct.priceString} / ${_getPeriodText()}';
   }
 }

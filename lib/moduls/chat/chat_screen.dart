@@ -137,7 +137,10 @@ class _ChatScreenState extends State<ChatScreen> {
         final chatName = chat.name.isEmpty ? 'Chat ${widget.chatId}' : chat.name;
 
         return Scaffold(
-          appBar: AppBar(title: Text(chatName)),
+          appBar: AppBar(
+            title: Text(chatName),
+            backgroundColor: const Color(0xFF16213e),
+          ),
           body: Column(
             children: [
               Expanded(

@@ -241,67 +241,89 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ];
       return Scaffold(
-        appBar: AppBar(
-          actions: [
-            ActionChip(
-              // avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
-              avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
-              label: isPro ? const Text('Pro') : Text('$tokens uses'),
-              side: const BorderSide(
-                color: Colors.blueAccent,
-                width: 2,
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF16213e),
+            actions: [
+              ActionChip(
+                // avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
+                avatar: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent),
+                label: isPro ? const Text('Pro') : Text('$tokens uses'),
+                side: const BorderSide(
+                  color: Colors.blueAccent,
+                  width: 2,
+                ),
+                tooltip: 'Watch an ad to get 4 more uses',
+                onPressed: () async {
+                  endGame();
+                },
               ),
-              tooltip: 'Watch an ad to get 4 more uses',
-              onPressed: () async {
-                endGame();
-              },
-            ),
-            const SizedBox(width: 8),
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: _pages,
+              const SizedBox(width: 8),
+            ],
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: IndexedStack(
+                  index: _currentIndex,
+                  children: _pages,
+                ),
               ),
-            ),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                double bannerHeight = 60;
-                double bannerWidth = constraints.maxWidth;
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  double bannerHeight = 60;
+                  double bannerWidth = constraints.maxWidth;
 
-                return (_banner == null && renderActive == false || isPro)
-                    ? Container(height: 0)
-                    : SizedBox(
-                        height: bannerHeight,
-                        width: bannerWidth,
-                        child: AdWidget(ad: _banner!),
-                      );
+                  return (_banner == null && renderActive == false || isPro)
+                      ? Container(height: 0)
+                      : SizedBox(
+                          height: bannerHeight,
+                          width: bannerWidth,
+                          child: AdWidget(ad: _banner!),
+                        );
+                },
+              )
+            ],
+          ),
+          bottomNavigationBar: NavigationBarTheme(
+            data: NavigationBarThemeData(
+              backgroundColor: const Color(0xFF16213e), // ciemne tło
+              indicatorColor: Colors.blueAccent.withOpacity(0.2), // delikatne podświetlenie
+              labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>(
+                (states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold);
+                  }
+                  return const TextStyle(color: Colors.white70);
+                },
+              ),
+              iconTheme: MaterialStateProperty.resolveWith<IconThemeData>(
+                (states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return const IconThemeData(color: Colors.blueAccent);
+                  }
+                  return const IconThemeData(color: Colors.white70);
+                },
+              ),
+            ),
+            child: NavigationBar(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
               },
-            )
-          ],
-        ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.chat),
-              label: AppLocalizations.of(context).chat,
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.chat),
+                  label: AppLocalizations.of(context).chat,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.history),
+                  label: AppLocalizations.of(context).chatHistory,
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: const Icon(Icons.history),
-              label: AppLocalizations.of(context).chatHistory,
-            ),
-          ],
-        ),
-      );
+          ));
     });
   }
 }

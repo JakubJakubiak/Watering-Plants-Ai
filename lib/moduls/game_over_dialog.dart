@@ -31,7 +31,7 @@ class GameOverDialog extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Coins and subscriptions'),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF16213e),
       ),
       body: SafeArea(
         child: Padding(
