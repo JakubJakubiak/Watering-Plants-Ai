@@ -214,7 +214,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                         const SizedBox(height: 8),
                       ],
-
                       Text(
                         message.content,
                         textAlign: TextAlign.center,
@@ -223,16 +222,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           color: message.isUserMessage ? Colors.white : null,
                         ),
                       )
-
-                      // MarkdownBody(
-                      //   data: message.content,
-                      //   styleSheet: MarkdownStyleSheet(
-                      //     p: TextStyle(
-                      //       fontSize: 16,
-                      //       color: message.isUserMessage ? Colors.white : null,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

@@ -130,14 +130,6 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           },
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NewChatScreen(onContinuePlaying: (dialogContext) => {}),
-          ));
-        },
-      ),
     );
   }
 

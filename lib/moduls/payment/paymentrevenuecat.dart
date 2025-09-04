@@ -82,19 +82,35 @@ class _PaywallViewState extends State<PaywallView> with SingleTickerProviderStat
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _buildCloseButton(),
-                _buildHeader(),
-                _buildBenefits(),
-                const SizedBox(height: 16),
-                _buildProductList(),
-                const SizedBox(height: 16),
-                _buildUpgradeButton(),
-                _buildFooter(),
-              ],
+          child: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF1a1a2e),
+                  Color(0xFF16213e),
+                  Color(0xFF0f3460),
+                ],
+                stops: [0.0, 0.6, 1.0],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildCloseButton(),
+                  _buildHeader(),
+                  _buildBenefits(),
+                  const SizedBox(height: 16),
+                  _buildProductList(),
+                  const SizedBox(height: 16),
+                  _buildUpgradeButton(),
+                  _buildFooter(),
+                ],
+              ),
             ),
           ),
         ),

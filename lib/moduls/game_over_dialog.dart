@@ -28,50 +28,63 @@ class GameOverDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Coins and subscriptions'),
-        elevation: 0,
-        backgroundColor: const Color(0xFF16213e),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 16),
-              Expanded(
-                flex: 1,
-                child: Transform.scale(
-                    scale: 0.8,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.asset(
-                        'lib/logoicon/icon.png',
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      const LanguageSelectorWidget(),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        child: SubscribeButton(
-                          isPro: isPro,
-                          onContinuePlaying: onContinuePlaying,
-                        ),
-                      ),
-                    ],
-                  )),
-              const SizedBox(height: 16),
-            ],
-          ),
+        appBar: AppBar(
+          title: const Text('Coins and subscriptions'),
+          elevation: 0,
+          backgroundColor: const Color(0xFF16213e),
         ),
-      ),
-    );
+        body: SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF1a1a2e),
+                  Color(0xFF16213e),
+                  Color(0xFF0f3460),
+                ],
+                stops: [0.0, 0.6, 1.0],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 16),
+                  Expanded(
+                    flex: 1,
+                    child: Transform.scale(
+                        scale: 0.8,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: Image.asset(
+                            'lib/logoicon/icon.png',
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          const LanguageSelectorWidget(),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            child: SubscribeButton(
+                              isPro: isPro,
+                              onContinuePlaying: onContinuePlaying,
+                            ),
+                          ),
+                        ],
+                      )),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }
