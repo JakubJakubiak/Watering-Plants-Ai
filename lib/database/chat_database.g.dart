@@ -48,9 +48,53 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
       'image_path', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _speciesMeta =
+      const VerificationMeta('species');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, createdAt, quickQuestions, lastMessage, imagePath];
+  late final GeneratedColumn<String> species = GeneratedColumn<String>(
+      'species', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+      care = GeneratedColumn<String>('care', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<Map<String, dynamic>?>($ChatsTable.$convertercaren);
+  static const VerificationMeta _wateringDaysMeta =
+      const VerificationMeta('wateringDays');
+  @override
+  late final GeneratedColumn<int> wateringDays = GeneratedColumn<int>(
+      'watering_days', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _lastWateredAtMeta =
+      const VerificationMeta('lastWateredAt');
+  @override
+  late final GeneratedColumn<DateTime> lastWateredAt =
+      GeneratedColumn<DateTime>('last_watered_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _inGardenMeta =
+      const VerificationMeta('inGarden');
+  @override
+  late final GeneratedColumn<bool> inGarden = GeneratedColumn<bool>(
+      'in_garden', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("in_garden" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        createdAt,
+        quickQuestions,
+        lastMessage,
+        imagePath,
+        species,
+        care,
+        wateringDays,
+        lastWateredAt,
+        inGarden
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -86,6 +130,26 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
       context.handle(_imagePathMeta,
           imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
     }
+    if (data.containsKey('species')) {
+      context.handle(_speciesMeta,
+          species.isAcceptableOrUnknown(data['species']!, _speciesMeta));
+    }
+    if (data.containsKey('watering_days')) {
+      context.handle(
+          _wateringDaysMeta,
+          wateringDays.isAcceptableOrUnknown(
+              data['watering_days']!, _wateringDaysMeta));
+    }
+    if (data.containsKey('last_watered_at')) {
+      context.handle(
+          _lastWateredAtMeta,
+          lastWateredAt.isAcceptableOrUnknown(
+              data['last_watered_at']!, _lastWateredAtMeta));
+    }
+    if (data.containsKey('in_garden')) {
+      context.handle(_inGardenMeta,
+          inGarden.isAcceptableOrUnknown(data['in_garden']!, _inGardenMeta));
+    }
     return context;
   }
 
@@ -108,6 +172,16 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
           .read(DriftSqlType.string, data['${effectivePrefix}last_message']),
       imagePath: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image_path']),
+      species: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}species']),
+      care: $ChatsTable.$convertercaren.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}care'])),
+      wateringDays: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}watering_days']),
+      lastWateredAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_watered_at']),
+      inGarden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}in_garden'])!,
     );
   }
 
@@ -118,6 +192,10 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
 
   static TypeConverter<List<String>, String> $converterquickQuestions =
       const ListStringConverter();
+  static TypeConverter<Map<String, dynamic>, String> $convertercare =
+      const JsonMapConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $convertercaren =
+      NullAwareTypeConverter.wrap($convertercare);
 }
 
 class Chat extends DataClass implements Insertable<Chat> {
@@ -127,13 +205,23 @@ class Chat extends DataClass implements Insertable<Chat> {
   final List<String> quickQuestions;
   final String? lastMessage;
   final String? imagePath;
+  final String? species;
+  final Map<String, dynamic>? care;
+  final int? wateringDays;
+  final DateTime? lastWateredAt;
+  final bool inGarden;
   const Chat(
       {required this.id,
       required this.name,
       required this.createdAt,
       required this.quickQuestions,
       this.lastMessage,
-      this.imagePath});
+      this.imagePath,
+      this.species,
+      this.care,
+      this.wateringDays,
+      this.lastWateredAt,
+      required this.inGarden});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -150,6 +238,19 @@ class Chat extends DataClass implements Insertable<Chat> {
     if (!nullToAbsent || imagePath != null) {
       map['image_path'] = Variable<String>(imagePath);
     }
+    if (!nullToAbsent || species != null) {
+      map['species'] = Variable<String>(species);
+    }
+    if (!nullToAbsent || care != null) {
+      map['care'] = Variable<String>($ChatsTable.$convertercaren.toSql(care));
+    }
+    if (!nullToAbsent || wateringDays != null) {
+      map['watering_days'] = Variable<int>(wateringDays);
+    }
+    if (!nullToAbsent || lastWateredAt != null) {
+      map['last_watered_at'] = Variable<DateTime>(lastWateredAt);
+    }
+    map['in_garden'] = Variable<bool>(inGarden);
     return map;
   }
 
@@ -165,6 +266,17 @@ class Chat extends DataClass implements Insertable<Chat> {
       imagePath: imagePath == null && nullToAbsent
           ? const Value.absent()
           : Value(imagePath),
+      species: species == null && nullToAbsent
+          ? const Value.absent()
+          : Value(species),
+      care: care == null && nullToAbsent ? const Value.absent() : Value(care),
+      wateringDays: wateringDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wateringDays),
+      lastWateredAt: lastWateredAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastWateredAt),
+      inGarden: Value(inGarden),
     );
   }
 
@@ -178,6 +290,11 @@ class Chat extends DataClass implements Insertable<Chat> {
       quickQuestions: serializer.fromJson<List<String>>(json['quickQuestions']),
       lastMessage: serializer.fromJson<String?>(json['lastMessage']),
       imagePath: serializer.fromJson<String?>(json['imagePath']),
+      species: serializer.fromJson<String?>(json['species']),
+      care: serializer.fromJson<Map<String, dynamic>?>(json['care']),
+      wateringDays: serializer.fromJson<int?>(json['wateringDays']),
+      lastWateredAt: serializer.fromJson<DateTime?>(json['lastWateredAt']),
+      inGarden: serializer.fromJson<bool>(json['inGarden']),
     );
   }
   @override
@@ -190,6 +307,11 @@ class Chat extends DataClass implements Insertable<Chat> {
       'quickQuestions': serializer.toJson<List<String>>(quickQuestions),
       'lastMessage': serializer.toJson<String?>(lastMessage),
       'imagePath': serializer.toJson<String?>(imagePath),
+      'species': serializer.toJson<String?>(species),
+      'care': serializer.toJson<Map<String, dynamic>?>(care),
+      'wateringDays': serializer.toJson<int?>(wateringDays),
+      'lastWateredAt': serializer.toJson<DateTime?>(lastWateredAt),
+      'inGarden': serializer.toJson<bool>(inGarden),
     };
   }
 
@@ -199,7 +321,12 @@ class Chat extends DataClass implements Insertable<Chat> {
           DateTime? createdAt,
           List<String>? quickQuestions,
           Value<String?> lastMessage = const Value.absent(),
-          Value<String?> imagePath = const Value.absent()}) =>
+          Value<String?> imagePath = const Value.absent(),
+          Value<String?> species = const Value.absent(),
+          Value<Map<String, dynamic>?> care = const Value.absent(),
+          Value<int?> wateringDays = const Value.absent(),
+          Value<DateTime?> lastWateredAt = const Value.absent(),
+          bool? inGarden}) =>
       Chat(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -207,6 +334,13 @@ class Chat extends DataClass implements Insertable<Chat> {
         quickQuestions: quickQuestions ?? this.quickQuestions,
         lastMessage: lastMessage.present ? lastMessage.value : this.lastMessage,
         imagePath: imagePath.present ? imagePath.value : this.imagePath,
+        species: species.present ? species.value : this.species,
+        care: care.present ? care.value : this.care,
+        wateringDays:
+            wateringDays.present ? wateringDays.value : this.wateringDays,
+        lastWateredAt:
+            lastWateredAt.present ? lastWateredAt.value : this.lastWateredAt,
+        inGarden: inGarden ?? this.inGarden,
       );
   Chat copyWithCompanion(ChatsCompanion data) {
     return Chat(
@@ -219,6 +353,15 @@ class Chat extends DataClass implements Insertable<Chat> {
       lastMessage:
           data.lastMessage.present ? data.lastMessage.value : this.lastMessage,
       imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      species: data.species.present ? data.species.value : this.species,
+      care: data.care.present ? data.care.value : this.care,
+      wateringDays: data.wateringDays.present
+          ? data.wateringDays.value
+          : this.wateringDays,
+      lastWateredAt: data.lastWateredAt.present
+          ? data.lastWateredAt.value
+          : this.lastWateredAt,
+      inGarden: data.inGarden.present ? data.inGarden.value : this.inGarden,
     );
   }
 
@@ -230,14 +373,29 @@ class Chat extends DataClass implements Insertable<Chat> {
           ..write('createdAt: $createdAt, ')
           ..write('quickQuestions: $quickQuestions, ')
           ..write('lastMessage: $lastMessage, ')
-          ..write('imagePath: $imagePath')
+          ..write('imagePath: $imagePath, ')
+          ..write('species: $species, ')
+          ..write('care: $care, ')
+          ..write('wateringDays: $wateringDays, ')
+          ..write('lastWateredAt: $lastWateredAt, ')
+          ..write('inGarden: $inGarden')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, createdAt, quickQuestions, lastMessage, imagePath);
+  int get hashCode => Object.hash(
+      id,
+      name,
+      createdAt,
+      quickQuestions,
+      lastMessage,
+      imagePath,
+      species,
+      care,
+      wateringDays,
+      lastWateredAt,
+      inGarden);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -247,7 +405,12 @@ class Chat extends DataClass implements Insertable<Chat> {
           other.createdAt == this.createdAt &&
           other.quickQuestions == this.quickQuestions &&
           other.lastMessage == this.lastMessage &&
-          other.imagePath == this.imagePath);
+          other.imagePath == this.imagePath &&
+          other.species == this.species &&
+          other.care == this.care &&
+          other.wateringDays == this.wateringDays &&
+          other.lastWateredAt == this.lastWateredAt &&
+          other.inGarden == this.inGarden);
 }
 
 class ChatsCompanion extends UpdateCompanion<Chat> {
@@ -257,6 +420,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   final Value<List<String>> quickQuestions;
   final Value<String?> lastMessage;
   final Value<String?> imagePath;
+  final Value<String?> species;
+  final Value<Map<String, dynamic>?> care;
+  final Value<int?> wateringDays;
+  final Value<DateTime?> lastWateredAt;
+  final Value<bool> inGarden;
   const ChatsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -264,6 +432,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     this.quickQuestions = const Value.absent(),
     this.lastMessage = const Value.absent(),
     this.imagePath = const Value.absent(),
+    this.species = const Value.absent(),
+    this.care = const Value.absent(),
+    this.wateringDays = const Value.absent(),
+    this.lastWateredAt = const Value.absent(),
+    this.inGarden = const Value.absent(),
   });
   ChatsCompanion.insert({
     this.id = const Value.absent(),
@@ -272,6 +445,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     this.quickQuestions = const Value.absent(),
     this.lastMessage = const Value.absent(),
     this.imagePath = const Value.absent(),
+    this.species = const Value.absent(),
+    this.care = const Value.absent(),
+    this.wateringDays = const Value.absent(),
+    this.lastWateredAt = const Value.absent(),
+    this.inGarden = const Value.absent(),
   })  : name = Value(name),
         createdAt = Value(createdAt);
   static Insertable<Chat> custom({
@@ -281,6 +459,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     Expression<String>? quickQuestions,
     Expression<String>? lastMessage,
     Expression<String>? imagePath,
+    Expression<String>? species,
+    Expression<String>? care,
+    Expression<int>? wateringDays,
+    Expression<DateTime>? lastWateredAt,
+    Expression<bool>? inGarden,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -289,6 +472,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       if (quickQuestions != null) 'quick_questions': quickQuestions,
       if (lastMessage != null) 'last_message': lastMessage,
       if (imagePath != null) 'image_path': imagePath,
+      if (species != null) 'species': species,
+      if (care != null) 'care': care,
+      if (wateringDays != null) 'watering_days': wateringDays,
+      if (lastWateredAt != null) 'last_watered_at': lastWateredAt,
+      if (inGarden != null) 'in_garden': inGarden,
     });
   }
 
@@ -298,7 +486,12 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       Value<DateTime>? createdAt,
       Value<List<String>>? quickQuestions,
       Value<String?>? lastMessage,
-      Value<String?>? imagePath}) {
+      Value<String?>? imagePath,
+      Value<String?>? species,
+      Value<Map<String, dynamic>?>? care,
+      Value<int?>? wateringDays,
+      Value<DateTime?>? lastWateredAt,
+      Value<bool>? inGarden}) {
     return ChatsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -306,6 +499,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       quickQuestions: quickQuestions ?? this.quickQuestions,
       lastMessage: lastMessage ?? this.lastMessage,
       imagePath: imagePath ?? this.imagePath,
+      species: species ?? this.species,
+      care: care ?? this.care,
+      wateringDays: wateringDays ?? this.wateringDays,
+      lastWateredAt: lastWateredAt ?? this.lastWateredAt,
+      inGarden: inGarden ?? this.inGarden,
     );
   }
 
@@ -331,6 +529,22 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     if (imagePath.present) {
       map['image_path'] = Variable<String>(imagePath.value);
     }
+    if (species.present) {
+      map['species'] = Variable<String>(species.value);
+    }
+    if (care.present) {
+      map['care'] =
+          Variable<String>($ChatsTable.$convertercaren.toSql(care.value));
+    }
+    if (wateringDays.present) {
+      map['watering_days'] = Variable<int>(wateringDays.value);
+    }
+    if (lastWateredAt.present) {
+      map['last_watered_at'] = Variable<DateTime>(lastWateredAt.value);
+    }
+    if (inGarden.present) {
+      map['in_garden'] = Variable<bool>(inGarden.value);
+    }
     return map;
   }
 
@@ -342,7 +556,12 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
           ..write('createdAt: $createdAt, ')
           ..write('quickQuestions: $quickQuestions, ')
           ..write('lastMessage: $lastMessage, ')
-          ..write('imagePath: $imagePath')
+          ..write('imagePath: $imagePath, ')
+          ..write('species: $species, ')
+          ..write('care: $care, ')
+          ..write('wateringDays: $wateringDays, ')
+          ..write('lastWateredAt: $lastWateredAt, ')
+          ..write('inGarden: $inGarden')
           ..write(')'))
         .toString();
   }
@@ -694,16 +913,236 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   }
 }
 
+class $WaterLogsTable extends WaterLogs
+    with TableInfo<$WaterLogsTable, WaterLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _chatIdMeta = const VerificationMeta('chatId');
+  @override
+  late final GeneratedColumn<int> chatId = GeneratedColumn<int>(
+      'chat_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES chats (id)'));
+  static const VerificationMeta _wateredAtMeta =
+      const VerificationMeta('wateredAt');
+  @override
+  late final GeneratedColumn<DateTime> wateredAt = GeneratedColumn<DateTime>(
+      'watered_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, chatId, wateredAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_logs';
+  @override
+  VerificationContext validateIntegrity(Insertable<WaterLog> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('chat_id')) {
+      context.handle(_chatIdMeta,
+          chatId.isAcceptableOrUnknown(data['chat_id']!, _chatIdMeta));
+    } else if (isInserting) {
+      context.missing(_chatIdMeta);
+    }
+    if (data.containsKey('watered_at')) {
+      context.handle(_wateredAtMeta,
+          wateredAt.isAcceptableOrUnknown(data['watered_at']!, _wateredAtMeta));
+    } else if (isInserting) {
+      context.missing(_wateredAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterLog(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      chatId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}chat_id'])!,
+      wateredAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}watered_at'])!,
+    );
+  }
+
+  @override
+  $WaterLogsTable createAlias(String alias) {
+    return $WaterLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WaterLog extends DataClass implements Insertable<WaterLog> {
+  final int id;
+  final int chatId;
+  final DateTime wateredAt;
+  const WaterLog(
+      {required this.id, required this.chatId, required this.wateredAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['chat_id'] = Variable<int>(chatId);
+    map['watered_at'] = Variable<DateTime>(wateredAt);
+    return map;
+  }
+
+  WaterLogsCompanion toCompanion(bool nullToAbsent) {
+    return WaterLogsCompanion(
+      id: Value(id),
+      chatId: Value(chatId),
+      wateredAt: Value(wateredAt),
+    );
+  }
+
+  factory WaterLog.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterLog(
+      id: serializer.fromJson<int>(json['id']),
+      chatId: serializer.fromJson<int>(json['chatId']),
+      wateredAt: serializer.fromJson<DateTime>(json['wateredAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'chatId': serializer.toJson<int>(chatId),
+      'wateredAt': serializer.toJson<DateTime>(wateredAt),
+    };
+  }
+
+  WaterLog copyWith({int? id, int? chatId, DateTime? wateredAt}) => WaterLog(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        wateredAt: wateredAt ?? this.wateredAt,
+      );
+  WaterLog copyWithCompanion(WaterLogsCompanion data) {
+    return WaterLog(
+      id: data.id.present ? data.id.value : this.id,
+      chatId: data.chatId.present ? data.chatId.value : this.chatId,
+      wateredAt: data.wateredAt.present ? data.wateredAt.value : this.wateredAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLog(')
+          ..write('id: $id, ')
+          ..write('chatId: $chatId, ')
+          ..write('wateredAt: $wateredAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, chatId, wateredAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterLog &&
+          other.id == this.id &&
+          other.chatId == this.chatId &&
+          other.wateredAt == this.wateredAt);
+}
+
+class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
+  final Value<int> id;
+  final Value<int> chatId;
+  final Value<DateTime> wateredAt;
+  const WaterLogsCompanion({
+    this.id = const Value.absent(),
+    this.chatId = const Value.absent(),
+    this.wateredAt = const Value.absent(),
+  });
+  WaterLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required int chatId,
+    required DateTime wateredAt,
+  })  : chatId = Value(chatId),
+        wateredAt = Value(wateredAt);
+  static Insertable<WaterLog> custom({
+    Expression<int>? id,
+    Expression<int>? chatId,
+    Expression<DateTime>? wateredAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (chatId != null) 'chat_id': chatId,
+      if (wateredAt != null) 'watered_at': wateredAt,
+    });
+  }
+
+  WaterLogsCompanion copyWith(
+      {Value<int>? id, Value<int>? chatId, Value<DateTime>? wateredAt}) {
+    return WaterLogsCompanion(
+      id: id ?? this.id,
+      chatId: chatId ?? this.chatId,
+      wateredAt: wateredAt ?? this.wateredAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (chatId.present) {
+      map['chat_id'] = Variable<int>(chatId.value);
+    }
+    if (wateredAt.present) {
+      map['watered_at'] = Variable<DateTime>(wateredAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('chatId: $chatId, ')
+          ..write('wateredAt: $wateredAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$ChatDatabase extends GeneratedDatabase {
   _$ChatDatabase(QueryExecutor e) : super(e);
   $ChatDatabaseManager get managers => $ChatDatabaseManager(this);
   late final $ChatsTable chats = $ChatsTable(this);
   late final $MessagesTable messages = $MessagesTable(this);
+  late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [chats, messages];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [chats, messages, waterLogs];
 }
 
 typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
@@ -713,6 +1152,11 @@ typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
   Value<List<String>> quickQuestions,
   Value<String?> lastMessage,
   Value<String?> imagePath,
+  Value<String?> species,
+  Value<Map<String, dynamic>?> care,
+  Value<int?> wateringDays,
+  Value<DateTime?> lastWateredAt,
+  Value<bool> inGarden,
 });
 typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<int> id,
@@ -721,6 +1165,11 @@ typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<List<String>> quickQuestions,
   Value<String?> lastMessage,
   Value<String?> imagePath,
+  Value<String?> species,
+  Value<Map<String, dynamic>?> care,
+  Value<int?> wateringDays,
+  Value<DateTime?> lastWateredAt,
+  Value<bool> inGarden,
 });
 
 final class $$ChatsTableReferences
@@ -737,6 +1186,20 @@ final class $$ChatsTableReferences
         .filter((f) => f.chatId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_messagesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$WaterLogsTable, List<WaterLog>>
+      _waterLogsRefsTable(_$ChatDatabase db) => MultiTypedResultKey.fromTable(
+          db.waterLogs,
+          aliasName: $_aliasNameGenerator(db.chats.id, db.waterLogs.chatId));
+
+  $$WaterLogsTableProcessedTableManager get waterLogsRefs {
+    final manager = $$WaterLogsTableTableManager($_db, $_db.waterLogs)
+        .filter((f) => f.chatId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_waterLogsRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -770,6 +1233,24 @@ class $$ChatsTableFilterComposer extends Composer<_$ChatDatabase, $ChatsTable> {
   ColumnFilters<String> get imagePath => $composableBuilder(
       column: $table.imagePath, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get species => $composableBuilder(
+      column: $table.species, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<Map<String, dynamic>?, Map<String, dynamic>,
+          String>
+      get care => $composableBuilder(
+          column: $table.care,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<int> get wateringDays => $composableBuilder(
+      column: $table.wateringDays, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastWateredAt => $composableBuilder(
+      column: $table.lastWateredAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get inGarden => $composableBuilder(
+      column: $table.inGarden, builder: (column) => ColumnFilters(column));
+
   Expression<bool> messagesRefs(
       Expression<bool> Function($$MessagesTableFilterComposer f) f) {
     final $$MessagesTableFilterComposer composer = $composerBuilder(
@@ -783,6 +1264,27 @@ class $$ChatsTableFilterComposer extends Composer<_$ChatDatabase, $ChatsTable> {
             $$MessagesTableFilterComposer(
               $db: $db,
               $table: $db.messages,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> waterLogsRefs(
+      Expression<bool> Function($$WaterLogsTableFilterComposer f) f) {
+    final $$WaterLogsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.waterLogs,
+        getReferencedColumn: (t) => t.chatId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WaterLogsTableFilterComposer(
+              $db: $db,
+              $table: $db.waterLogs,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -819,6 +1321,23 @@ class $$ChatsTableOrderingComposer
 
   ColumnOrderings<String> get imagePath => $composableBuilder(
       column: $table.imagePath, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get species => $composableBuilder(
+      column: $table.species, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get care => $composableBuilder(
+      column: $table.care, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wateringDays => $composableBuilder(
+      column: $table.wateringDays,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastWateredAt => $composableBuilder(
+      column: $table.lastWateredAt,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get inGarden => $composableBuilder(
+      column: $table.inGarden, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ChatsTableAnnotationComposer
@@ -849,6 +1368,21 @@ class $$ChatsTableAnnotationComposer
   GeneratedColumn<String> get imagePath =>
       $composableBuilder(column: $table.imagePath, builder: (column) => column);
 
+  GeneratedColumn<String> get species =>
+      $composableBuilder(column: $table.species, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get care =>
+      $composableBuilder(column: $table.care, builder: (column) => column);
+
+  GeneratedColumn<int> get wateringDays => $composableBuilder(
+      column: $table.wateringDays, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastWateredAt => $composableBuilder(
+      column: $table.lastWateredAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get inGarden =>
+      $composableBuilder(column: $table.inGarden, builder: (column) => column);
+
   Expression<T> messagesRefs<T extends Object>(
       Expression<T> Function($$MessagesTableAnnotationComposer a) f) {
     final $$MessagesTableAnnotationComposer composer = $composerBuilder(
@@ -869,6 +1403,27 @@ class $$ChatsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> waterLogsRefs<T extends Object>(
+      Expression<T> Function($$WaterLogsTableAnnotationComposer a) f) {
+    final $$WaterLogsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.waterLogs,
+        getReferencedColumn: (t) => t.chatId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WaterLogsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.waterLogs,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$ChatsTableTableManager extends RootTableManager<
@@ -882,7 +1437,7 @@ class $$ChatsTableTableManager extends RootTableManager<
     $$ChatsTableUpdateCompanionBuilder,
     (Chat, $$ChatsTableReferences),
     Chat,
-    PrefetchHooks Function({bool messagesRefs})> {
+    PrefetchHooks Function({bool messagesRefs, bool waterLogsRefs})> {
   $$ChatsTableTableManager(_$ChatDatabase db, $ChatsTable table)
       : super(TableManagerState(
           db: db,
@@ -900,6 +1455,11 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<List<String>> quickQuestions = const Value.absent(),
             Value<String?> lastMessage = const Value.absent(),
             Value<String?> imagePath = const Value.absent(),
+            Value<String?> species = const Value.absent(),
+            Value<Map<String, dynamic>?> care = const Value.absent(),
+            Value<int?> wateringDays = const Value.absent(),
+            Value<DateTime?> lastWateredAt = const Value.absent(),
+            Value<bool> inGarden = const Value.absent(),
           }) =>
               ChatsCompanion(
             id: id,
@@ -908,6 +1468,11 @@ class $$ChatsTableTableManager extends RootTableManager<
             quickQuestions: quickQuestions,
             lastMessage: lastMessage,
             imagePath: imagePath,
+            species: species,
+            care: care,
+            wateringDays: wateringDays,
+            lastWateredAt: lastWateredAt,
+            inGarden: inGarden,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -916,6 +1481,11 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<List<String>> quickQuestions = const Value.absent(),
             Value<String?> lastMessage = const Value.absent(),
             Value<String?> imagePath = const Value.absent(),
+            Value<String?> species = const Value.absent(),
+            Value<Map<String, dynamic>?> care = const Value.absent(),
+            Value<int?> wateringDays = const Value.absent(),
+            Value<DateTime?> lastWateredAt = const Value.absent(),
+            Value<bool> inGarden = const Value.absent(),
           }) =>
               ChatsCompanion.insert(
             id: id,
@@ -924,15 +1494,24 @@ class $$ChatsTableTableManager extends RootTableManager<
             quickQuestions: quickQuestions,
             lastMessage: lastMessage,
             imagePath: imagePath,
+            species: species,
+            care: care,
+            wateringDays: wateringDays,
+            lastWateredAt: lastWateredAt,
+            inGarden: inGarden,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
                   (e.readTable(table), $$ChatsTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({messagesRefs = false}) {
+          prefetchHooksCallback: (
+              {messagesRefs = false, waterLogsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (messagesRefs) db.messages],
+              explicitlyWatchedTables: [
+                if (messagesRefs) db.messages,
+                if (waterLogsRefs) db.waterLogs
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
@@ -943,6 +1522,17 @@ class $$ChatsTableTableManager extends RootTableManager<
                             $$ChatsTableReferences._messagesRefsTable(db),
                         managerFromTypedResult: (p0) =>
                             $$ChatsTableReferences(db, table, p0).messagesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.chatId == item.id),
+                        typedResults: items),
+                  if (waterLogsRefs)
+                    await $_getPrefetchedData<Chat, $ChatsTable, WaterLog>(
+                        currentTable: table,
+                        referencedTable:
+                            $$ChatsTableReferences._waterLogsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ChatsTableReferences(db, table, p0).waterLogsRefs,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.chatId == item.id),
@@ -965,7 +1555,7 @@ typedef $$ChatsTableProcessedTableManager = ProcessedTableManager<
     $$ChatsTableUpdateCompanionBuilder,
     (Chat, $$ChatsTableReferences),
     Chat,
-    PrefetchHooks Function({bool messagesRefs})>;
+    PrefetchHooks Function({bool messagesRefs, bool waterLogsRefs})>;
 typedef $$MessagesTableCreateCompanionBuilder = MessagesCompanion Function({
   Value<int> id,
   required int chatId,
@@ -1245,6 +1835,242 @@ typedef $$MessagesTableProcessedTableManager = ProcessedTableManager<
     (Message, $$MessagesTableReferences),
     Message,
     PrefetchHooks Function({bool chatId})>;
+typedef $$WaterLogsTableCreateCompanionBuilder = WaterLogsCompanion Function({
+  Value<int> id,
+  required int chatId,
+  required DateTime wateredAt,
+});
+typedef $$WaterLogsTableUpdateCompanionBuilder = WaterLogsCompanion Function({
+  Value<int> id,
+  Value<int> chatId,
+  Value<DateTime> wateredAt,
+});
+
+final class $$WaterLogsTableReferences
+    extends BaseReferences<_$ChatDatabase, $WaterLogsTable, WaterLog> {
+  $$WaterLogsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ChatsTable _chatIdTable(_$ChatDatabase db) => db.chats
+      .createAlias($_aliasNameGenerator(db.waterLogs.chatId, db.chats.id));
+
+  $$ChatsTableProcessedTableManager get chatId {
+    final $_column = $_itemColumn<int>('chat_id')!;
+
+    final manager = $$ChatsTableTableManager($_db, $_db.chats)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_chatIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$WaterLogsTableFilterComposer
+    extends Composer<_$ChatDatabase, $WaterLogsTable> {
+  $$WaterLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get wateredAt => $composableBuilder(
+      column: $table.wateredAt, builder: (column) => ColumnFilters(column));
+
+  $$ChatsTableFilterComposer get chatId {
+    final $$ChatsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableFilterComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WaterLogsTableOrderingComposer
+    extends Composer<_$ChatDatabase, $WaterLogsTable> {
+  $$WaterLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get wateredAt => $composableBuilder(
+      column: $table.wateredAt, builder: (column) => ColumnOrderings(column));
+
+  $$ChatsTableOrderingComposer get chatId {
+    final $$ChatsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableOrderingComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WaterLogsTableAnnotationComposer
+    extends Composer<_$ChatDatabase, $WaterLogsTable> {
+  $$WaterLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get wateredAt =>
+      $composableBuilder(column: $table.wateredAt, builder: (column) => column);
+
+  $$ChatsTableAnnotationComposer get chatId {
+    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.chatId,
+        referencedTable: $db.chats,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ChatsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.chats,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WaterLogsTableTableManager extends RootTableManager<
+    _$ChatDatabase,
+    $WaterLogsTable,
+    WaterLog,
+    $$WaterLogsTableFilterComposer,
+    $$WaterLogsTableOrderingComposer,
+    $$WaterLogsTableAnnotationComposer,
+    $$WaterLogsTableCreateCompanionBuilder,
+    $$WaterLogsTableUpdateCompanionBuilder,
+    (WaterLog, $$WaterLogsTableReferences),
+    WaterLog,
+    PrefetchHooks Function({bool chatId})> {
+  $$WaterLogsTableTableManager(_$ChatDatabase db, $WaterLogsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> chatId = const Value.absent(),
+            Value<DateTime> wateredAt = const Value.absent(),
+          }) =>
+              WaterLogsCompanion(
+            id: id,
+            chatId: chatId,
+            wateredAt: wateredAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int chatId,
+            required DateTime wateredAt,
+          }) =>
+              WaterLogsCompanion.insert(
+            id: id,
+            chatId: chatId,
+            wateredAt: wateredAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$WaterLogsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({chatId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (chatId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.chatId,
+                    referencedTable:
+                        $$WaterLogsTableReferences._chatIdTable(db),
+                    referencedColumn:
+                        $$WaterLogsTableReferences._chatIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$WaterLogsTableProcessedTableManager = ProcessedTableManager<
+    _$ChatDatabase,
+    $WaterLogsTable,
+    WaterLog,
+    $$WaterLogsTableFilterComposer,
+    $$WaterLogsTableOrderingComposer,
+    $$WaterLogsTableAnnotationComposer,
+    $$WaterLogsTableCreateCompanionBuilder,
+    $$WaterLogsTableUpdateCompanionBuilder,
+    (WaterLog, $$WaterLogsTableReferences),
+    WaterLog,
+    PrefetchHooks Function({bool chatId})>;
 
 class $ChatDatabaseManager {
   final _$ChatDatabase _db;
@@ -1253,4 +2079,6 @@ class $ChatDatabaseManager {
       $$ChatsTableTableManager(_db, _db.chats);
   $$MessagesTableTableManager get messages =>
       $$MessagesTableTableManager(_db, _db.messages);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db, _db.waterLogs);
 }

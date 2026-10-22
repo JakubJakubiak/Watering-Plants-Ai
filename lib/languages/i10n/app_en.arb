@@ -1,31 +1,272 @@
 {
   "@@locale": "en",
-    "appTitle": "Caption",
-    "camera":"Camera",
-    "addCoins":"Add Coins",
-    "unsubscribe" : "Unsubscribe",
-    "subscribe":"Subscribe ",
-    "gallery":"Gallery ",
-    "chat":"New Chat ",
-    "chatHistory":"Chat History",
-    "unlimitedAccess":"Unlimited Access",
-    "upgradeNow":"Upgrade Now",
-    "identifications":"Unlimited Identifications plants",
-    "limitlessChat":"Limitless Chat Message",
-    "tips":"Create your own AI",
-    "tips2":"Well-spent time",
-    "removeAds":"Remove annoying paywalls",
-    
-  "@appTitle": {
-      "description": "The title of the application"
-    },
-    "@homeScreenTitle": {
-      "description": "The title of the home screen"
-    },
-    "@settingsTitle": {
-      "description": "The title of the settings screen"
-    },
-    "@camera": {
-      "description": "camera ooo  cc"
+  "appTitle": "Plants AI",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "addCoins": "Add credits",
+  "unsubscribe": "Unsubscribe",
+  "subscribe": "Subscribe",
+  "chat": "New Chat",
+  "chatHistory": "Chat History",
+  "unlimitedAccess": "Unlimited Access",
+  "upgradeNow": "Upgrade Now",
+  "identifications": "Unlimited plant identifications",
+  "limitlessChat": "Limitless chat messages",
+  "tips": "Create your own AI",
+  "tips2": "Well-spent time",
+  "removeAds": "Remove ads",
+  "navScan": "Scan",
+  "navGarden": "Garden",
+  "navChats": "Chats",
+  "navSettings": "Settings",
+  "scanTitle": "What's growing here?",
+  "scanSubtitle": "Snap a photo — AI identifies the plant, checks its health and plans the watering.",
+  "askExpert": "Ask the plant expert",
+  "askExpertHint": "e.g. Why are my monstera's leaves turning yellow?",
+  "identifyPrompt": "What plant is this? How is it doing and how should I care for it?",
+  "needsWaterToday": "Needs water",
+  "allWatered": "All your plants are watered",
+  "plantLibrary": "Plant library",
+  "plantLibrarySubtitle": "{count} species with care guides",
+  "@plantLibrarySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
     }
-  }
+  },
+  "tipsTitle": "Tips for a great scan",
+  "tip1": "One plant in the frame",
+  "tip2": "Daylight, no harsh shadows",
+  "tip3": "Show the leaves up close",
+  "gardenEmpty": "Your garden is empty",
+  "gardenEmptyHint": "Scan a plant and it will appear here with its own watering plan.",
+  "scanPlant": "Scan a plant",
+  "waterNow": "Watered",
+  "wateredToast": "{name} watered",
+  "@wateredToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "waterIn": "{days, plural, =0{Water today} =1{Water tomorrow} other{Water in {days} days}}",
+  "@waterIn": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "overdue": "{days, plural, =1{1 day overdue} other{{days} days overdue}}",
+  "@overdue": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "everyDays": "{days, plural, =1{Every day} other{Every {days} days}}",
+  "@everyDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "plantsCount": "{count, plural, =0{No plants} =1{1 plant} other{{count} plants}}",
+  "@plantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dueCount": "{count, plural, =1{1 plant needs water} other{{count} plants need water}}",
+  "@dueCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wateringSchedule": "Watering",
+  "changeInterval": "Change interval",
+  "waterEvery": "Water every",
+  "daysUnit": "days",
+  "lastWatered": "Last watered",
+  "never": "Never",
+  "wateringHistory": "Watering history",
+  "careTitle": "Care",
+  "light": "Light",
+  "humidity": "Humidity",
+  "temperature": "Temperature",
+  "difficulty": "Difficulty",
+  "health": "Health",
+  "toxicToPets": "Toxic to pets",
+  "safeForPets": "Pet-safe",
+  "lightLow": "Low light",
+  "lightMedium": "Medium light",
+  "lightBrightIndirect": "Bright, indirect",
+  "lightFullSun": "Full sun",
+  "levelLow": "Low",
+  "levelMedium": "Medium",
+  "levelHigh": "High",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "healthHealthy": "Healthy",
+  "healthNeedsAttention": "Needs attention",
+  "healthSick": "Sick",
+  "healthUnknown": "Unknown",
+  "openChat": "Ask about this plant",
+  "removeFromGarden": "Remove from garden",
+  "addToGarden": "Add to garden",
+  "addedToGarden": "Added to your garden",
+  "share": "Share",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "save": "Save",
+  "deleteChatConfirm": "Delete this conversation?",
+  "deleteChatBody": "Messages and the photo will be removed from this device.",
+  "deleted": "Deleted",
+  "chatsEmpty": "No conversations yet",
+  "chatsEmptyHint": "Scan a plant or ask the expert a question.",
+  "search": "Search",
+  "typeMessage": "Ask about your plant…",
+  "thinking": "Analyzing…",
+  "retry": "Try again",
+  "aiError": "Couldn't get an answer. Check your connection and try again.",
+  "copied": "Copied",
+  "newChat": "New conversation",
+  "outOfCreditsTitle": "You're out of credits",
+  "outOfCreditsBody": "You get {daily} free credits every day. Watch a short ad for +{reward}, or go Pro for unlimited access.",
+  "@outOfCreditsBody": {
+    "placeholders": {
+      "daily": {
+        "type": "int"
+      },
+      "reward": {
+        "type": "int"
+      }
+    }
+  },
+  "watchAd": "Watch an ad (+{reward})",
+  "@watchAd": {
+    "placeholders": {
+      "reward": {
+        "type": "int"
+      }
+    }
+  },
+  "adNotReady": "The ad is still loading — try again in a moment.",
+  "rewardLimit": "Daily ad limit reached. Come back tomorrow!",
+  "creditsAdded": "{count, plural, =1{+1 credit added} other{+{count} credits added}}",
+  "@creditsAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "credits": "{count, plural, =1{1 credit} other{{count} credits}}",
+  "@credits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "creditsRenew": "{daily} free credits every day",
+  "@creditsRenew": {
+    "placeholders": {
+      "daily": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyLimit": "Daily limit reached. Try again tomorrow.",
+  "goPro": "Go Pro",
+  "proActive": "Pro is active",
+  "proSubtitle": "Unlimited scans and chats, no ads",
+  "manageSubscription": "Manage subscription",
+  "restorePurchases": "Restore purchases",
+  "purchasesRestored": "Purchases restored",
+  "language": "Language",
+  "privacyPolicy": "Terms & privacy",
+  "rateApp": "Rate the app",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "account": "Account",
+  "appSection": "App",
+  "offline": "Can't reach the server",
+  "reconnect": "Reconnect",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "proBenefitScans": "Unlimited plant scans",
+  "proBenefitChat": "Unlimited expert chat",
+  "proBenefitGarden": "Watering plans for your whole garden",
+  "proBenefitNoAds": "No ads",
+  "paywallTitle": "Plants AI Pro",
+  "paywallSubtitle": "Everything your plants need, without limits.",
+  "yearly": "Yearly",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "perYear": "{price} / year",
+  "@perYear": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "perWeek": "{price} / week",
+  "@perWeek": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "perMonth": "{price} / month",
+  "@perMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "savePercent": "SAVE {percent}%",
+  "@savePercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTrial": "Free trial",
+  "continueLabel": "Continue",
+  "paywallUnavailable": "Subscriptions are not available right now.",
+  "onboarding1Title": "Identify any plant",
+  "onboarding1Body": "Take a photo — AI tells you what it is and how it's doing.",
+  "onboarding2Title": "Never forget to water",
+  "onboarding2Body": "Every scanned plant lands in your garden with its own watering plan.",
+  "onboarding3Title": "Your plant expert",
+  "onboarding3Body": "Ask follow-up questions about pests, soil, light and more.",
+  "next": "Next",
+  "getStarted": "Get started",
+  "skip": "Skip",
+  "cropImage": "Crop photo",
+  "noResults": "No results",
+  "today": "Today",
+  "yesterday": "Yesterday"
+}

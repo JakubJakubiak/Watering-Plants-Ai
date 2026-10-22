@@ -4,12 +4,14 @@ import 'package:drift_flutter/drift_flutter.dart';
 
 part 'chat_database.g.dart';
 
-@DriftDatabase(tables: [Chats, Messages])
+@DriftDatabase(tables: [Chats, Messages, WaterLogs])
 class ChatDatabase extends _$ChatDatabase {
   ChatDatabase() : super(driftDatabase(name: 'chat.db'));
 
+  ChatDatabase.forTesting(super.executor);
+
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(onCreate: (m) async {
@@ -22,23 +24,17 @@ class ChatDatabase extends _$ChatDatabase {
           await m.addColumn(chats, chats.lastMessage);
           await m.addColumn(chats, chats.imagePath);
         }
+        if (from < 4) {
+          await m.addColumn(chats, chats.species);
+          await m.addColumn(chats, chats.care);
+          await m.addColumn(chats, chats.wateringDays);
+          await m.addColumn(chats, chats.lastWateredAt);
+          await m.addColumn(chats, chats.inGarden);
+          await m.createTable(waterLogs);
+        }
       });
 
-  Future<void> updateQuickQuestions(int chatId, List<String> newQuickQuestions) async {
-    await (update(chats)..where((t) => t.id.equals(chatId))).write(ChatsCompanion(
-      quickQuestions: Value(newQuickQuestions),
-    ));
-  }
-
-  Future<void> updateName(int chatId, String newName) async {
-    await (update(chats)..where((t) => t.id.equals(chatId))).write(ChatsCompanion(
-      name: Value(newName),
-    ));
-  }
-
-  Future<void> updateLastMessage(int chatId, String newLastMessage) async {
-    await (update(chats)..where((t) => t.id.equals(chatId))).write(ChatsCompanion(
-      lastMessage: Value(newLastMessage),
-    ));
+  Future<void> updateChat(int chatId, ChatsCompanion fields) async {
+    await (update(chats)..where((t) => t.id.equals(chatId))).write(fields);
   }
 }

@@ -67,8 +67,9 @@ mixin ResponseMessageMappable {
   }
 
   ResponseMessageCopyWith<ResponseMessage, ResponseMessage, ResponseMessage>
-      get copyWith => _ResponseMessageCopyWithImpl(
-          this as ResponseMessage, $identity, $identity);
+      get copyWith =>
+          _ResponseMessageCopyWithImpl<ResponseMessage, ResponseMessage>(
+              this as ResponseMessage, $identity, $identity);
   @override
   String toString() {
     return ResponseMessageMapper.ensureInitialized()
@@ -91,7 +92,7 @@ mixin ResponseMessageMappable {
 extension ResponseMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ResponseMessage, $Out> {
   ResponseMessageCopyWith<$R, ResponseMessage, $Out> get $asResponseMessage =>
-      $base.as((v, t, t2) => _ResponseMessageCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ResponseMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ResponseMessageCopyWith<$R, $In extends ResponseMessage, $Out>
@@ -133,5 +134,5 @@ class _ResponseMessageCopyWithImpl<$R, $Out>
   @override
   ResponseMessageCopyWith<$R2, ResponseMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ResponseMessageCopyWithImpl($value, $cast, t);
+      _ResponseMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
