@@ -66,8 +66,8 @@ class _PaywallPageState extends State<PaywallPage> {
     setState(() => _busy = true);
     final navigator = Navigator.of(context);
     try {
-      final info = await Purchases.purchasePackage(_selected);
-      if (info.entitlements.all[AppConfig.proEntitlement]?.isActive ?? false) {
+      final result = await Purchases.purchase(PurchaseParams.package(_selected));
+      if (result.customerInfo.entitlements.all[AppConfig.proEntitlement]?.isActive ?? false) {
         Analytics.purchaseCompleted(_selected.storeProduct.identifier);
         navigator.pop(true);
         return;
