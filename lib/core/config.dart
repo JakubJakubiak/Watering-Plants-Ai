@@ -4,7 +4,7 @@ class AppConfig {
   /// Endpoint HTTP wspólnego backendu ai-hub (Convex, adres `.convex.site`).
   static const aiHubUrl = String.fromEnvironment(
     'AI_HUB_URL',
-    defaultValue: 'https://perceptive-herring-277.eu-west-1.convex.site',
+    defaultValue: 'https://qualified-jackal-293.eu-west-1.convex.site',
   );
 
   /// Identyfikator tej aplikacji w ai-hub (convex/appConfigs/plantsai.ts).
