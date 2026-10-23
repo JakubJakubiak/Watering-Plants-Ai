@@ -13,9 +13,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  # Wspólny backend Convex (OpenAI, kredyty, Pro) — repo ~/Git/ai-hub
+  # Wspólny backend Convex (OpenAI, kredyty, Pro) — prywatne repo JakubJakubiak/ai-hub.
+  # Lokalną kopię klienta podłączysz przez pubspec_overrides.yaml (patrz README).
   ai_hub_client:
-    path: ../ai-hub/clients/dart
+    git:
+      url: https://github.com/JakubJakubiak/ai-hub.git
+      path: clients/dart
+      ref: main
 
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8

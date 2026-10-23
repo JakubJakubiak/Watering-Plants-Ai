@@ -42,3 +42,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Lokalne nadpisania zależności (np. ai_hub_client z ../ai-hub)
+pubspec_overrides.yaml

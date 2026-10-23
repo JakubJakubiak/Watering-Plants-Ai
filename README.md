@@ -29,7 +29,13 @@ Grafiki w Google Play (`store/google-play/phone/`):
 
 ## Architektura
 
-- **Backend:** wspólny projekt Convex [`~/Git/ai-hub`](../ai-hub) (OpenAI, kredyty, Pro przez RevenueCat). Aplikacja łączy się przez pakiet `ai_hub_client` (`path: ../ai-hub/clients/dart`), więc oba repo muszą leżeć obok siebie.
+- **Backend:** wspólny projekt Convex [JakubJakubiak/ai-hub](https://github.com/JakubJakubiak/ai-hub) (prywatne repo; OpenAI, kredyty, Pro przez RevenueCat). Aplikacja łączy się przez pakiet `ai_hub_client` pobierany z gita (`clients/dart`, gałąź `main`), więc `flutter pub get` potrzebuje dostępu do tego repo (zalogowany `gh` / token HTTPS). Po zmianach w kliencie: `flutter pub upgrade ai_hub_client`.
+  Żeby pracować na lokalnej kopii klienta, utwórz `pubspec_overrides.yaml` (jest w `.gitignore`):
+  ```yaml
+  dependency_overrides:
+    ai_hub_client:
+      path: ../ai-hub/clients/dart
+  ```
 - **Firebase:** tylko Analytics (`lib/core/analytics.dart`). Bez `google-services.json` / `GoogleService-Info.plist` aplikacja działa dalej, tylko bez statystyk.
 - **Dane lokalne:** drift (`lib/database`): rozmowy, wiadomości, ogród (profil opieki, harmonogram podlewania) i historia podlewania.
 - **UI:** Material 3, `lib/features/*` (scan, garden, chat, history, library, settings, paywall, onboarding).
